@@ -1,0 +1,10 @@
+# do not save vscode workspace settings
+.vscode/
+
+# ignore the cmake-generated build directory
+build/
+
+
+# in case somebody mistakenly commits a zip or other binary files
+*.zip
+*.7z
