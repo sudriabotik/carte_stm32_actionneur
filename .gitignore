@@ -4,6 +4,9 @@
 # ignore the cmake-generated build directory
 build/
 
+# ignore the driver folder, because it is very heavy and contains some binary files.
+# The content canbe regenerated with cubemx
+Drivers/
 
 # in case somebody mistakenly commits a zip or other binary files
 *.zip
