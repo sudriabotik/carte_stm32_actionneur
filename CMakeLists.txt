@@ -45,11 +45,16 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
+    User/Src/pid.c
+    User/Src/state_machine.c
+    User/Src/movement_statemachine.c
+    User/Src/statevars.c
 )
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE AFTER
     # Add user defined include paths
+    User/Inc/
 )
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
 message(STATUS "${dirs}")

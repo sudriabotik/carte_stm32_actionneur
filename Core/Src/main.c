@@ -26,6 +26,7 @@
 /* USER CODE BEGIN Includes */
 # include "stdio.h"
 # include <inttypes.h>
+# include "movement_statemachine.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -98,8 +99,11 @@ int main(void)
   MX_GPIO_Init();
   MX_LPUART1_UART_Init();
   MX_TIM3_Init();
+  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
+  HAL_TIM_PWM_Init(&htim1);
+  movement_statemachine_switch(&MOVEMENT_STATE_MOTOR_TEST);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -110,6 +114,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
+    
     printf("pos ");
     printf("%"PRIu32"\n", TIM3->CNT);
 
@@ -119,6 +124,12 @@ int main(void)
     printf("pins : %d ", pin_a);
     printf("%d", pin_a);
     printf("\n");
+
+    
+
+    /*
+    movement_statemachine_update();
+    */
     HAL_Delay(1000);
   }
   /* USER CODE END 3 */
