@@ -47,6 +47,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
     User/Src/pid.c
     User/Src/state_machine.c
+    User/Src/motors.c
     User/Src/movement_statemachine.c
     User/Src/statevars.c
 )

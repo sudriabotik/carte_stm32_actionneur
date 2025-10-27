@@ -3,6 +3,8 @@
 
 # include <stdio.h>
 
+# include "tim.h"
+
 # include "state_machine.h"
 
 extern struct State MOVEMENT_STATE_MOTOR_TEST;
