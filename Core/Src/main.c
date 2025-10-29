@@ -27,6 +27,7 @@
 # include "stdio.h"
 # include <inttypes.h>
 # include "movement_statemachine.h"
+# include "robot_data.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -103,6 +104,8 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
   HAL_TIM_PWM_Init(&htim1);
+
+  robot_data_init();
   movement_statemachine_switch(&MOVEMENT_STATE_MOTOR_TEST);
   /* USER CODE END 2 */
 
@@ -114,9 +117,11 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
+    Encoder16Update(&encoder_R);
+
     
     printf("pos ");
-    printf("%"PRIu32"\n", TIM3->CNT);
+    printf("%"PRIu32"\n", encoder_R.total_count);
 
     pin_a = HAL_GPIO_ReadPin(GPIOB, 5);
     pin_b = HAL_GPIO_ReadPin(GPIOB, 4);
