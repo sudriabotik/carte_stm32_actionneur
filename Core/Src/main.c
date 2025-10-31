@@ -28,6 +28,7 @@
 # include <inttypes.h>
 # include "movement_statemachine.h"
 # include "robot_data.h"
+# include "motors.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -101,9 +102,10 @@ int main(void)
   MX_LPUART1_UART_Init();
   MX_TIM1_Init();
   MX_TIM3_Init();
+  MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
-  HAL_TIM_PWM_Init(&htim1);
+  HAL_TIM_PWM_Init(&htim16);
 
   robot_data_init();
   movement_statemachine_switch(&MOVEMENT_STATE_MOTOR_TEST);
@@ -127,14 +129,20 @@ int main(void)
     pin_b = HAL_GPIO_ReadPin(GPIOB, 4);
 
     printf("pins : %d ", pin_a);
-    printf("%d", pin_a);
+    printf("%d\n", pin_a);
+
+    printf("pwm ccr : %"PRIu32"\n", TIM16->CCR1);
+    printf("pwm arr : %"PRIu32"\n", TIM16->ARR);
+    printf("pwm ccr addr : %p\n", (void*)&TIM16->CCR1);
+    printf("pwm ccr struct addr : %p\n", (void*)motor_R.pwm_ccr);
+    //printf("pwm cnt : %"PRIu32"\n", TIM1->CNT);
     printf("\n");
 
     
 
-    /*
+    
     movement_statemachine_update();
-    */
+    
     HAL_Delay(1000);
   }
   /* USER CODE END 3 */

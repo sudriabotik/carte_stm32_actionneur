@@ -2,6 +2,7 @@
 # define __ROBOT_DATA_H
 
 # include "encoders.h"
+# include "motors.h"
 
 extern struct Encoder16Handle encoder_R;
 

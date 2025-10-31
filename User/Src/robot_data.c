@@ -8,4 +8,6 @@ void robot_data_init()
 	encoder_R.close_distance = 3000;
 	
 	Encoder16ResetMiddle(&encoder_R);
+
+	motor_handles_init();
 }
