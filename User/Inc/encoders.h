@@ -33,6 +33,9 @@ struct Encoder16Handle
 	/** The 32 bits count computed from the timer counter and detected rollovers */
 	uint32_t total_count;
 
+	/** The delta between now and the last update */
+	uint32_t total_count_delta;
+
 	/** Increases at each timer rollover and decreases at each rollback */
 	uint32_t rollover_count;
 

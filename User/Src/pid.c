@@ -1,14 +1,16 @@
 # include "pid.h"
 
 
-double PID_Run(struct PidRuntime *runtime, const struct PidSettings *settings, double currentVal, double targetVal)
+float PID_Run(struct PidRuntime *runtime, const struct PidSettings *settings, float currentVal, float targetVal)
 {
-	double p, d;
-	double out;
+	float p, d;
+	float out;
 
 	p = targetVal - currentVal;
 	d = runtime->lastVal - currentVal;
 	runtime->i = runtime->i + p;
+	if (runtime->i < settings->iMin) runtime->i = settings->iMin;
+	if (runtime->i > settings->iMax) runtime->i = settings->iMax;
 
 	out = p * settings->kp + runtime->i * settings->ki + d * settings->kd;
 	runtime->lastVal = out;

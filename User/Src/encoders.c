@@ -35,6 +35,8 @@ int Encoder16Update(struct Encoder16Handle *handle)
 		handle->rollover_count --;
 	}
 
+	uint32_t prev_count = handle->total_count;
 	handle->total_count = *handle->tim_counter + 0xFFFF * handle->rollover_count;
+	handle->total_count_delta = handle->total_count - prev_count;
 	return 0;
 }

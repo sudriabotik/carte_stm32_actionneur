@@ -108,7 +108,7 @@ int main(void)
   HAL_TIM_PWM_Init(&htim16);
 
   robot_data_init();
-  movement_statemachine_switch(&MOVEMENT_STATE_MOTOR_TEST);
+  movement_statemachine_switch(&MOVEMENT_STATE_MOTOR_SPEED_CONTROL_TEST);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -124,7 +124,10 @@ int main(void)
     
     printf("pos ");
     printf("%"PRIu32"\n", encoder_R.total_count);
+    printf("delta %"PRIu32"\n", encoder_R.total_count_delta);
+    printf("pwm ccr %"PRIu32"\n", *motor_R.pwm_ccr);
 
+    /*
     pin_a = HAL_GPIO_ReadPin(GPIOB, 5);
     pin_b = HAL_GPIO_ReadPin(GPIOB, 4);
 
@@ -136,6 +139,7 @@ int main(void)
     printf("pwm ccr addr : %p\n", (void*)&TIM16->CCR1);
     printf("pwm ccr struct addr : %p\n", (void*)motor_R.pwm_ccr);
     //printf("pwm cnt : %"PRIu32"\n", TIM1->CNT);
+    */
     printf("\n");
 
     
@@ -143,7 +147,7 @@ int main(void)
     
     movement_statemachine_update();
     
-    HAL_Delay(1000);
+    HAL_Delay(10);
   }
   /* USER CODE END 3 */
 }

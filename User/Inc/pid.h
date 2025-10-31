@@ -6,8 +6,8 @@
 */
 struct PidSettings
 {
-	double kp, ki, kd;
-	double iMin, iMax;
+	float kp, ki, kd;
+	float iMin, iMax;
 };
 
 /*
@@ -15,12 +15,12 @@ struct PidSettings
 */
 struct PidRuntime
 {
-	double i; // the integral need to be stored between pid runs.
-	double lastVal; // the output of the PID the last time it was ran.
+	float i; // the integral need to be stored between pid runs.
+	float lastVal; // the output of the PID the last time it was ran.
 };
 
 
-double PID_Run(struct PidRuntime *runtime, const struct PidSettings *settings, double currentVal, double targetVal);
+float PID_Run(struct PidRuntime *runtime, const struct PidSettings *settings, float currentVal, float targetVal);
 
 
 # endif // __PID_H
