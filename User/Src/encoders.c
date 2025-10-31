@@ -16,6 +16,8 @@ int Encoder16ResetMiddle(struct Encoder16Handle *handle)
 	*handle->tim_counter = 0; // set the timer counter to 0
 	
 	Encoder16Update(handle); // update the calculated values
+
+	return 0;
 }
 
 int Encoder16Update(struct Encoder16Handle *handle)

@@ -19,21 +19,12 @@ struct MotorHandle
 	// a pointer to the Capture/Compare register used to modify the pwm duty cycle
 	volatile uint32_t* pwm_ccr;
 
-	GPIO_TypeDef *dir1_gpio_port;
-	uint32_t dir1_gpio_num;
-	GPIO_TypeDef *dir2_gpio_port;
-	uint32_t dir2_gpio_num;
+	GPIO_TypeDef *dir_gpio_port;
+	uint32_t dir_gpio_num;
 
 };
 
 
-/*
-Defines the description of both motors.
-Does not contain valid values unless motor_handle_init has been called.
-*/
-extern struct MotorHandle motor_R;
-extern struct MotorHandle motor_L;
 
-void motor_handles_init();
 
 # endif // __MOTORS_H
