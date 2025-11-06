@@ -1,5 +1,5 @@
 
-# Project pinout
+## Project pinout
 
 pb5 : IN1 A
 pb4 : IN2 A

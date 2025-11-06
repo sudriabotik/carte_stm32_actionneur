@@ -2,6 +2,7 @@
 
 # include "robot_data.h"
 # include "pid.h"
+# include "recorder.h"
 
 void state_motor_test_wake(struct StateMachine *state_machine)
 {
@@ -51,6 +52,10 @@ void state_motor_speed_control_test_run(struct StateMachine *state_machine)
 	if (drive_value < 0) drive_value = 0;
 
 	*(motor_R.pwm_ccr) = (uint32_t)drive_value;
+
+	// update the recording
+	struct RecordedTick tick = {.actual = encoder_R.total_count_delta, .target = 4, .drive = (uint32_t)drive_value};
+	recorder_append(0, tick);
 }
 
 void state_motor_speed_control_test_stop(struct StateMachine *state_machine)

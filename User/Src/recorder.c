@@ -25,14 +25,14 @@ void recorder_append(uint32_t track, struct RecordedTick value)
 }
 
 
-void print_recorded_data(uint32_t track)
+void recorder_print_recorded_data(uint32_t track)
 {
 	if (track >= NUM_RECORDING_TRACKS)
 	{
 		DEBUG_MSG_ERROR_VAL("RECORDER", "track number %"PRIu32" is too high, doesn't exist", track)
 	}
 
-	printf("data_track_%"PRIu32"\n", track);
+	printf("recorded_data_track_%"PRIu32"\n", track);
 
 	for (uint32_t i = 0; i < recording_timestamp[track]; i++)
 	{
@@ -41,5 +41,16 @@ void print_recorded_data(uint32_t track)
 		printf("%"PRIu32";\n", recording[track][i].actual);
 	}
 	
-	printf("data_stop");
+	printf("recorded_data_stop\n");
+}
+
+
+int recorder_is_track_full(uint32_t track)
+{
+	if (track >= NUM_RECORDING_TRACKS)
+	{
+		DEBUG_MSG_ERROR_VAL("RECORDER", "track number %"PRIu32" is too high, doesn't exist", track)
+	}
+
+	return recording_timestamp[track] >= RECORDING_LENGTH_TICKS;
 }

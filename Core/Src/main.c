@@ -29,6 +29,7 @@
 # include "movement_statemachine.h"
 # include "robot_data.h"
 # include "motors.h"
+# include "recorder.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -143,6 +144,11 @@ int main(void)
     printf("\n");
 
     
+    if (recorder_is_track_full(0))
+    {
+      recorder_print_recorded_data(0);
+      HAL_Delay(20000);
+    }
 
     
     movement_statemachine_update();
