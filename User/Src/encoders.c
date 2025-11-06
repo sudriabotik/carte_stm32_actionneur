@@ -12,7 +12,7 @@ int Encoder16ResetMiddle(struct Encoder16Handle *handle)
 {
 	if (handle == 0) return -1;
 
-	handle->rollover_count = 125; // about half of the maximum amout of rollovers
+	handle->rollover_count = 0; // set the rollover count to 0
 	*handle->tim_counter = 0; // set the timer counter to 0
 	
 	Encoder16Update(handle); // update the calculated values
@@ -35,8 +35,11 @@ int Encoder16Update(struct Encoder16Handle *handle)
 		handle->rollover_count --;
 	}
 
-	uint32_t prev_count = handle->total_count;
-	handle->total_count = *handle->tim_counter + 0xFFFF * handle->rollover_count;
+	handle->situation = current_situation;
+
+	int32_t prev_count = handle->total_count;
+	handle->total_count = (int32_t)*handle->tim_counter + 0xFFFF * handle->rollover_count;
+
 	handle->total_count_delta = handle->total_count - prev_count;
 	return 0;
 }

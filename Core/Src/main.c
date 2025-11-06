@@ -124,9 +124,11 @@ int main(void)
 
     
     printf("pos ");
-    printf("%"PRIu32"\n", encoder_R.total_count);
-    printf("delta %"PRIu32"\n", encoder_R.total_count_delta);
+    printf("%"PRIi32"\n", encoder_R.total_count);
+    printf("delta %"PRIi32"\n", encoder_R.total_count_delta);
     printf("pwm ccr %"PRIu32"\n", *motor_R.pwm_ccr);
+    printf("rollovers %"PRIi32"\n", encoder_R.rollover_count);
+    printf("situation %"PRIu32"\n", encoder_R.situation);
 
     /*
     pin_a = HAL_GPIO_ReadPin(GPIOB, 5);
@@ -143,17 +145,18 @@ int main(void)
     */
     printf("\n");
 
-    
+    /*
     if (recorder_is_track_full(0))
     {
       recorder_print_recorded_data(0);
       HAL_Delay(20000);
     }
+    */
 
     
     movement_statemachine_update();
     
-    HAL_Delay(10);
+    HAL_Delay(100);
   }
   /* USER CODE END 3 */
 }

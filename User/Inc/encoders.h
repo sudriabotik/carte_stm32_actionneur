@@ -31,13 +31,13 @@ enum encoder_situation
 struct Encoder16Handle
 {
 	/** The 32 bits count computed from the timer counter and detected rollovers */
-	uint32_t total_count;
+	int32_t total_count;
 
 	/** The delta between now and the last update */
-	uint32_t total_count_delta;
+	int32_t total_count_delta;
 
 	/** Increases at each timer rollover and decreases at each rollback */
-	uint32_t rollover_count;
+	int32_t rollover_count;
 
 	/** A pointer to the timer CNT we are watching for this encoder 
 	 * It is stored in an uint32_t, probably for compatibility between 16 and 32 bits timers.
@@ -48,7 +48,7 @@ struct Encoder16Handle
 	uint32_t situation;
 
 	/** Specify the distance from underflow or overflow that is considered "close" */
-	uint32_t close_distance;
+	int32_t close_distance;
 };
 
 
