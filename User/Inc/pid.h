@@ -15,8 +15,10 @@ struct PidSettings
 */
 struct PidRuntime
 {
-	float i; // the integral need to be stored between pid runs.
-	float lastVal; // the output of the PID the last time it was ran.
+	/** The total accumulated integral, after applying the coef */
+	float i;
+	/** The output of the PID the last time it was ran */
+	float lastVal;
 };
 
 
