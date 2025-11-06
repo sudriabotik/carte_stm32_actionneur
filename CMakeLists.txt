@@ -51,7 +51,6 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     User/Src/encoders.c
     User/Src/robot_data.c
     User/Src/movement_statemachine.c
-    User/Src/statevars.c
 )
 
 # Add include paths
