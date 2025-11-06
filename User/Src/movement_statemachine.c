@@ -34,7 +34,7 @@ State speed asserv test
 ///////////////////////
 */
 
-struct PidSettings speed_test_pid_settings = {.kp = 60, .ki = 0.1, .kd = 0.1, .iMax = 500, .iMin = 0};
+struct PidSettings speed_test_pid_settings = {.kp = 60.0f, .ki = 0.1f, .kd = 0.1f, .iMax = 500.0f, .iMin = 0.0f, .max = 1024.0f, .min = 0.0f, .fratio = 0.5f};
 struct PidRuntime speed_test_pid_runtime = {};
 
 
@@ -54,7 +54,7 @@ void state_motor_speed_control_test_run(struct StateMachine *state_machine)
 	*(motor_R.pwm_ccr) = (uint32_t)drive_value;
 
 	// update the recording
-	struct RecordedTick tick = {.actual = encoder_R.total_count_delta, .target = 4, .drive = (uint32_t)drive_value};
+	struct RecordedTick tick = {.actual = (uint32_t)encoder_R.total_count_delta, .target = 4, .drive = (uint32_t)drive_value};
 	recorder_append(0, tick);
 }
 

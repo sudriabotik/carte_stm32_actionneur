@@ -11,8 +11,8 @@
 # include "stdio.h"
 
 // how many slots in the array, to store 
-# define RECORDING_LENGTH_TICKS 100U
-# define NUM_RECORDING_TRACKS 1U
+# define RECORDING_LENGTH_TICKS 100UL
+# define NUM_RECORDING_TRACKS 1UL
 
 struct RecordedTick
 {

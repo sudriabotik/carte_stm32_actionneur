@@ -48,7 +48,7 @@ struct Encoder16Handle
 	uint32_t situation;
 
 	/** Specify the distance from underflow or overflow that is considered "close" */
-	int32_t close_distance;
+	uint32_t close_distance;
 };
 
 

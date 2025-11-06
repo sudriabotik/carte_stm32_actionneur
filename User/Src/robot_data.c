@@ -7,7 +7,7 @@ void robot_data_init()
 {
 	// encoder R
 	encoder_R.tim_counter = &TIM3->CNT;
-	encoder_R.close_distance = 3000;
+	encoder_R.close_distance = 3000u;
 	Encoder16ResetMiddle(&encoder_R);
 
 	// motor R
