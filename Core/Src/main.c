@@ -30,6 +30,7 @@
 # include "robot_data.h"
 # include "motors.h"
 # include "recorder.h"
+# include "uart_messenger.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -109,6 +110,7 @@ int main(void)
   HAL_TIM_PWM_Init(&htim16);
 
   robot_data_init();
+  uart_messenger_init();
   movement_statemachine_switch(&MOVEMENT_STATE_MOTOR_SPEED_CONTROL_TEST);
   /* USER CODE END 2 */
 
@@ -122,13 +124,14 @@ int main(void)
 
     Encoder16Update(&encoder_R);
 
-    
+    /*
     printf("pos ");
     printf("%"PRIi32"\n", encoder_R.total_count);
     printf("delta %"PRIi32"\n", encoder_R.total_count_delta);
     printf("pwm ccr %"PRIu32"\n", *motor_R.pwm_ccr);
     printf("rollovers %"PRIi32"\n", encoder_R.rollover_count);
     printf("situation %"PRIu32"\n", encoder_R.situation);
+    */
 
     /*
     pin_a = HAL_GPIO_ReadPin(GPIOB, 5);
@@ -143,7 +146,7 @@ int main(void)
     printf("pwm ccr struct addr : %p\n", (void*)motor_R.pwm_ccr);
     //printf("pwm cnt : %"PRIu32"\n", TIM1->CNT);
     */
-    printf("\n");
+    printf("a\n");
 
     /*
     if (recorder_is_track_full(0))
@@ -154,9 +157,9 @@ int main(void)
     */
 
     
-    movement_statemachine_update();
+    //movement_statemachine_update();
     
-    HAL_Delay(100);
+    HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }
