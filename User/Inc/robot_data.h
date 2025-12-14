@@ -7,6 +7,9 @@
 extern struct Encoder16Handle encoder_R;
 extern struct MotorHandle motor_R;
 
+extern struct Encoder16Handle encoder_L;
+extern struct MotorHandle motor_L;
+
 /**
  * @brief Initialize the struct handles to the various devices of the robot.
  * 

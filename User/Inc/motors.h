@@ -17,12 +17,25 @@ Stores infos about how to drive the motor
 struct MotorHandle
 {
 	// a pointer to the Capture/Compare register used to modify the pwm duty cycle
-	volatile uint32_t* pwm_ccr;
+	volatile uint32_t* pwm_ccr_f;
+	volatile uint32_t* pwm_ccr_b;
+
+	// the autoreload value of the PWM counter. Used to calculate the CCR from a duty cycle.
+	uint32_t pwm_arr_f;
+	uint32_t pwm_arr_b;
 
 	GPIO_TypeDef *dir_gpio_port;
 	uint32_t dir_gpio_num;
 
 };
+
+/**
+ * @brief Maps the speed value to 0-100% of the control pwm duty cycle.
+ * 
+ * @param handle A handle to the motor to drive.
+ * @param speed The value to drive the motor to. Maps the speed value to 0-100% of the control pwm duty cycle.
+ */
+void motor_drive(struct MotorHandle handle, int16_t speed);
 
 
 
