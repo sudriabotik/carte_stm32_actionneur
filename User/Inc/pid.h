@@ -11,7 +11,7 @@ struct PidSettings
 	float iMin, iMax;
 	float min, max;
 
-	/** The ratio used to filter the derivative */
+	// The ratio used to filter the derivative (the higher the more smoothing)
 	float fratio;
 };
 
