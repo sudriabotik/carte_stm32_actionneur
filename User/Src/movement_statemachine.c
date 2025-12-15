@@ -4,15 +4,19 @@
 # include "pid.h"
 # include "recorder.h"
 
+float motor_test_speed = 0.0f;
+
 void state_motor_test_wake(struct StateMachine *state_machine)
 {
 	printf("motor test wake\n");
-	*(motor_R.pwm_ccr) = MOTOR_PWM_REGISTER_PERIOD / 4;
+	motor_test_speed = -100.0f;
 }
 
 void state_motor_test_run(struct StateMachine *state_machine)
 {
 	printf("motor test running\n");
+	motor_drive(motor_R, motor_test_speed);
+	if (motor_test_speed < 100.0f) motor_test_speed += 0.5f;
 }
 
 void state_motor_test_stop(struct StateMachine *state_machine)
@@ -41,7 +45,7 @@ struct PidRuntime speed_test_pid_runtime = {};
 void state_motor_speed_control_test_wake(struct StateMachine *state_machine)
 {
 	printf("motor speed test wake\n");
-	*(motor_R.pwm_ccr) = MOTOR_PWM_REGISTER_PERIOD / 4;
+	motor_drive(motor_R, 0.0f);
 }
 
 void state_motor_speed_control_test_run(struct StateMachine *state_machine)
@@ -51,7 +55,7 @@ void state_motor_speed_control_test_run(struct StateMachine *state_machine)
 	float drive_value = PID_Run(&speed_test_pid_runtime, &speed_test_pid_settings, encoder_R.total_count_delta, 4);
 	if (drive_value < 0) drive_value = 0;
 
-	*(motor_R.pwm_ccr) = (uint32_t)drive_value;
+	motor_drive(motor_R, drive_value);
 
 	// update the recording
 	struct RecordedTick tick = {.actual = (uint32_t)encoder_R.total_count_delta, .target = 4, .drive = (uint32_t)drive_value};
