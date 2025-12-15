@@ -13,7 +13,7 @@ void motor_drive(struct MotorHandle handle, float speed)
 	else if (speed < 0)
 	{
 		*handle.pwm_ccr_f = 0;
-		*handle.pwm_ccr_b = (uint32_t)((handle.pwm_arr_f * (speed)) / 100.0f);
+		*handle.pwm_ccr_b = (uint32_t)((handle.pwm_arr_b * (speed)) / 100.0f);
 	}
 	else
 	{
