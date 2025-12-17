@@ -8,8 +8,7 @@
 #include "gpio.h"
 #include "stm32g431xx.h"
 
-// the autoreload register of the timer used for the PWM
-# define MOTOR_PWM_REGISTER_PERIOD TIM1->ARR
+
 
 /**
  * @brief Stores references and variables used to drive the motors.
