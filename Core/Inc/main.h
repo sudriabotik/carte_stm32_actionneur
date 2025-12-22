@@ -57,8 +57,32 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define LED_Pin GPIO_PIN_5
-#define LED_GPIO_Port GPIOA
+#define curr_sens_M_D_Pin GPIO_PIN_3
+#define curr_sens_M_D_GPIO_Port GPIOA
+#define N_fault_D_Pin GPIO_PIN_4
+#define N_fault_D_GPIO_Port GPIOA
+#define DIR_D_Pin GPIO_PIN_5
+#define DIR_D_GPIO_Port GPIOA
+#define pwm_M_D_Pin GPIO_PIN_7
+#define pwm_M_D_GPIO_Port GPIOA
+#define pwm_M_G_Pin GPIO_PIN_5
+#define pwm_M_G_GPIO_Port GPIOC
+#define curr_sens_M_G_Pin GPIO_PIN_0
+#define curr_sens_M_G_GPIO_Port GPIOB
+#define N_fault_G_Pin GPIO_PIN_1
+#define N_fault_G_GPIO_Port GPIOB
+#define DIR_G_Pin GPIO_PIN_2
+#define DIR_G_GPIO_Port GPIOB
+#define V_Bus_Sensing_Pin GPIO_PIN_9
+#define V_Bus_Sensing_GPIO_Port GPIOA
+#define encoder_D_A_Pin GPIO_PIN_4
+#define encoder_D_A_GPIO_Port GPIOB
+#define encoder_D_B_Pin GPIO_PIN_5
+#define encoder_D_B_GPIO_Port GPIOB
+#define encoder_G_A_Pin GPIO_PIN_6
+#define encoder_G_A_GPIO_Port GPIOB
+#define encoder_G_B_Pin GPIO_PIN_7
+#define encoder_G_B_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
