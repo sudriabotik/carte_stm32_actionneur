@@ -18,7 +18,6 @@ void state_motor_test_run(struct StateMachine *state_machine)
 	motor_drive(motor_R, motor_test_speed);
 	if (motor_test_speed < 100.0f) motor_test_speed += 0.5f;
 }
-
 void state_motor_test_stop(struct StateMachine *state_machine)
 {
 	printf("motor test end\n");
