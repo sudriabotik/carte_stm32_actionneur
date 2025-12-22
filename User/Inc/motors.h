@@ -19,10 +19,15 @@
 struct MotorHandle
 {
 	// a pointer to the Capture/Compare register used to modify the pwm duty cycle
-	volatile uint32_t *pwm_ccr_f, *pwm_ccr_b;
+	volatile uint32_t *pwm_ccr;
 
 	// the autoreload value of the PWM counter. Used to calculate the CCR from a duty cycle.
-	uint32_t pwm_arr_f, pwm_arr_b;
+	uint32_t pwm_arr;
+
+	// the direction pin, and whether or not it should be inversed
+	GPIO_TypeDef *gpio_port;
+	uint16_t gpio_pin;
+	bool reverse;
 };
 
 /**

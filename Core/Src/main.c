@@ -115,8 +115,10 @@ int main(void)
   MX_USART3_UART_Init();
   MX_USB_PCD_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
-  HAL_TIM_PWM_Init(&htim16);
+  HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL); // right
+  HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL); // left
+
+  HAL_TIM_PWM_Init(&htim1); // init the pwm for the motors
 
   robot_data_init();
   uart_messenger_init();

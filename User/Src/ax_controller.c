@@ -1,7 +1,7 @@
 # include "ax_controller.h"
 
 
-# define AX_UART &hlpuart1 // temp
+# define AX_UART &huart3 // temp
 
 
 void ax_init() {}
