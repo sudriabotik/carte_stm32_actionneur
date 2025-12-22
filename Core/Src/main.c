@@ -31,6 +31,7 @@
 # include "motors.h"
 # include "recorder.h"
 # include "uart_messenger.h"
+# include "ax_controller.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -147,6 +148,7 @@ int main(void)
     //printf("pwm cnt : %"PRIu32"\n", TIM1->CNT);
     */
     printf("a\n");
+    ax_write_position(2, 20);
 
     /*
     if (recorder_is_track_full(0))
@@ -158,8 +160,8 @@ int main(void)
 
     
     //movement_statemachine_update();
-    
-    HAL_Delay(1000);
+    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+    HAL_Delay(5000);
   }
   /* USER CODE END 3 */
 }
