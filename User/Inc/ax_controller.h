@@ -5,6 +5,13 @@
 #include "stm32g431xx.h"
 
 
+/*
+Some links that might be useful :
+https://emanual.robotis.com/docs/en/dxl/ax/ax-12a/#
+https://emanual.robotis.com/docs/en/dxl/protocol1/
+*/
+
+
 void ax_write_position(uint8_t id, uint16_t position);
 
 
