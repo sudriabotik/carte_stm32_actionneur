@@ -11,3 +11,29 @@ struct PidSettings pid_motor_R =
 	.max = 1000,
 	.min = -1000
 };
+
+struct PidSettings pid_motor_L =
+{
+	.kp = 10,
+	.kd = 0,
+	.ki = 0,
+	.fratio = 0,
+	.iMax = 0,
+	.iMin = 0,
+	.max = 1000,
+	.min = -1000
+};
+
+
+
+struct PidSettings pid_line_move =
+{
+	.kp = 10,
+	.kd = 0,
+	.ki = 0,
+	.fratio = 0,
+	.iMax = 0,
+	.iMin = 0,
+	.max = 1000,
+	.min = -1000
+};

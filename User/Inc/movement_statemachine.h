@@ -9,6 +9,7 @@
 
 extern struct State MOVEMENT_STATE_MOTOR_TEST;
 extern struct State MOVEMENT_STATE_MOTOR_SPEED_CONTROL_TEST;
+extern struct State MOVEMENT_STATE_LINE;
 
 
 void movement_statemachine_switch(struct State *state);

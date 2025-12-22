@@ -8,7 +8,7 @@ uint32_t GetEncoderSituation(struct Encoder16Handle *handle)
 	return ENCODER_SITUATION_NOTHING;
 }
 
-int Encoder16ResetMiddle(struct Encoder16Handle *handle)
+int Encoder16Reset(struct Encoder16Handle *handle)
 {
 	if (handle == 0) return -1;
 

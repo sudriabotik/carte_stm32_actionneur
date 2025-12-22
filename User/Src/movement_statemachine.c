@@ -2,7 +2,10 @@
 
 # include "robot_data.h"
 # include "pid.h"
+# include "pid_config.h"
 # include "recorder.h"
+# include "mathfuncs.h"
+# include "movement_setting.h"
 
 float motor_test_speed = 0.0f;
 
@@ -73,6 +76,62 @@ struct State MOVEMENT_STATE_MOTOR_SPEED_CONTROL_TEST =
 	.stop = state_motor_speed_control_test_stop
 };
 
+
+
+/*
+///////////////////
+State line movement
+///////////////////
+*/
+
+struct PidRuntime line_move_pid_runtime = {};
+struct Trapezoid line_move_trapez = {};
+
+
+void state_line_move_wake(struct StateMachine *state_machine)
+{
+	printf("line move\n");
+
+	// reset the encoder, as such we can use the distance to zero as the travelled distance.
+	Encoder16Reset(&encoder_R);
+	Encoder16Reset(&encoder_L);
+
+	line_move_trapez = pregen_trapezoid(movement_settings.speed, movement_settings.distance, 60);
+}
+
+void state_line_move_run(struct StateMachine *state_machine)
+{
+	printf("motor speed test running\n");
+
+	float distance_travelled = encoder_R.total_count; // temp
+
+	if (distance_travelled >= movement_settings.distance) movement_statemachine_switch(NULL);
+
+	float desired_speed = func_trapezoid(distance_travelled, line_move_trapez);
+
+	float drive_value = PID_Run(&line_move_pid_runtime, &pid_line_move, encoder_R.total_count_delta, desired_speed);
+	//if (drive_value < 0) drive_value = 0;
+
+	motor_drive(motor_R, drive_value);
+
+	// update the recording
+	//struct RecordedTick tick = {.actual = (uint32_t)encoder_R.total_count_delta, .target = 4, .drive = (uint32_t)drive_value};
+	//recorder_append(0, tick);
+}
+
+void state_line_move_stop(struct StateMachine *state_machine)
+{
+	printf("motor speed test end\n");
+
+	motor_drive(motor_R, 0.0f);
+}
+
+struct State MOVEMENT_STATE_LINE_MOVE =
+{
+	.wake = state_line_move_wake,
+	.run = state_line_move_run,
+	.stop = state_line_move_stop
+};
 
 
 

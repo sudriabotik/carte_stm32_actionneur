@@ -53,9 +53,9 @@ struct Encoder16Handle
 
 
 /**
- * @brief Set the encoder variables so the total count is about halfway between min and max values
+ * @brief Set the encoder variables so the count and overflows are zero
  */
-int Encoder16ResetMiddle(struct Encoder16Handle *handle);
+int Encoder16Reset(struct Encoder16Handle *handle);
 
 int Encoder16Update(struct Encoder16Handle *handle);
 
