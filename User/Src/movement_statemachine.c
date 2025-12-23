@@ -57,21 +57,21 @@ struct State MOVEMENT_STATE_MOTOR_TEST =
 
 
 /*
-########################
-STATE SPEED_CONTROL_TEST
-########################
+####################
+STATE MOTOR_PID_TEST
+####################
 */
 
 struct PidSettings speed_test_pid_settings = {.kp = 60.0f, .ki = 0.1f, .kd = 0.1f, .iMax = 500.0f, .iMin = 0.0f, .max = 1024.0f, .min = 0.0f, .fratio = 0.5f};
 struct PidRuntime speed_test_pid_runtime = {};
 
-void state_motor_speed_control_test_wake(struct StateMachine *state_machine)
+void state_motor_pid_test_wake(struct StateMachine *state_machine)
 {
 	printf("motor speed test wake\n");
 	motor_drive(motor_R, 0.0f);
 }
 
-void state_motor_speed_control_test_run(struct StateMachine *state_machine)
+void state_motor_pid_test_run(struct StateMachine *state_machine)
 {
 	printf("motor speed test running\n");
 
@@ -85,16 +85,16 @@ void state_motor_speed_control_test_run(struct StateMachine *state_machine)
 	recorder_append(0, tick);
 }
 
-void state_motor_speed_control_test_stop(struct StateMachine *state_machine)
+void state_motor_pid_test_stop(struct StateMachine *state_machine)
 {
 	printf("motor speed test end\n");
 }
 
-struct State MOVEMENT_STATE_MOTOR_SPEED_CONTROL_TEST =
+struct State MOVEMENT_STATE_MOTOR_PID_TEST =
 {
-	.wake = state_motor_speed_control_test_wake,
-	.run = state_motor_speed_control_test_run,
-	.stop = state_motor_speed_control_test_stop
+	.wake = state_motor_pid_test_wake,
+	.run = state_motor_pid_test_run,
+	.stop = state_motor_pid_test_stop
 };
 
 
@@ -186,3 +186,18 @@ void movement_statemachine_move_line(float distance, float speed, float ramp_dis
 
 	movement_statemachine_switch(&MOVEMENT_STATE_LINE_MOVE);
 }
+
+
+# ifdef MOVEMENT_STATEMACHINE_TEST
+
+void movement_statemachine_test_motors()
+{
+	movement_statemachine_switch(&MOVEMENT_STATE_MOTOR_TEST);
+}
+
+void movement_statemachine_test_motors_pid()
+{
+	movement_statemachine_switch(&MOVEMENT_STATE_MOTOR_PID_TEST);
+}
+
+# endif

@@ -1,6 +1,8 @@
 # ifndef __MOVEMENT_STATEMACHINE_H
 # define __MOVEMENT_STATEMACHINE_H
 
+# define MOVEMENT_STATEMACHINE_TEST
+
 # include "state_machine.h"
 
 /**
@@ -31,5 +33,20 @@ int movement_statemachine_busy();
  * @param ramp_dist for how many mm at start/end the speed ramps up/down
  */
 void movement_statemachine_move_line(float distance, float speed, float ramp_dist);
+
+
+# ifdef MOVEMENT_STATEMACHINE_TEST
+
+/**
+ * @brief 5s of 50% pwm forward for both motors.
+ */
+void movement_statemachine_test_motors();
+
+/**
+ * @brief 5s of ??? pid command forward for both motors.
+ */
+void movement_statemachine_test_motors_pid();
+
+# endif
 
 # endif // __MOVEMENT_STATEMACHINE_H

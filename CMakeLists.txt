@@ -57,7 +57,6 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     User/Src/recorder.c
     User/Src/ax_controller.c
     User/Src/pid_config.c
-    User/Src/movement_settings.c
 )
 
 # Add include paths
