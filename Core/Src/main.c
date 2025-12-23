@@ -34,7 +34,6 @@
 # include "robot_data.h"
 # include "motors.h"
 # include "recorder.h"
-# include "uart_messenger.h"
 # include "ax_controller.h"
 /* USER CODE END Includes */
 
@@ -71,7 +70,7 @@ void SystemClock_Config(void);
 
 PUTCHAR_PROTOTYPE
 {
-	HAL_UART_Transmit(&hlpuart1, (uint8_t*)&ch, 1, 0xFFFF);
+	//HAL_UART_Transmit(&hlpuart1, (uint8_t*)&ch, 1, 0xFFFF);
 	return ch;
 }
 
@@ -121,8 +120,7 @@ int main(void)
   HAL_TIM_PWM_Init(&htim1); // init the pwm for the motors
 
   robot_data_init();
-  uart_messenger_init();
-  movement_statemachine_switch(&MOVEMENT_STATE_MOTOR_SPEED_CONTROL_TEST);
+  //movement_statemachine_switch(&MOVEMENT_STATE_MOTOR_SPEED_CONTROL_TEST);
   /* USER CODE END 2 */
 
   /* Infinite loop */

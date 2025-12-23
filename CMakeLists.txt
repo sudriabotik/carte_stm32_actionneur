@@ -55,7 +55,6 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     User/Src/robot_data.c
     User/Src/movement_statemachine.c
     User/Src/recorder.c
-    User/Src/uart_messenger.c
     User/Src/ax_controller.c
     User/Src/pid_config.c
     User/Src/movement_settings.c

@@ -11,7 +11,7 @@ void robot_data_init()
 	// encoder R
 	encoder_R.tim_counter = &TIM3->CNT;
 	encoder_R.close_distance = 3000u;
-	Encoder16ResetMiddle(&encoder_R);
+	Encoder16Reset(&encoder_R);
 
 	// motor R
 	motor_R.pwm_arr = (uint32_t)TIM1->ARR;
@@ -20,7 +20,7 @@ void robot_data_init()
 	// encoder L
 	encoder_L.tim_counter = &TIM4->CNT;
 	encoder_L.close_distance = 3000u;
-	Encoder16ResetMiddle(&encoder_L);
+	Encoder16Reset(&encoder_L);
 
 	// motor L
 	motor_L.pwm_arr = (uint32_t)TIM1->ARR;
