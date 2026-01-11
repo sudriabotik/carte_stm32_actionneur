@@ -15,7 +15,8 @@
 /**
  * @brief function to be called at regular intervals to run the statemachine logic.
  */
-void movement_statemachine_update();
+void MSM_update();
+
 
 
 // public functions to interact with the statemachine
@@ -24,7 +25,7 @@ void movement_statemachine_update();
  * @brief Checks if the state machine is currently executing a movement.
  * @return 0 if free, 1 if busy.
  */
-int movement_statemachine_busy();
+int MSM_busy();
 
 /**
  * @brief Uses a trapezoidal command to move in a straight line, then stops.
@@ -32,7 +33,8 @@ int movement_statemachine_busy();
  * @param speed the targeted top speed, in percentage
  * @param ramp_dist for how many mm at start/end the speed ramps up/down
  */
-void movement_statemachine_move_line(float distance, float speed, float ramp_dist);
+void MSM_move_straight(float distance, float speed, float ramp_dist);
+
 
 
 # ifdef MOVEMENT_STATEMACHINE_TEST
@@ -40,12 +42,12 @@ void movement_statemachine_move_line(float distance, float speed, float ramp_dis
 /**
  * @brief 5s of 50% pwm forward for both motors.
  */
-void movement_statemachine_test_motors();
+void MSM_test_motors();
 
 /**
  * @brief 5s of ??? pid command forward for both motors.
  */
-void movement_statemachine_test_motors_pid();
+void MSM_test_motors_pid();
 
 # endif
 

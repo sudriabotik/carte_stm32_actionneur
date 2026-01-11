@@ -70,7 +70,7 @@ void SystemClock_Config(void);
 
 PUTCHAR_PROTOTYPE
 {
-	//HAL_UART_Transmit(&hlpuart1, (uint8_t*)&ch, 1, 0xFFFF);
+	HAL_UART_Transmit(&huart4, (uint8_t*)&ch, 1, 0xFFFF);
 	return ch;
 }
 
@@ -111,8 +111,9 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM3_Init();
   MX_TIM4_Init();
-  MX_USART3_UART_Init();
   MX_USB_PCD_Init();
+  MX_UART4_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL); // right
   HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL); // left
@@ -121,6 +122,7 @@ int main(void)
 
   robot_data_init();
   //movement_statemachine_switch(&MOVEMENT_STATE_MOTOR_SPEED_CONTROL_TEST);
+  MSM_move_straight(100.0f, 100.0f, 25.0f);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -131,7 +133,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-    Encoder16Update(&encoder_R);
+    //Encoder16Update(&encoder_R);
 
     /*
     printf("pos ");
@@ -142,21 +144,10 @@ int main(void)
     printf("situation %"PRIu32"\n", encoder_R.situation);
     */
 
-    /*
-    pin_a = HAL_GPIO_ReadPin(GPIOB, 5);
-    pin_b = HAL_GPIO_ReadPin(GPIOB, 4);
-
-    printf("pins : %d ", pin_a);
-    printf("%d\n", pin_a);
-
-    printf("pwm ccr : %"PRIu32"\n", TIM16->CCR1);
-    printf("pwm arr : %"PRIu32"\n", TIM16->ARR);
-    printf("pwm ccr addr : %p\n", (void*)&TIM16->CCR1);
-    printf("pwm ccr struct addr : %p\n", (void*)motor_R.pwm_ccr);
-    //printf("pwm cnt : %"PRIu32"\n", TIM1->CNT);
-    */
-    printf("a\n");
-    ax_write_position(2, 20);
+    
+    
+    //printf("a\n");
+    //ax_write_position(2, 20);
 
     /*
     if (recorder_is_track_full(0))
@@ -166,10 +157,11 @@ int main(void)
     }
     */
 
-    
+    MSM_update();
+    HAL_UART_Transmit(&huart4, "m\n", 2, 1000);
     //movement_statemachine_update();
     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-    HAL_Delay(5000);
+    HAL_Delay(100);
   }
   /* USER CODE END 3 */
 }

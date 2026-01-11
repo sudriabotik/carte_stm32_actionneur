@@ -1,7 +1,7 @@
 # include "ax_controller.h"
+# include "usart.h"
 
-
-# define AX_UART &huart3 // temp
+# define AX_UART &huart3
 
 
 void ax_init() {}

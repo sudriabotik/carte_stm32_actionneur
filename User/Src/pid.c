@@ -1,5 +1,6 @@
 # include "pid.h"
 
+# define BYPASS_PID
 
 float PID_Run(struct PidRuntime *runtime, const struct PidSettings *settings, float currentVal, float targetVal)
 {

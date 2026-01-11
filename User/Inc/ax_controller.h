@@ -1,7 +1,6 @@
 # ifndef __AX_CONTROLLER_H
 # define __AX_CONTROLLER_H
 
-# include "usart.h"
 #include "stm32g431xx.h"
 
 
