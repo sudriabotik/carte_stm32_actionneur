@@ -130,7 +130,7 @@ void state_move_straight_run(struct StateMachine *state_machine)
 	Encoder16Update(&encoder_L);
 
 	// state exit condition
-	if (is_val_near(encoder_R.total_count, movement_dist, 1.0f) && is_val_near(encoder_R.total_count, movement_dist, 1.0f)) SM_Switch(state_machine, 0);
+	if (is_val_near(encoder_R.total_count, movement_dist, 1.0f) && is_val_near(encoder_L.total_count, movement_dist, 1.0f)) SM_Switch(state_machine, 0);
 
 	float distance_travelled = (encoder_R.total_count + encoder_L.total_count) / 2;
 
