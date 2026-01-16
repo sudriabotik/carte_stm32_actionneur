@@ -9,6 +9,7 @@
 extern struct PidSettings pid_motor_R;
 extern struct PidSettings pid_motor_L;
 
-extern struct PidSettings pid_line_move;
+extern struct PidSettings pid_translation;
+extern struct PidSettings pid_rotation;
 
 # endif

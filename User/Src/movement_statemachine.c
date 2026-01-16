@@ -9,6 +9,7 @@
 # include "pid_config.h"
 # include "recorder.h"
 # include "mathfuncs.h"
+# include "logicfuncs.h"
 
 
 
@@ -128,12 +129,13 @@ void state_move_straight_run(struct StateMachine *state_machine)
 	Encoder16Update(&encoder_R);
 	Encoder16Update(&encoder_L);
 
+	// state exit condition
+	if (is_val_near(encoder_R.total_count, movement_dist, 1.0f) && is_val_near(encoder_R.total_count, movement_dist, 1.0f)) SM_Switch(state_machine, 0);
+
 	float distance_travelled = (encoder_R.total_count + encoder_L.total_count) / 2;
 
-	if (distance_travelled >= movement_dist) SM_Switch(state_machine, 0); // exit
-
 	float desired_speed = func_trapezoid(distance_travelled, line_move_trapez) + 10.0f;
-	float drive_value = PID_Run(&line_move_pid_runtime, &pid_line_move, encoder_R.total_count_delta, desired_speed);
+	float drive_value = PID_Run(&line_move_pid_runtime, &pid_translation, encoder_R.total_count_delta, desired_speed);
 
 	motor_drive(motor_R, drive_value);
 	motor_drive(motor_L, drive_value);

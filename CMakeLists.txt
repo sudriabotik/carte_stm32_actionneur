@@ -58,6 +58,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     User/Src/ax_controller.c
     User/Src/pid_config.c
     User/Src/mathfuncs.c
+    User/Src/logicfuncs.c
 )
 
 # Add include paths
