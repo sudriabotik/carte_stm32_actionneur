@@ -10,6 +10,8 @@ https://emanual.robotis.com/docs/en/dxl/ax/ax-12a/#
 https://emanual.robotis.com/docs/en/dxl/protocol1/
 */
 
+# define AX_UART &huart3
+
 
 void ax_write_position(uint8_t id, uint16_t position);
 
