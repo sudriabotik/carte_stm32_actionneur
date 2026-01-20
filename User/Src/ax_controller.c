@@ -36,7 +36,7 @@ void ax_send_packet()
 {
 	uint16_t total_packet_len = AX_INDEX_LEN + ax_instruction_msg[AX_INDEX_LEN] + 1;
 
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(AX_DIR_GPIO, AX_DIR_GPIO_PIN, GPIO_PIN_RESET); // switch half duplex adapter to TX
 	HAL_UART_Transmit_IT(AX_UART, ax_instruction_msg, total_packet_len);
 }
 
@@ -55,11 +55,12 @@ void ax_send_instruction_write(uint8_t id, uint8_t address, uint16_t data)
 	ax_instruction_msg[AX_INDEX_LEN] = 0x05;
 	ax_instruction_msg[AX_INDEX_INSTRUCTION] = 0x03;
 
-	// Sets the address to write 
+	// sets the address 
 	ax_instruction_msg[5] = address;
 
-	ax_instruction_msg[7] = (uint8_t)(data >> 8) & 0xFF;
+	// sets the data
 	ax_instruction_msg[6] = (uint8_t)(data) & 0xFF;
+	ax_instruction_msg[7] = (uint8_t)(data >> 8) & 0xFF;
 
 	ax_calculate_checksum();
 	ax_send_packet();
@@ -80,7 +81,18 @@ void ax_send_instruction_write(uint8_t id, uint8_t address, uint16_t data1, uint
 	ax_instruction_msg[AX_INDEX_LEN] = 0x07;
 	ax_instruction_msg[AX_INDEX_INSTRUCTION] = 0x03;
 
+	// sets the address 
+	ax_instruction_msg[5] = address;
 
+	// sets the data
+	ax_instruction_msg[6] = (uint8_t)(data1) & 0xFF;
+	ax_instruction_msg[7] = (uint8_t)(data1 >> 8) & 0xFF;
+	
+	ax_instruction_msg[8] = (uint8_t)(data2) & 0xFF;
+	ax_instruction_msg[9] = (uint8_t)(data2 >> 8) & 0xFF;
+
+	ax_calculate_checksum();
+	ax_send_packet();
 }
 
 
@@ -93,16 +105,4 @@ void ax_send_instruction_write(uint8_t id, uint8_t address, uint16_t data1, uint
 void ax_write_position(uint8_t id, uint16_t position)
 {
 	
-	// write id
-	ax_write_position_msg[2] = id;
-
-	// write position
-	ax_write_position_msg[6] = (uint8_t)(position >> 8) & 0xFF;
-	ax_write_position_msg[7] = (uint8_t)(position) & 0xFF;
-
-	// sets checksum
-	ax_write_position_msg[8] = ~ (ax_write_position_msg[2] + ax_write_position_msg[3] + ax_write_position_msg[4] + ax_write_position_msg[5] + ax_write_position_msg[6] + ax_write_position_msg[7]);
-
-	// sends the packet
-	HAL_UART_Transmit_IT(AX_UART, ax_write_position_msg, 9);
 }
