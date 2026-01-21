@@ -7,7 +7,7 @@ struct State;
 struct StateMachine;
 
 
-typedef void (*StateCall)(struct StateMachine *);
+typedef void (*StateCall)(struct StateMachine *, float delta_time);
 
 
 
@@ -31,7 +31,7 @@ struct StateMachine
 struct StateMachine SM_New();
 
 
-int SM_Run(struct StateMachine *machine);
+int SM_Run(struct StateMachine *machine, float delta_time);
 
 
 int SM_Switch(struct StateMachine *machine, struct State *newState);

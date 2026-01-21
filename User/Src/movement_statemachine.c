@@ -4,6 +4,8 @@
 
 # include "tim.h"
 
+# include "state_machine.h"
+
 # include "robot_data.h"
 # include "pid.h"
 # include "pid_config.h"
@@ -19,9 +21,24 @@ PRIVATE VARIABLES
 #################
 */
 
-static float movement_speed;
-static float movement_dist;
-static float movement_ramp;
+struct MovementControl
+{
+	float elapsed_time;
+
+	float movement_speed;
+	float movement_dist;
+	float movement_accel;
+};
+
+static struct MovementControl movement_control =
+{
+	.elapsed_time = 0,
+	.movement_dist = 0,
+	.movement_accel = 0,
+	.movement_speed = 0
+};
+
+struct Trapezoid trapez_function = {};
 
 
 
@@ -33,20 +50,20 @@ STATE MOTOR_SPEED_TEST
 
 float motor_test_speed = 0.0f;
 
-void state_motor_test_wake(struct StateMachine *state_machine)
+void state_motor_test_wake(struct StateMachine *state_machine, float delta_time)
 {
 	printf("motor test wake\n");
 	motor_test_speed = -100.0f;
 }
 
-void state_motor_test_run(struct StateMachine *state_machine)
+void state_motor_test_run(struct StateMachine *state_machine, float delta_time)
 {
 	printf("motor test running\n");
 	motor_drive(motor_R, motor_test_speed);
 	if (motor_test_speed < 100.0f) motor_test_speed += 0.5f;
 }
 
-void state_motor_test_stop(struct StateMachine *state_machine)
+void state_motor_test_stop(struct StateMachine *state_machine, float delta_time)
 {
 	printf("motor test end\n");
 }
@@ -61,58 +78,14 @@ struct State MOVEMENT_STATE_MOTOR_TEST =
 
 
 /*
-####################
-STATE MOTOR_PID_TEST
-####################
+#################
+STATE TRANSLATION
+#################
 */
 
-struct PidSettings speed_test_pid_settings = {.kp = 60.0f, .ki = 0.1f, .kd = 0.1f, .iMax = 500.0f, .iMin = 0.0f, .max = 1024.0f, .min = 0.0f, .fratio = 0.5f};
-struct PidRuntime speed_test_pid_runtime = {};
-
-void state_motor_pid_test_wake(struct StateMachine *state_machine)
-{
-	printf("motor speed test wake\n");
-	motor_drive(motor_R, 0.0f);
-}
-
-void state_motor_pid_test_run(struct StateMachine *state_machine)
-{
-	printf("motor speed test running\n");
-
-	float drive_value = PID_Run(&speed_test_pid_runtime, &speed_test_pid_settings, encoder_R.total_count_delta, 4);
-	if (drive_value < 0) drive_value = 0;
-
-	motor_drive(motor_R, drive_value);
-
-	// update the recording
-	struct RecordedTick tick = {.actual = (uint32_t)encoder_R.total_count_delta, .target = 4, .drive = (uint32_t)drive_value};
-	recorder_append(0, tick);
-}
-
-void state_motor_pid_test_stop(struct StateMachine *state_machine)
-{
-	printf("motor speed test end\n");
-}
-
-struct State MOVEMENT_STATE_MOTOR_PID_TEST =
-{
-	.wake = state_motor_pid_test_wake,
-	.run = state_motor_pid_test_run,
-	.stop = state_motor_pid_test_stop
-};
 
 
-
-/*
-###############
-STATE LINE_MOVE
-###############
-*/
-
-struct PidRuntime line_move_pid_runtime = {};
-struct Trapezoid line_move_trapez = {};
-
-void state_move_straight_wake(struct StateMachine *state_machine)
+void state_move_straight_wake(struct StateMachine *state_machine, float delta_time)
 {
 	printf("moving in a straight line, distance %.3f mm\n", movement_dist); // upgrade this to show values
 
@@ -124,7 +97,7 @@ void state_move_straight_wake(struct StateMachine *state_machine)
 	line_move_trapez = pregen_trapezoid(movement_speed - 10.0f, movement_dist, movement_ramp);
 }
 
-void state_move_straight_run(struct StateMachine *state_machine)
+void state_move_straight_run(struct StateMachine *state_machine, float delta_time)
 {
 	Encoder16Update(&encoder_R);
 	Encoder16Update(&encoder_L);
@@ -143,7 +116,7 @@ void state_move_straight_run(struct StateMachine *state_machine)
 	printf("desired speed : %2.3f\n", desired_speed);
 }
 
-void state_move_straight_stop(struct StateMachine *state_machine)
+void state_move_straight_stop(struct StateMachine *state_machine, float delta_time)
 {
 	printf("straight movement finished\n");
 
@@ -173,9 +146,9 @@ static void MSM_switch(struct State *state)
 	SM_Switch(&movement_statemachine, state);
 }
 
-void MSM_update()
+void MSM_update(float delta_time_ms)
 {
-	SM_Run(&movement_statemachine);
+	SM_Run(&movement_statemachine, delta_time_ms);
 }
 
 
@@ -188,12 +161,14 @@ STATEMACHINE PUBLIC INTERFACE FUNCTIONS
 
 int MSM_busy() {return movement_statemachine.currentState != 0;}
 
-void MSM_move_straight(float distance, float speed, float ramp_dist)
+void MSM_move_straight(float distance, float speed, float acceleration)
 {
-	movement_dist = distance;
-	movement_ramp = ramp_dist;
-	movement_speed = speed;
+	// stores all the movement parameter so the statemachine can refer to them
+	movement_control.movement_dist = distance;
+	movement_control.movement_speed = speed;
+	movement_control.movement_accel = acceleration;
 
+	// switches to the correct state
 	MSM_switch(&MOVEMENT_STATE_MOVE_STRAIGHT);
 }
 

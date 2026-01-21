@@ -6,11 +6,14 @@ struct PidSettings pid_motor_R =
 	.kd = 0,
 	.ki = 0,
 	.fratio = 0,
-	.iMax = 0,
-	.iMin = 0,
-	.max = 1000,
-	.min = -1000
+	.i_lim = 0,
+	.max_output = 100,
+	.min_output = 5,
 };
+
+struct PidRuntime pid_motor_R_runtime = {};
+
+
 
 struct PidSettings pid_motor_L =
 {
@@ -18,11 +21,12 @@ struct PidSettings pid_motor_L =
 	.kd = 0,
 	.ki = 0,
 	.fratio = 0,
-	.iMax = 0,
-	.iMin = 0,
-	.max = 1000,
-	.min = -1000
+	.i_lim = 0,
+	.max_output = 100,
+	.min_output = 5,
 };
+
+struct PidRuntime pid_motor_L_runtime = {};
 
 
 
@@ -32,11 +36,14 @@ struct PidSettings pid_translation =
 	.kd = 0,
 	.ki = 0,
 	.fratio = 0,
-	.iMax = 0,
-	.iMin = 0,
-	.max = 1000,
-	.min = -1000
+	.i_lim = 0,
+	.max_output = 100,
+	.min_output = 5,
 };
+
+struct PidRuntime pid_translation_runtime = {};
+
+
 
 struct PidSettings pid_rotation =
 {
@@ -44,8 +51,9 @@ struct PidSettings pid_rotation =
 	.kd = 0,
 	.ki = 0,
 	.fratio = 0,
-	.iMax = 0,
-	.iMin = 0,
-	.max = 1000,
-	.min = -1000
+	.i_lim = 0,
+	.max_output = 100,
+	.min_output = 5,
 };
+
+struct PidRuntime pid_rotation_runtime = {};

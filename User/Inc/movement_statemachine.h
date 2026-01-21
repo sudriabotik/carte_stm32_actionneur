@@ -3,7 +3,6 @@
 
 # define MOVEMENT_STATEMACHINE_TEST
 
-# include "state_machine.h"
 
 /**
  * @file movement_statemachine.h
@@ -14,8 +13,10 @@
 
 /**
  * @brief function to be called at regular intervals to run the statemachine logic.
+ * 
+ * @param delta_time_ms the time between each call, in ms.
  */
-void MSM_update();
+void MSM_update(float delta_time_ms);
 
 
 
@@ -30,10 +31,10 @@ int MSM_busy();
 /**
  * @brief Uses a trapezoidal command to move in a straight line, then stops.
  * @param distance the distance in mm, can be negative
- * @param speed the targeted top speed, in percentage
- * @param ramp_dist for how many mm at start/end the speed ramps up/down
+ * @param speed the targeted top speed, in mm/s
+ * @param acceleration the acceleration in mm/s^2
  */
-void MSM_move_straight(float distance, float speed, float ramp_dist);
+int MSM_begin_translation(float distance, float speed, float acceleration);
 
 
 
@@ -43,11 +44,6 @@ void MSM_move_straight(float distance, float speed, float ramp_dist);
  * @brief 5s of 50% pwm forward for both motors.
  */
 void MSM_test_motors();
-
-/**
- * @brief 5s of ??? pid command forward for both motors.
- */
-void MSM_test_motors_pid();
 
 # endif
 

@@ -4,6 +4,36 @@
 # include "encoders.h"
 # include "motors.h"
 
+
+/**
+ * @brief The diameter of the robot's wheels, in mm.
+ */
+extern const float ROBOT_WHEEL_DIAMETER = 20.0f;
+
+/**
+ * @brief The width between each wheel, in mm.
+ */
+extern const float ROBOT_WHEELBASE_WIDTH = 100.0f;
+
+/**
+ * @brief Corrective coefficient for the distance of translation movement
+ */
+extern const float ROBOT_COEF_TRANSLATION_DISTANCE = 1.0f;
+
+/**
+ * @brief Corrective coefficient for the target distance of the right wheel, for a translation movement.
+ * The left wheel will be corrected by (1 - coef)
+ * 
+ * @note If the coefficient is 1.2, the right wheel will move 1.2 * distance while the left wheel will move 0.8 * distance.
+ */
+extern const float ROBOT_COEF_TRANSLATION_DISTANCE = 1.0f;
+
+/**
+ * @brief Corrective coefficient for rotation movement
+ */
+extern const float ROBOT_COEF_ROTATION = 1.0f;
+
+
 extern struct Encoder16Handle encoder_R;
 extern struct MotorHandle motor_R;
 

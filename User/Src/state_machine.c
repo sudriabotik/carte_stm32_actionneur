@@ -6,19 +6,19 @@ struct StateMachine SM_New()
 }
 
 
-int SM_Run(struct StateMachine *machine)
+int SM_Run(struct StateMachine *machine, float delta_time)
 {
 	if (machine == 0) return -1;
 
 	if (machine->scheduledSwitch != 0)
 	{
-		if (machine->currentState != 0) machine->currentState->stop(machine);
+		if (machine->currentState != 0) machine->currentState->stop(machine, delta_time);
 		machine->currentState = machine->scheduledSwitch;
 		machine->scheduledSwitch = 0;
-		machine->currentState->wake(machine);
+		machine->currentState->wake(machine, delta_time);
 	}
 
-	if (machine->currentState != 0) machine->currentState->run(machine);
+	if (machine->currentState != 0) machine->currentState->run(machine, delta_time);
 
 	return 0;
 }
