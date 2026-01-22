@@ -7,6 +7,7 @@
 # include "state_machine.h"
 
 # include "robot_data.h"
+# include "motor_asserv.h"
 # include "pid.h"
 # include "pid_config.h"
 # include "recorder.h"
@@ -25,17 +26,17 @@ struct MovementControl
 {
 	float elapsed_time;
 
-	float movement_speed;
-	float movement_dist;
-	float movement_accel;
+	float speed;
+	float dist;
+	float accel;
 };
 
 static struct MovementControl movement_control =
 {
 	.elapsed_time = 0,
-	.movement_dist = 0,
-	.movement_accel = 0,
-	.movement_speed = 0
+	.dist = 0,
+	.accel = 0,
+	.speed = 0
 };
 
 struct Trapezoid trapez_function = {};
@@ -83,42 +84,50 @@ STATE TRANSLATION
 #################
 */
 
-
-
-void state_move_straight_wake(struct StateMachine *state_machine, float delta_time)
+void state_translation_wake(struct StateMachine *state_machine, float delta_time)
 {
-	printf("moving in a straight line, distance %.3f mm\n", movement_dist); // upgrade this to show values
+	printf("performing a translation of distance %.3f mm\n", movement_control.dist);
 
 	// reset the encoder, as such we can use the distance to zero as the travelled distance.
 	Encoder16Reset(&encoder_R);
 	Encoder16Reset(&encoder_L);
 
 	// pregenerates a trapezoidal function with the correct parameters
-	line_move_trapez = pregen_trapezoid(movement_speed - 10.0f, movement_dist, movement_ramp);
+	trapez_function = pregen_trapezoid(movement_control.dist - 5.0f, movement_control.dist, movement_control.accel); // TEMPORARY INCORRECT CALCULATIONS
+
+	movement_control.elapsed_time = 0;
 }
 
-void state_move_straight_run(struct StateMachine *state_machine, float delta_time)
+void state_translation_run(struct StateMachine *state_machine, float delta_time)
 {
 	Encoder16Update(&encoder_R);
 	Encoder16Update(&encoder_L);
+	movement_control.elapsed_time += delta_time;
 
 	// state exit condition
-	if (is_val_near(encoder_R.total_count, movement_dist, 1.0f) && is_val_near(encoder_L.total_count, movement_dist, 1.0f)) SM_Switch(state_machine, 0);
+	if (is_val_near(encoder_R.total_count, movement_control.dist, 1.0f) 
+			&& is_val_near(encoder_L.total_count, movement_control.dist, 1.0f))
+	{
+		SM_Switch(state_machine, 0);
+	}
 
 	float distance_travelled = (encoder_R.total_count + encoder_L.total_count) / 2;
+	float rotation_error = (encoder_R.total_count - encoder_L.total_count) / 2;
 
-	float desired_speed = func_trapezoid(distance_travelled, line_move_trapez) + 10.0f;
-	float drive_value = PID_Run(&line_move_pid_runtime, &pid_translation, encoder_R.total_count_delta, desired_speed);
+	float desired_position = func_trapezoid(movement_control.elapsed_time, trapez_function) + 5.0f;
 
-	motor_drive(motor_R, drive_value);
-	motor_drive(motor_L, drive_value);
+
+	float desired_speed = PID_Run(&pid_translation_runtime, &pid_translation, encoder_R.total_count_delta, desired_speed, delta_time);
+
+	motor_drive_pid(delta_time, , motor_R, encoder_R, pid_motor_R, drive_value);
+	motor_drive_pid(motor_L, drive_value);
 
 	printf("desired speed : %2.3f\n", desired_speed);
 }
 
-void state_move_straight_stop(struct StateMachine *state_machine, float delta_time)
+void state_translation_stop(struct StateMachine *state_machine, float delta_time)
 {
-	printf("straight movement finished\n");
+	printf("finished a translation of distance %.3f mm\n", movement_control.movement_dist);
 
 	motor_drive(motor_R, 0.0f);
 	motor_drive(motor_L, 0.0f);
@@ -126,9 +135,9 @@ void state_move_straight_stop(struct StateMachine *state_machine, float delta_ti
 
 struct State MOVEMENT_STATE_MOVE_STRAIGHT =
 {
-	.wake = state_move_straight_wake,
-	.run = state_move_straight_run,
-	.stop = state_move_straight_stop
+	.wake = state_translation_wake,
+	.run = state_translation_run,
+	.stop = state_translation_stop
 };
 
 

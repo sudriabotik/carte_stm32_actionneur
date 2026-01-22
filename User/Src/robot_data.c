@@ -19,6 +19,7 @@ void robot_data_init()
 	// encoder R
 	encoder_R.tim_counter = &TIM3->CNT;
 	encoder_R.close_distance = 3000u;
+	encoder_R.ticks_per_revolution = 200;
 	Encoder16Reset(&encoder_R);
 
 	// motor R
@@ -28,6 +29,7 @@ void robot_data_init()
 	// encoder L
 	encoder_L.tim_counter = &TIM4->CNT;
 	encoder_L.close_distance = 3000u;
+	encoder_L.ticks_per_revolution = 200;
 	Encoder16Reset(&encoder_L);
 
 	// motor L

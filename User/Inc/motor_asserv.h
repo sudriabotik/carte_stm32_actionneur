@@ -8,9 +8,9 @@
 
 /**
  * @brief Controls an encoded motor using the given PID
- * @note This function does not adjust for time, so it takes an encoder delta as the target rotation rate.
+ * 
  */
-void motor_drive_pid(int32_t tick_delta, const struct MotorHandle motor, const struct Encoder16Handle encoder, const struct PidSettings settings, struct PidRuntime *runtime);
+void motor_drive_pid(float delta_ms, float rpms, const struct MotorHandle motor, const struct Encoder16Handle encoder, const struct PidSettings settings, struct PidRuntime *runtime);
 
 
 # endif

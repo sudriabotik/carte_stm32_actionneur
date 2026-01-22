@@ -49,6 +49,9 @@ struct Encoder16Handle
 
 	/** Specify the distance from underflow or overflow that is considered "close" */
 	uint32_t close_distance;
+
+	/** Ticks per revolution */
+	uint32_t ticks_per_revolution;
 };
 
 

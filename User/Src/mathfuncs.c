@@ -32,3 +32,46 @@ float func_trapezoid(float t, struct Trapezoid trapez)
 		else return trapez.height;
 	}
 }
+
+
+
+float eval_position_slope_f1(float t, struct FuncPositionSlope func)
+{
+	return ((t*t) / 2) * func.accel;
+}
+
+float eval_position_slope_f2(float t, struct FuncPositionSlope func)
+{
+	return func.c1 + (t - func.l1) * func.top_speed;
+}
+
+float eval_position_slope_f3(float t, struct FuncPositionSlope func) 
+{
+	return func.c2 + (t - func.l1 - func.l2) * func.top_speed - (((t - func.l1 - func.l2)*(t - func.l1 - func.l2)) / 2 * func.accel);
+}
+
+struct FuncPositionSlope pregen_position_slope(float accel, float top_speed, float dist)
+{
+	struct FuncPositionSlope func;
+
+	func.accel = accel;
+	func.top_speed = top_speed;
+	func.dist = dist;
+
+	func.l1 = top_speed/accel;
+	func.l2 = (dist - (func.l1 * func.l1) * accel) / top_speed;
+
+	func.c1 = eval_position_slope_f1(func.l1, func);
+	func.c2 = eval_position_slope_f2(func.l1 + func.l2, func);
+
+	return func;
+}
+
+float eval_position_slope(float t, struct FuncPositionSlope func)
+{
+	if (t < 0) return 0;
+	else if (t < func.l1) return eval_position_slope_f1(t, func);
+	else if (t < func.l1 + func.l2) return eval_position_slope_f2(t,func);
+	else if (t < 2*func.l1 + func.l2) return eval_position_slope_f3(t,func);
+	else return 0;
+}
