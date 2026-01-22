@@ -39,7 +39,7 @@ static struct MovementControl movement_control =
 	.speed = 0
 };
 
-struct Trapezoid trapez_function = {};
+struct FuncPositionSlope func_position_slope = {};
 
 
 
@@ -93,7 +93,7 @@ void state_translation_wake(struct StateMachine *state_machine, float delta_time
 	Encoder16Reset(&encoder_L);
 
 	// pregenerates a trapezoidal function with the correct parameters
-	trapez_function = pregen_trapezoid(movement_control.dist - 5.0f, movement_control.dist, movement_control.accel); // TEMPORARY INCORRECT CALCULATIONS
+	func_position_slope = pregen_position_slope(movement_control.accel, movement_control.speed, movement_control.dist);
 
 	movement_control.elapsed_time = 0;
 }
@@ -114,20 +114,23 @@ void state_translation_run(struct StateMachine *state_machine, float delta_time)
 	float distance_travelled = (encoder_R.total_count + encoder_L.total_count) / 2;
 	float rotation_error = (encoder_R.total_count - encoder_L.total_count) / 2;
 
-	float desired_position = func_trapezoid(movement_control.elapsed_time, trapez_function) + 5.0f;
+	float desired_position = eval_position_slope(movement_control.elapsed_time, func_position_slope);
 
+	float motor_command_position = PID_Run(&pid_translation_runtime, &pid_translation, distance_travelled, desired_position, delta_time);
+	float motor_command_rotation = PID_Run(&pid_rotation_runtime, &pid_rotation, rotation_error, 0, delta_time);
 
-	float desired_speed = PID_Run(&pid_translation_runtime, &pid_translation, encoder_R.total_count_delta, desired_speed, delta_time);
+	printf("translation pid command : %2.3f\n", motor_command_position);
+	printf("rotation pid command : %2.3f\n", motor_command_rotation);
 
-	motor_drive_pid(delta_time, , motor_R, encoder_R, pid_motor_R, drive_value);
-	motor_drive_pid(motor_L, drive_value);
+	motor_drive_pid(delta_time, motor_command_position + motor_command_rotation, motor_R, encoder_R, pid_motor_R, &pid_motor_R_runtime);
+	motor_drive_pid(delta_time, motor_command_position - motor_command_rotation, motor_L, encoder_L, pid_motor_L, &pid_motor_L_runtime);
 
-	printf("desired speed : %2.3f\n", desired_speed);
+	
 }
 
 void state_translation_stop(struct StateMachine *state_machine, float delta_time)
 {
-	printf("finished a translation of distance %.3f mm\n", movement_control.movement_dist);
+	printf("finished a translation of distance %.3f mm\n", movement_control.dist);
 
 	motor_drive(motor_R, 0.0f);
 	motor_drive(motor_L, 0.0f);
@@ -173,9 +176,9 @@ int MSM_busy() {return movement_statemachine.currentState != 0;}
 void MSM_move_straight(float distance, float speed, float acceleration)
 {
 	// stores all the movement parameter so the statemachine can refer to them
-	movement_control.movement_dist = distance;
-	movement_control.movement_speed = speed;
-	movement_control.movement_accel = acceleration;
+	movement_control.dist = distance;
+	movement_control.speed = speed;
+	movement_control.accel = acceleration;
 
 	// switches to the correct state
 	MSM_switch(&MOVEMENT_STATE_MOVE_STRAIGHT);
@@ -187,11 +190,6 @@ void MSM_move_straight(float distance, float speed, float acceleration)
 void MSM_test_motors()
 {
 	MSM_switch(&MOVEMENT_STATE_MOTOR_TEST);
-}
-
-void MSM_test_motors_pid()
-{
-	MSM_switch(&MOVEMENT_STATE_MOTOR_PID_TEST);
 }
 
 # endif
