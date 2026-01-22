@@ -66,35 +66,6 @@ void ax_send_instruction_write(uint8_t id, uint8_t address, uint16_t data)
 	ax_send_packet();
 }
 
-/**
- * @brief Sends a write instruction of two times two bytes.
- * Useful to write to two contingent areas of the control table at once, such as CW and CCW limit.
- * 
- * @param id The ID of the destination AX
- * @param address The address in the AX's control table the data will be written to
- * @param data1 The data to write to the AX at address
- * @param data2 The data to write to the AX at address + 2
- */
-void ax_send_instruction_write(uint8_t id, uint8_t address, uint16_t data1, uint16_t data2)
-{
-	ax_instruction_msg[AX_INDEX_ID] = id;
-	ax_instruction_msg[AX_INDEX_LEN] = 0x07;
-	ax_instruction_msg[AX_INDEX_INSTRUCTION] = 0x03;
-
-	// sets the address 
-	ax_instruction_msg[5] = address;
-
-	// sets the data
-	ax_instruction_msg[6] = (uint8_t)(data1) & 0xFF;
-	ax_instruction_msg[7] = (uint8_t)(data1 >> 8) & 0xFF;
-	
-	ax_instruction_msg[8] = (uint8_t)(data2) & 0xFF;
-	ax_instruction_msg[9] = (uint8_t)(data2 >> 8) & 0xFF;
-
-	ax_calculate_checksum();
-	ax_send_packet();
-}
-
 
 
 /**

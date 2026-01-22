@@ -8,17 +8,17 @@
 /**
  * @brief The diameter of the robot's wheels, in mm.
  */
-extern const float ROBOT_WHEEL_DIAMETER = 20.0f;
+extern const float ROBOT_WHEEL_DIAMETER;
 
 /**
  * @brief The width between each wheel, in mm.
  */
-extern const float ROBOT_WHEELBASE_WIDTH = 100.0f;
+extern const float ROBOT_WHEELBASE_WIDTH;
 
 /**
  * @brief Corrective coefficient for the distance of translation movement
  */
-extern const float ROBOT_COEF_TRANSLATION_DISTANCE = 1.0f;
+extern const float ROBOT_COEF_TRANSLATION_DISTANCE;
 
 /**
  * @brief Corrective coefficient for the target distance of the right wheel, for a translation movement.
@@ -26,12 +26,12 @@ extern const float ROBOT_COEF_TRANSLATION_DISTANCE = 1.0f;
  * 
  * @note If the coefficient is 1.2, the right wheel will move 1.2 * distance while the left wheel will move 0.8 * distance.
  */
-extern const float ROBOT_COEF_TRANSLATION_DISTANCE = 1.0f;
+extern const float ROBOT_COEF_WHEEL_DIFFERENCE;
 
 /**
  * @brief Corrective coefficient for rotation movement
  */
-extern const float ROBOT_COEF_ROTATION = 1.0f;
+extern const float ROBOT_COEF_ROTATION;
 
 
 extern struct Encoder16Handle encoder_R;

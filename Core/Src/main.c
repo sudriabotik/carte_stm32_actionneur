@@ -122,7 +122,7 @@ int main(void)
 
   robot_data_init();
   //movement_statemachine_switch(&MOVEMENT_STATE_MOTOR_SPEED_CONTROL_TEST);
-  MSM_move_straight(100.0f, 100.0f, 25.0f);
+  MSM_begin_hold();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -157,8 +157,8 @@ int main(void)
     }
     */
 
-    MSM_update();
-    HAL_UART_Transmit(&huart4, "m\n", 2, 1000);
+    MSM_update(1);
+    //HAL_UART_Transmit(&huart4, "m\n", 2, 1000);
     //movement_statemachine_update();
     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
     HAL_Delay(100);

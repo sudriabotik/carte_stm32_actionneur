@@ -51,6 +51,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     User/Src/pid.c
     User/Src/state_machine.c
     User/Src/motors.c
+    User/Src/motor_asserv.c
     User/Src/encoders.c
     User/Src/robot_data.c
     User/Src/movement_statemachine.c

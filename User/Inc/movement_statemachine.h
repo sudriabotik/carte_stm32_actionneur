@@ -28,6 +28,12 @@ void MSM_update(float delta_time_ms);
  */
 int MSM_busy();
 
+
+/**
+ * @brief Holds the robot in place using PIDs.
+ */
+int MSM_begin_hold();
+
 /**
  * @brief Uses a trapezoidal command to move in a straight line, then stops.
  * @param distance the distance in mm, can be negative

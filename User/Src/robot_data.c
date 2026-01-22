@@ -5,7 +5,7 @@ const float ROBOT_WHEEL_DIAMETER = 20.0f;
 const float ROBOT_WHEELBASE_WIDTH = 100.0f;
 
 const float ROBOT_COEF_TRANSLATION_DISTANCE = 1.0f;
-const float ROBOT_COEF_TRANSLATION_DISTANCE = 1.0f;
+const float ROBOT_COEF_WHEEL_DIFFERENCE = 1.0f;
 const float ROBOT_COEF_ROTATION = 1.0f;
 
 struct Encoder16Handle encoder_R;
