@@ -25,6 +25,9 @@ void robot_data_init()
 	// motor R
 	motor_R.pwm_arr = (uint32_t)TIM1->ARR;
 	motor_R.pwm_ccr = &TIM1->CCR1;
+	motor_R.dir_gpio_port = GPIOA;
+	motor_R.dir_gpio_pin = GPIO_PIN_5;
+	motor_R.reverse = 1;
 
 	// encoder L
 	encoder_L.tim_counter = &TIM4->CNT;

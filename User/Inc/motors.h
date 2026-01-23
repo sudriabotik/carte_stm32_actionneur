@@ -25,8 +25,8 @@ struct MotorHandle
 	uint32_t pwm_arr;
 
 	// the direction pin, and whether or not it should be inversed
-	GPIO_TypeDef *gpio_port;
-	uint16_t gpio_pin;
+	GPIO_TypeDef *dir_gpio_port;
+	uint16_t dir_gpio_pin;
 	bool reverse;
 };
 

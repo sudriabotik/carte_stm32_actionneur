@@ -33,6 +33,8 @@
 # include "movement_statemachine.h"
 # include "robot_data.h"
 # include "motors.h"
+# include "motor_asserv.h"
+# include "pid_config.h"
 # include "recorder.h"
 # include "ax_controller.h"
 /* USER CODE END Includes */
@@ -119,6 +121,8 @@ int main(void)
   HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL); // left
 
   HAL_TIM_PWM_Init(&htim1); // init the pwm for the motors
+  HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);
+  HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_4);
 
   robot_data_init();
   //movement_statemachine_switch(&MOVEMENT_STATE_MOTOR_SPEED_CONTROL_TEST);
@@ -157,10 +161,13 @@ int main(void)
     }
     */
 
-    MSM_update(1);
+    //MSM_update(100);
     //HAL_UART_Transmit(&huart4, "m\n", 2, 1000);
     //movement_statemachine_update();
-    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+    //HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+    //Encoder16Update(&encoder_R);
+    //motor_drive_pid(100, 0.0f, motor_R, encoder_R, pid_motor_R, &pid_motor_R_runtime);
+    motor_drive(motor_R, -20);
     HAL_Delay(100);
   }
   /* USER CODE END 3 */
