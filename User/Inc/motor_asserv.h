@@ -9,8 +9,9 @@
 /**
  * @brief Controls an encoded motor using the given PID
  * 
+ * @param rps target revolutions per seconds
  */
-void motor_drive_pid(float delta_ms, float rpms, const struct MotorHandle motor, const struct Encoder16Handle encoder, const struct PidSettings settings, struct PidRuntime *runtime);
+void motor_drive_pid(float delta_ms, float rps, const struct MotorHandle motor, const struct Encoder16Handle encoder, const struct PidSettings settings, struct PidRuntime *runtime);
 
 
 # endif

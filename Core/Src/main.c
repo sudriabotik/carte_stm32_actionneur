@@ -116,6 +116,7 @@ int main(void)
   MX_USB_PCD_Init();
   MX_UART4_Init();
   MX_USART3_UART_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL); // right
   HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL); // left
