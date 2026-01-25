@@ -8,7 +8,7 @@ struct PidSettings pid_motor_R =
 	.fratio = 0,
 	.i_lim = 0,
 	.max_output = 100,
-	.min_output = 5,
+	.min_output = 0,
 };
 
 struct PidRuntime pid_motor_R_runtime = {};
@@ -23,7 +23,7 @@ struct PidSettings pid_motor_L =
 	.fratio = 0,
 	.i_lim = 0,
 	.max_output = 100,
-	.min_output = 5,
+	.min_output = 0,
 };
 
 struct PidRuntime pid_motor_L_runtime = {};

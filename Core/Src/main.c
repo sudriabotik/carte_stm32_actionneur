@@ -72,7 +72,7 @@ void SystemClock_Config(void);
 
 PUTCHAR_PROTOTYPE
 {
-	HAL_UART_Transmit(&huart4, (uint8_t*)&ch, 1, 0xFFFF);
+	HAL_UART_Transmit(&huart3, (uint8_t*)&ch, 1, 0xFFFF);
 	return ch;
 }
 
@@ -124,6 +124,9 @@ int main(void)
   HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_4);
 
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
+
   robot_data_init();
   //movement_statemachine_switch(&MOVEMENT_STATE_MOTOR_SPEED_CONTROL_TEST);
   MSM_begin_hold();
@@ -139,14 +142,15 @@ int main(void)
 
     //Encoder16Update(&encoder_R);
 
-    /*
+    
     printf("pos ");
     printf("%"PRIi32"\n", encoder_R.total_count);
     printf("delta %"PRIi32"\n", encoder_R.total_count_delta);
     printf("pwm ccr %"PRIu32"\n", *motor_R.pwm_ccr);
     printf("rollovers %"PRIi32"\n", encoder_R.rollover_count);
     printf("situation %"PRIu32"\n", encoder_R.situation);
-    */
+    printf("encoder register %"PRIu32"\n", TIM3->CNT);
+    
 
     
     
@@ -165,10 +169,11 @@ int main(void)
     //HAL_UART_Transmit(&huart4, "m\n", 2, 1000);
     //movement_statemachine_update();
     //HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-    //Encoder16Update(&encoder_R);
-    //motor_drive_pid(100, 0.0f, motor_R, encoder_R, pid_motor_R, &pid_motor_R_runtime);
-    motor_drive(motor_R, -20);
-    HAL_Delay(100);
+    Encoder16Update(&encoder_R);
+    motor_drive_pid(1000, 0.0f, motor_R, encoder_R, pid_motor_R, &pid_motor_R_runtime);
+    //motor_drive(motor_R, -20);
+    printf("end\n");
+    HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }
