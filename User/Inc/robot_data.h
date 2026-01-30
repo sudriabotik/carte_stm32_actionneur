@@ -11,6 +11,11 @@
 extern const float ROBOT_WHEEL_DIAMETER;
 
 /**
+ * @brief The diameter of the robot's wheels, in mm.
+ */
+extern const float ROBOT_ENCODER_WHEEL_DIAMETER;
+
+/**
  * @brief The width between each wheel, in mm.
  */
 extern const float ROBOT_WHEELBASE_WIDTH;

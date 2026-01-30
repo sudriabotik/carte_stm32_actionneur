@@ -59,6 +59,7 @@
 /* USER CODE BEGIN PV */
 GPIO_PinState pin_a;
 GPIO_PinState pin_b;
+int trig_count = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -143,14 +144,32 @@ int main(void)
 
     //Encoder16Update(&encoder_R);
 
-    
-    printf("pos ");
+    /*
+    printf("R pos ");
     printf("%"PRIi32"\n", encoder_R.total_count);
     printf("delta %"PRIi32"\n", encoder_R.total_count_delta);
     printf("pwm ccr %"PRIu32"\n", *motor_R.pwm_ccr);
-    printf("rollovers %"PRIi32"\n", encoder_R.rollover_count);
-    printf("situation %"PRIu32"\n", encoder_R.situation);
-    printf("encoder register %"PRIu32"\n", TIM3->CNT);
+    printf("R rollovers %"PRIi32"\n", encoder_R.rollover_count);
+    printf("R situation %"PRIu32"\n", encoder_R.situation);
+    printf("R encoder register %"PRIu32"\n", TIM3->CNT);
+
+    printf("L pos ");
+    printf("%"PRIi32"\n", encoder_L.total_count);
+    printf("delta %"PRIi32"\n", encoder_L.total_count_delta);
+    printf("pwm ccr %"PRIu32"\n", *motor_L.pwm_ccr);
+    printf("L rollovers %"PRIi32"\n", encoder_L.rollover_count);
+    printf("L situation %"PRIu32"\n", encoder_L.situation);
+    printf("L encoder register %"PRIu32"\n", TIM4->CNT);
+    */
+
+    if (trig_count == 25)
+    {
+      printf("Encoder R : \n");
+      Encoder16PrintStatus(encoder_R);
+      printf("Encoder L : \n");
+      Encoder16PrintStatus(encoder_L);
+      trig_count = 0;
+    }
     
 
     
@@ -170,11 +189,12 @@ int main(void)
     //HAL_UART_Transmit(&huart4, "m\n", 2, 1000);
     //movement_statemachine_update();
     //HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-    Encoder16Update(&encoder_R);
-    motor_drive_pid(1000, 0.0f, motor_R, encoder_R, pid_motor_R, &pid_motor_R_runtime);
+    //Encoder16Update(&encoder_R);
+    //motor_drive_pid(1000, 0.0f, motor_R, encoder_R, pid_motor_R, &pid_motor_R_runtime);
     //motor_drive(motor_R, -20);
-    printf("end\n");
-    HAL_Delay(1000);
+    MSM_update(10);
+    HAL_Delay(10);
+    trig_count ++;
   }
   /* USER CODE END 3 */
 }

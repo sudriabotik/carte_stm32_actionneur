@@ -2,6 +2,7 @@
 
 
 const float ROBOT_WHEEL_DIAMETER = 20.0f;
+const float ROBOT_ENCODER_WHEEL_DIAMETER = 62.5f;
 const float ROBOT_WHEELBASE_WIDTH = 100.0f;
 
 const float ROBOT_COEF_TRANSLATION_DISTANCE = 1.0f;
@@ -18,8 +19,8 @@ void robot_data_init()
 {
 	// encoder R
 	encoder_R.tim_counter = &TIM3->CNT;
-	encoder_R.close_distance = 3000u;
-	encoder_R.ticks_per_revolution = 200;
+	encoder_R.close_distance = 10000u;
+	encoder_R.ticks_per_revolution = 14000;
 	Encoder16Reset(&encoder_R);
 
 	// motor R
@@ -31,12 +32,15 @@ void robot_data_init()
 
 	// encoder L
 	encoder_L.tim_counter = &TIM4->CNT;
-	encoder_L.close_distance = 3000u;
-	encoder_L.ticks_per_revolution = 200;
+	encoder_L.close_distance = 10000u;
+	encoder_L.ticks_per_revolution = 14000;
 	Encoder16Reset(&encoder_L);
 
 	// motor L
 	motor_L.pwm_arr = (uint32_t)TIM1->ARR;
 	motor_L.pwm_ccr = &TIM1->CCR4;
+	motor_L.dir_gpio_port = GPIOB;
+	motor_L.dir_gpio_pin = GPIO_PIN_2;
+	motor_L.reverse = 1;
 
 }

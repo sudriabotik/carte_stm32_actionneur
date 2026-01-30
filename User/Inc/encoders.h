@@ -62,5 +62,7 @@ int Encoder16Reset(struct Encoder16Handle *handle);
 
 int Encoder16Update(struct Encoder16Handle *handle);
 
+void Encoder16PrintStatus(struct Encoder16Handle handle);
+
 
 # endif // __ENCODERS_H

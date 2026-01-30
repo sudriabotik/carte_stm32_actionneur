@@ -1,5 +1,7 @@
 # include "encoders.h"
 
+# include <inttypes.h>
+
 
 uint32_t GetEncoderSituation(struct Encoder16Handle *handle)
 {
@@ -42,4 +44,13 @@ int Encoder16Update(struct Encoder16Handle *handle)
 
 	handle->total_count_delta = handle->total_count - prev_count;
 	return 0;
+}
+
+void Encoder16PrintStatus(struct Encoder16Handle handle)
+{
+	printf("processed absolute position : %"PRIi32"\n", handle.total_count);
+	printf("position delta : %"PRIi32"\n", handle.total_count_delta);
+	printf("rollover count : %"PRIi32"\n", handle.rollover_count);
+	printf("situation : %"PRIu32"\n", handle.situation);
+	printf("counter register raw : %"PRIu32"\n", TIM3->CNT);
 }
