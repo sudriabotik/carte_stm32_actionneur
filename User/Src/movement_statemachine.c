@@ -1,6 +1,6 @@
 # include "movement_statemachine.h"
 
-# include "inttypes.h"
+# include <inttypes.h>
 # include <math.h>
 
 # include "tim.h"
@@ -30,6 +30,11 @@ struct MovementControl
 	float speed;
 	float dist;
 	float accel;
+
+	float pow_limit;
+
+	// used as an additional argument for some states
+	int32_t selector;
 };
 
 static struct MovementControl movement_control =
@@ -147,9 +152,9 @@ struct State MOVEMENT_STATE_MOVE_STRAIGHT =
 
 
 /*
-#################
+##########
 STATE HOLD
-#################
+##########
 */
 
 void state_hold_wake(struct StateMachine *state_machine, float delta_time)
@@ -214,6 +219,58 @@ struct State MOVEMENT_STATE_HOLD =
 
 
 /*
+#################
+STATE RECALIBRATE
+#################
+*/
+
+void state_recalibrate_wake(struct StateMachine *state_machine, float delta_time)
+{
+	printf("recalibrating the position\n");
+
+	// reset the encoder, as such we can use the distance to zero as the travelled distance.
+	Encoder16Reset(&encoder_R);
+	Encoder16Reset(&encoder_L);
+
+	// resets all used PID runtimes
+	PID_reset_runtime(&pid_translation_runtime);
+	PID_reset_runtime(&pid_rotation_runtime);
+	PID_reset_runtime(&pid_motor_R_runtime);
+	PID_reset_runtime(&pid_motor_L_runtime);
+
+	// reinitializes the elapsed time
+	movement_control.elapsed_time = 0;
+}
+
+void state_recalibrate_run(struct StateMachine *state_machine, float delta_time)
+{
+	Encoder16Update(&encoder_R);
+	Encoder16Update(&encoder_L);
+
+	movement_control.elapsed_time += delta_time;
+
+	motor_drive_pid(delta_time, movement_control.speed, motor_R, encoder_R, pid_motor_R, &pid_motor_R_runtime);
+	motor_drive_pid(delta_time, movement_control.speed, motor_L, encoder_L, pid_motor_L, &pid_motor_L_runtime);
+}
+
+void state_recalibrate_stop(struct StateMachine *state_machine, float delta_time)
+{
+	printf("position recalibrated\n");
+
+	motor_drive(motor_R, 0.0f);
+	motor_drive(motor_L, 0.0f);
+}
+
+struct State MOVEMENT_STATE_RECALIBRATE =
+{
+	.wake = state_recalibrate_wake,
+	.run = state_recalibrate_run,
+	.stop = state_recalibrate_stop
+};
+
+
+
+/*
 ###########################
 STATEMACHINE CORE FUNCTIONS
 ###########################
@@ -260,6 +317,8 @@ int MSM_begin_translation(float distance, float speed, float acceleration)
 
 	return 0;
 }
+
+int MSM_begin_recalibration(float motor_rps, float stop_threshold, float power_limit, enum Facing facing);
 
 
 # ifdef MOVEMENT_STATEMACHINE_TEST

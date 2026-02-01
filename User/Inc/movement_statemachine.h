@@ -11,6 +11,16 @@
 
 
 
+enum Facing
+{
+	POSITIVE_X,
+	POSITIVE_Y,
+	NEGATIVE_X,
+	NEGATIVE_Y
+};
+
+
+
 /**
  * @brief function to be called at regular intervals to run the statemachine logic.
  * 
@@ -42,6 +52,19 @@ int MSM_begin_hold();
  */
 int MSM_begin_translation(float distance, float speed, float acceleration);
 
+
+/**
+ * @brief Recalibrate the position using a wall
+ *
+ * @param motor_rps the rps to run the motor at. Can be negative.
+ * @param stop_threshold the speed integral threshold to stop the motors at.
+ * @param power_limit the maximum power, as a percentage, to be used from the motors.
+ * @param facing where the front of the robot should be facing.
+ * 
+ * @note To calibrate with the back of the robot, give a negative speed.
+ * The robot will move in the direction given as facing.
+ */
+int MSM_begin_recalibration(float motor_rps, float stop_threshold, float power_limit, enum Facing facing);
 
 
 # ifdef MOVEMENT_STATEMACHINE_TEST
