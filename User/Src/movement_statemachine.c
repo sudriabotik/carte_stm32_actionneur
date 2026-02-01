@@ -251,6 +251,9 @@ void state_recalibrate_run(struct StateMachine *state_machine, float delta_time)
 
 	motor_drive_pid(delta_time, movement_control.speed, motor_R, encoder_R, pid_motor_R, &pid_motor_R_runtime);
 	motor_drive_pid(delta_time, movement_control.speed, motor_L, encoder_L, pid_motor_L, &pid_motor_L_runtime);
+
+	// exit condition
+	if ((fabs(pid_motor_L_runtime.i) + fabs(pid_motor_R_runtime.i)) / 2 >= movement_control.dist) SM_Switch(state_machine, 0);
 }
 
 void state_recalibrate_stop(struct StateMachine *state_machine, float delta_time)
