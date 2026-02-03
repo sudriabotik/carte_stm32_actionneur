@@ -73,5 +73,5 @@ float eval_position_slope(float t, struct FuncPositionSlope func)
 	else if (t < func.l1) return eval_position_slope_f1(t, func);
 	else if (t < func.l1 + func.l2) return eval_position_slope_f2(t,func);
 	else if (t < 2*func.l1 + func.l2) return eval_position_slope_f3(t,func);
-	else return 0;
+	else return eval_position_slope_f3(2*func.l1 + func.l2,func);
 }

@@ -131,7 +131,9 @@ int main(void)
 
   robot_data_init();
   //movement_statemachine_switch(&MOVEMENT_STATE_MOTOR_SPEED_CONTROL_TEST);
-  MSM_begin_hold();
+  MSM_begin_translation(200, 0.04, 0.02);
+  HAL_Delay(4000);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -170,6 +172,8 @@ int main(void)
       Encoder16PrintStatus(encoder_L);
       trig_count = 0;
     }
+
+    
     
 
     
@@ -193,6 +197,9 @@ int main(void)
     //motor_drive_pid(1000, 0.0f, motor_R, encoder_R, pid_motor_R, &pid_motor_R_runtime);
     //motor_drive(motor_R, -20);
     MSM_update(10);
+
+    if (MSM_busy() == 0) MSM_begin_hold();
+
     HAL_Delay(10);
     trig_count ++;
   }

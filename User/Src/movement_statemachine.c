@@ -111,22 +111,27 @@ void state_translation_run(struct StateMachine *state_machine, float delta_time)
 	movement_control.elapsed_time += delta_time;
 
 	// state exit condition
+	/*
 	if (is_val_near(encoder_R.total_count, movement_control.dist, 1.0f) 
 			&& is_val_near(encoder_L.total_count, movement_control.dist, 1.0f))
 	{
 		SM_Switch(state_machine, 0);
 	}
+	*/
 
 	float distance_travelled = (encoder_R.total_count + encoder_L.total_count) / 2;
+	distance_travelled = (distance_travelled / encoder_R.ticks_per_revolution) * M_PI * ROBOT_ENCODER_WHEEL_DIAMETER;
 	float rotation_error = (encoder_R.total_count - encoder_L.total_count) / 2;
+	rotation_error = (rotation_error / encoder_R.ticks_per_revolution) * M_PI * ROBOT_ENCODER_WHEEL_DIAMETER; // INCORRECT, TEMP
 
 	float desired_position = eval_position_slope(movement_control.elapsed_time, func_position_slope);
+	//printf("position slope : %f", desired_position);
 
 	float motor_command_position = PID_Run(&pid_translation_runtime, &pid_translation, distance_travelled, desired_position, delta_time);
 	float motor_command_rotation = PID_Run(&pid_rotation_runtime, &pid_rotation, rotation_error, 0, delta_time);
 
-	printf("translation pid command : %2.3f\n", motor_command_position);
-	printf("rotation pid command : %2.3f\n", motor_command_rotation);
+	//printf("translation pid command : %2.3f\n", motor_command_position);
+	//printf("rotation pid command : %2.3f\n", motor_command_rotation);
 
 	motor_drive_pid(delta_time, motor_command_position + motor_command_rotation, motor_R, encoder_R, pid_motor_R, &pid_motor_R_runtime);
 	motor_drive_pid(delta_time, motor_command_position - motor_command_rotation, motor_L, encoder_L, pid_motor_L, &pid_motor_L_runtime);
