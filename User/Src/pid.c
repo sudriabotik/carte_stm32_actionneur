@@ -27,14 +27,14 @@ float PID_Run(struct PidRuntime *runtime, const struct PidSettings *settings, fl
 	runtime->d = (runtime->last_val - current_val) * delta * (1 - settings->fratio)
 				+ runtime->d * settings->fratio;
 
-	runtime->i = runtime->i + p * settings->ki * delta;
+	runtime->i = runtime->i + p * delta;
 
 	// clamp the integral
 	if (runtime->i < -settings->i_lim) runtime->i = -settings->i_lim;
 	if (runtime->i > settings->i_lim) runtime->i = settings->i_lim;
 
 	// calculates the output
-	out = p * settings->kp + runtime->i + runtime->d * settings->kd;
+	out = p * settings->kp + runtime->i * settings->ki + runtime->d * settings->kd;
 
 	// clamp the final output
 	if (out > settings->max_output) out = settings->max_output;

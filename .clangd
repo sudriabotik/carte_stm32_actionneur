@@ -1,0 +1,4 @@
+CompileFlags:
+  CompilationDatabase: build/Debug/
+  Compiler: /usr/bin/arm-none-eabi-gcc
+  Add: '-Wall -isystem /usr/lib/arm-none-eabi/include/ -nostdinc'
