@@ -1,4 +1,4 @@
 CompileFlags:
-  CompilationDatabase: build/Debug/compile_commands.json
+  CompilationDatabase: build/Debug/
   Compiler: /usr/bin/arm-none-eabi-gcc
-  Add: '-Wall -isystem /usr/lib/arm-none-eabi/include/ -nostdinc'
+  Add: '-Wall -isystem /usr/lib/arm-none-eabi/include/ -nostdinc -Wno-unknown-warning-option'

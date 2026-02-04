@@ -6,7 +6,7 @@ struct PidSettings pid_motor_R =
 	.kd = 0,
 	.ki = 0,
 	.fratio = 0,
-	.i_lim = 0,
+	.i_lim = 110000,
 	.max_output = 100,
 	.min_output = 0,
 };
@@ -21,7 +21,7 @@ struct PidSettings pid_motor_L =
 	.kd = 0,
 	.ki = 0,
 	.fratio = 0,
-	.i_lim = 0,
+	.i_lim = 110000,
 	.max_output = 100,
 	.min_output = 0,
 };

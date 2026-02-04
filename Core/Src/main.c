@@ -60,6 +60,7 @@
 GPIO_PinState pin_a;
 GPIO_PinState pin_b;
 int trig_count = 0;
+bool toggle = false;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -131,7 +132,8 @@ int main(void)
 
   robot_data_init();
   //movement_statemachine_switch(&MOVEMENT_STATE_MOTOR_SPEED_CONTROL_TEST);
-  MSM_begin_translation(200, 0.04, 0.02);
+  //MSM_begin_translation(200, 0.04, 0.02);
+  MSM_begin_recalibration(0.5f, 50000, 20, POSITIVE_X);
   HAL_Delay(4000);
 
   /* USER CODE END 2 */
@@ -198,7 +200,12 @@ int main(void)
     //motor_drive(motor_R, -20);
     MSM_update(10);
 
-    if (MSM_busy() == 0) MSM_begin_hold();
+    if (MSM_busy() == 0)
+    {
+      if (toggle) MSM_begin_recalibration(0.5f, 50000, 20, POSITIVE_X);
+      else MSM_begin_translation(-100, 0.04, 0.02);
+      toggle = !toggle;
+    }
 
     HAL_Delay(10);
     trig_count ++;

@@ -111,13 +111,9 @@ void state_translation_run(struct StateMachine *state_machine, float delta_time)
 	movement_control.elapsed_time += delta_time;
 
 	// state exit condition
-	/*
-	if (is_val_near(encoder_R.total_count, movement_control.dist, 1.0f) 
-			&& is_val_near(encoder_L.total_count, movement_control.dist, 1.0f))
-	{
-		SM_Switch(state_machine, 0);
-	}
-	*/
+	
+	
+	
 
 	float distance_travelled = (encoder_R.total_count + encoder_L.total_count) / 2;
 	distance_travelled = (distance_travelled / encoder_R.ticks_per_revolution) * M_PI * ROBOT_ENCODER_WHEEL_DIAMETER;
@@ -135,6 +131,11 @@ void state_translation_run(struct StateMachine *state_machine, float delta_time)
 
 	motor_drive_pid(delta_time, motor_command_position + motor_command_rotation, motor_R, encoder_R, pid_motor_R, &pid_motor_R_runtime);
 	motor_drive_pid(delta_time, motor_command_position - motor_command_rotation, motor_L, encoder_L, pid_motor_L, &pid_motor_L_runtime);
+
+	if (is_val_near(distance_travelled, movement_control.dist, 1.0f) )
+	{
+		MSM_begin_hold();
+	}
 
 	
 }
@@ -257,8 +258,14 @@ void state_recalibrate_run(struct StateMachine *state_machine, float delta_time)
 	motor_drive_pid(delta_time, movement_control.speed, motor_R, encoder_R, pid_motor_R, &pid_motor_R_runtime);
 	motor_drive_pid(delta_time, movement_control.speed, motor_L, encoder_L, pid_motor_L, &pid_motor_L_runtime);
 
+	printf("integral L R : %2.3f %2.3f vs %2.3f - %2.3f\n", pid_motor_L_runtime.i, pid_motor_R_runtime.i, (fabs(pid_motor_L_runtime.i) + fabs(pid_motor_R_runtime.i)) / 2, movement_control.dist);
+
 	// exit condition
-	if ((fabs(pid_motor_L_runtime.i) + fabs(pid_motor_R_runtime.i)) / 2 >= movement_control.dist) SM_Switch(state_machine, 0);
+	if ((fabs(pid_motor_L_runtime.i) + fabs(pid_motor_R_runtime.i)) / 2 >= movement_control.dist)
+	{
+		printf("stoppen\n");
+		MSM_begin_hold();
+	}
 }
 
 void state_recalibrate_stop(struct StateMachine *state_machine, float delta_time)
@@ -304,7 +311,7 @@ STATEMACHINE PUBLIC INTERFACE FUNCTIONS
 #######################################
 */
 
-int MSM_busy() {return movement_statemachine.currentState != 0;}
+int MSM_busy() {return movement_statemachine.currentState != &MOVEMENT_STATE_HOLD;}
 
 int MSM_begin_hold()
 {
@@ -326,7 +333,16 @@ int MSM_begin_translation(float distance, float speed, float acceleration)
 	return 0;
 }
 
-int MSM_begin_recalibration(float motor_rps, float stop_threshold, float power_limit, enum Facing facing);
+int MSM_begin_recalibration(float motor_rps, float stop_threshold, float power_limit, enum Facing facing)
+{
+	movement_control.dist = stop_threshold;
+	movement_control.speed = motor_rps;
+	movement_control.pow_limit = power_limit;
+
+	MSM_switch(&MOVEMENT_STATE_RECALIBRATE);
+
+	return 0;
+}
 
 
 # ifdef MOVEMENT_STATEMACHINE_TEST
