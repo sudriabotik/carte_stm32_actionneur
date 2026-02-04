@@ -132,7 +132,7 @@ void state_translation_run(struct StateMachine *state_machine, float delta_time)
 	motor_drive_pid(delta_time, motor_command_position + motor_command_rotation, motor_R, encoder_R, pid_motor_R, &pid_motor_R_runtime);
 	motor_drive_pid(delta_time, motor_command_position - motor_command_rotation, motor_L, encoder_L, pid_motor_L, &pid_motor_L_runtime);
 
-	if (is_val_near(distance_travelled, movement_control.dist, 1.0f) )
+	if (is_val_near(distance_travelled, movement_control.dist, 3.0f))
 	{
 		MSM_begin_hold();
 	}

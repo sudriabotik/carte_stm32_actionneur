@@ -26,6 +26,9 @@ struct PidSettings
 
 	// The ratio used to filter the derivative (the higher the more smoothing)
 	float fratio;
+
+	// the decay of the integral
+	float decay;
 	
 };
 
@@ -35,7 +38,9 @@ struct PidSettings
  */
 struct PidRuntime
 {
-	/** The total accumulated integral, after applying the coef */
+	float p;
+
+	/** The total accumulated integral */
 	float i;
 
 	/** The current filtered derivative */

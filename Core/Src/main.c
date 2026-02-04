@@ -133,8 +133,9 @@ int main(void)
   robot_data_init();
   //movement_statemachine_switch(&MOVEMENT_STATE_MOTOR_SPEED_CONTROL_TEST);
   //MSM_begin_translation(200, 0.04, 0.02);
-  MSM_begin_recalibration(0.5f, 50000, 20, POSITIVE_X);
+  MSM_begin_recalibration(1, 10000, 20, POSITIVE_X);
   HAL_Delay(4000);
+  HAL_TIM_Base_Start_IT(&htim2);
 
   /* USER CODE END 2 */
 
@@ -202,8 +203,8 @@ int main(void)
 
     if (MSM_busy() == 0)
     {
-      if (toggle) MSM_begin_recalibration(0.5f, 50000, 20, POSITIVE_X);
-      else MSM_begin_translation(-100, 0.04, 0.02);
+      if (toggle) MSM_begin_recalibration(1, 15000, 20, POSITIVE_X);
+      else MSM_begin_translation(-300, 0.02, 0.0001);
       toggle = !toggle;
     }
 
