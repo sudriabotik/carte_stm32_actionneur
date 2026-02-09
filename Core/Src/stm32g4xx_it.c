@@ -42,7 +42,8 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+uint32_t counter_test = 0;
+int toggle_test = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -206,7 +207,17 @@ void SysTick_Handler(void)
 void TIM2_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM2_IRQn 0 */
-  //MSM_update(10);
+  //printf("irq_tim2_interrupt %lu\n", counter_test);
+  counter_test ++;
+  MSM_update(10);
+
+  if (MSM_busy() == 0)
+    {
+      //if (toggle) MSM_begin_recalibration(1, 15000, 20, POSITIVE_X);
+      if (toggle_test) MSM_begin_translation(500, 0.02, 0.00005);
+      else MSM_begin_translation(-500, 0.02, 0.00005);
+      toggle_test = !toggle_test;
+    }
   /* USER CODE END TIM2_IRQn 0 */
   HAL_TIM_IRQHandler(&htim2);
   /* USER CODE BEGIN TIM2_IRQn 1 */

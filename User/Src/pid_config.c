@@ -50,7 +50,7 @@ struct PidRuntime pid_translation_runtime = {};
 
 struct PidSettings pid_rotation =
 {
-	.kp = 1.0f,
+	.kp = 0.2f,
 	.kd = 0,
 	.ki = 0,
 	.fratio = 0,

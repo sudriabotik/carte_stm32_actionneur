@@ -133,7 +133,7 @@ int main(void)
   robot_data_init();
   //movement_statemachine_switch(&MOVEMENT_STATE_MOTOR_SPEED_CONTROL_TEST);
   //MSM_begin_translation(200, 0.04, 0.02);
-  MSM_begin_recalibration(1, 10000, 20, POSITIVE_X);
+  //MSM_begin_recalibration(1, 10000, 20, POSITIVE_X);
   HAL_Delay(4000);
   HAL_TIM_Base_Start_IT(&htim2);
 
@@ -167,6 +167,7 @@ int main(void)
     printf("L encoder register %"PRIu32"\n", TIM4->CNT);
     */
 
+    /*
     if (trig_count == 25)
     {
       printf("Encoder R : \n");
@@ -175,6 +176,7 @@ int main(void)
       Encoder16PrintStatus(encoder_L);
       trig_count = 0;
     }
+    */
 
     
     
@@ -199,14 +201,17 @@ int main(void)
     //Encoder16Update(&encoder_R);
     //motor_drive_pid(1000, 0.0f, motor_R, encoder_R, pid_motor_R, &pid_motor_R_runtime);
     //motor_drive(motor_R, -20);
-    MSM_update(10);
+    //MSM_update(10);
 
+    /*
     if (MSM_busy() == 0)
     {
-      if (toggle) MSM_begin_recalibration(1, 15000, 20, POSITIVE_X);
-      else MSM_begin_translation(-300, 0.02, 0.0001);
+      //if (toggle) MSM_begin_recalibration(1, 15000, 20, POSITIVE_X);
+      if (toggle) MSM_begin_translation(500, 0.02, 0.00005);
+      else MSM_begin_translation(-500, 0.02, 0.00005);
       toggle = !toggle;
     }
+      */
 
     HAL_Delay(10);
     trig_count ++;
