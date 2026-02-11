@@ -7,6 +7,8 @@
   * @brief The statemachine used for movement control
   */
 
+# include "mathfuncs.h"
+
 /**
   * @brief The queue size for the statemachine
   */
@@ -28,7 +30,13 @@ typedef void (*MvStateCall)(struct MvStateMachine*, struct MvStateEnv*, float de
 
 struct MvStateEnv
 {
-	int dummy;	
+	float distance;
+	float speed;
+	float acceleration;
+
+	struct FuncPositionSlope pos_slope;
+
+	float elapsed_time;
 };
 
 
