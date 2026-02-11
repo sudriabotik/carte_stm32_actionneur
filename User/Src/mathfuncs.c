@@ -1,5 +1,7 @@
 # include "mathfuncs.h"
 
+# include <math.h>
+
 
 struct Trapezoid pregen_trapezoid(float height, float base_length, float slope_length)
 {
@@ -59,10 +61,13 @@ struct FuncPositionSlope pregen_position_slope(float accel, float top_speed, flo
 	func.dist = dist;
 
 	func.l1 = top_speed/accel;
-	func.l2 = (dist - (func.l1 * func.l1) * accel) / top_speed;
+	func.l2 = (fabs(dist) - (func.l1 * func.l1) * accel) / top_speed;
 
 	func.c1 = eval_position_slope_f1(func.l1, func);
 	func.c2 = eval_position_slope_f2(func.l1 + func.l2, func);
+
+	if (dist < 0) func.multiplier = -1;
+	else func.multiplier = 1;
 
 	return func;
 }
@@ -70,8 +75,8 @@ struct FuncPositionSlope pregen_position_slope(float accel, float top_speed, flo
 float eval_position_slope(float t, struct FuncPositionSlope func)
 {
 	if (t < 0) return 0;
-	else if (t < func.l1) return eval_position_slope_f1(t, func);
-	else if (t < func.l1 + func.l2) return eval_position_slope_f2(t,func);
-	else if (t < 2*func.l1 + func.l2) return eval_position_slope_f3(t,func);
-	else return eval_position_slope_f3(2*func.l1 + func.l2,func);
+	else if (t < func.l1) return eval_position_slope_f1(t, func) * func.multiplier;
+	else if (t < func.l1 + func.l2) return eval_position_slope_f2(t,func) * func.multiplier;
+	else if (t < 2*func.l1 + func.l2) return eval_position_slope_f3(t,func) * func.multiplier;
+	else return eval_position_slope_f3(2*func.l1 + func.l2,func) * func.multiplier;
 }

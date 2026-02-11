@@ -120,6 +120,10 @@ void state_translation_run(struct StateMachine *state_machine, float delta_time)
 	float rotation_error = (encoder_R.total_count - encoder_L.total_count) / 2;
 	rotation_error = (rotation_error / encoder_R.ticks_per_revolution) * M_PI * ROBOT_ENCODER_WHEEL_DIAMETER; // INCORRECT, TEMP
 
+	printf("distance travelled : %2.3f\n", distance_travelled);
+
+	
+
 	float desired_position = eval_position_slope(movement_control.elapsed_time, func_position_slope);
 	//printf("position slope : %f", desired_position);
 

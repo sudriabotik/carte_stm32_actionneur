@@ -15,7 +15,10 @@ int Encoder16Reset(struct Encoder16Handle *handle)
 	if (handle == 0) return -1;
 
 	handle->rollover_count = 0; // set the rollover count to 0
+	handle->total_count = 0;
+	handle->total_count_delta = 0;
 	*handle->tim_counter = 0; // set the timer counter to 0
+	handle->situation = GetEncoderSituation(handle);
 	
 	Encoder16Update(handle); // update the calculated values
 
