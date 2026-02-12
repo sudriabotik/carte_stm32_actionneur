@@ -19,6 +19,12 @@ struct MvStateEnv genenv_mv_state_hold();
 extern struct MvState MV_STATE_TRANSLATION;
 struct MvStateEnv genenv_mv_state_translation(float acceleration, float speed, float distance);
 
+extern struct MvState MV_STATE_ROTATION;
+struct MvStateEnv genenv_mv_state_rotation(float acceleration, float speed, float distance);
+
+extern struct MvState MV_STATE_RECALIBRATION;
+struct MvStateEnv genenv_mv_state_recalibration(float acceleration, float speed, enum Facing facing);
+
 
 
 #endif
