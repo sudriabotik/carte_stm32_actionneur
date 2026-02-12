@@ -1,5 +1,5 @@
-#ifndef __MOVEMENT_STATEMACHINE_H
-#define __MOVEMENT_STATEMACHINE_H
+#ifndef __MV_STATEMACHINE_H
+#define __MV_STATEMACHINE_H
 
 /**
   * @file mv_statemachine.h
@@ -70,7 +70,7 @@ struct MvStateMachine
   * It will initialize some fields of the struct.
   * @return The initialized struct.
   */
-struct MvStateMachine DSM_init();
+struct MvStateMachine MSM_init();
 
 /**
   * @brief Empties the construction states queue, allowing it to be redefined from the start.
@@ -113,6 +113,12 @@ int_t MSM_is_busy(struct MvStateMachine *machine);
   * @return 0
   */
 int_t MSM_update(struct MvStateMachine *machine, float delta_time);
+
+/**
+  * @brief Indicates the current state is done, and the statemachine may go to the next one.
+  * @return 0
+  */
+int_t MSM_set_state_finished(struct MvStateMachine *machine);
 
 
 

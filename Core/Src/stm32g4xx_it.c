@@ -22,7 +22,8 @@
 #include "stm32g4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "movement_statemachine.h"
+#include "mv_statemachine.h"
+#include "mv_statemachine_states.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -209,14 +210,15 @@ void TIM2_IRQHandler(void)
   /* USER CODE BEGIN TIM2_IRQn 0 */
   //printf("irq_tim2_interrupt %lu\n", counter_test);
   counter_test ++;
-  MSM_update(10);
+  MSM_update(&MV_STATEMACHINE, 10);
 
-  if (MSM_busy() == 0)
+  if (MSM_is_busy(&MV_STATEMACHINE) == 0)
     {
       //if (toggle) MSM_begin_recalibration(1, 15000, 20, POSITIVE_X);
-      if (toggle_test) MSM_begin_translation(500, 0.3, 0.001);
-      else MSM_begin_translation(-500, 0.3, 0.001);
-      toggle_test = !toggle_test;
+      MSM_reset_construction(&MV_STATEMACHINE);
+      MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_TRANSLATION, genenv_mv_state_translation(0.001, 0.3, 500));
+      MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_TRANSLATION, genenv_mv_state_translation(0.001, 0.3, -500));
+      MSM_ready_construction(&MV_STATEMACHINE);
     }
   /* USER CODE END TIM2_IRQn 0 */
   HAL_TIM_IRQHandler(&htim2);

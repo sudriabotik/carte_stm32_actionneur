@@ -30,13 +30,15 @@
 /* USER CODE BEGIN Includes */
 # include "stdio.h"
 # include <inttypes.h>
-# include "movement_statemachine.h"
+//# include "movement_statemachine.h"
 # include "robot_data.h"
 # include "motors.h"
 # include "motor_asserv.h"
 # include "pid_config.h"
 # include "recorder.h"
 # include "ax_controller.h"
+# include "mv_statemachine.h"
+# include "mv_statemachine_states.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -134,7 +136,10 @@ int main(void)
   //movement_statemachine_switch(&MOVEMENT_STATE_MOTOR_SPEED_CONTROL_TEST);
   //MSM_begin_translation(200, 0.04, 0.02);
   //MSM_begin_recalibration(1, 10000, 20, POSITIVE_X);
-  MSM_begin_hold();
+  //MSM_begin_hold();
+
+  MV_STATEMACHINE = MSM_init();
+
   HAL_Delay(4000);
   HAL_TIM_Base_Start_IT(&htim2);
 

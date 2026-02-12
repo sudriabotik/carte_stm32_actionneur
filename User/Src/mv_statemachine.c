@@ -13,12 +13,12 @@ struct MvStateMachine MSM_init()
 		.load_construction_queue = 0,
 	};
 
-	machine.state_queue[MV_STATEMACHINE_LENGTH] = 0;
+	for (uint_t i = 0; i <= MV_STATEMACHINE_LENGTH; i++) machine.state_queue[i] = 0;
 
 	return machine;
 }
 
-int_t MSM_reset_schedule(struct MvStateMachine *machine)
+int_t MSM_reset_construction(struct MvStateMachine *machine)
 {
 	machine->construction_index = 0;
 	return 0;
@@ -35,25 +35,25 @@ int_t MSM_enqueue_state(struct MvStateMachine *machine, struct MvState *state, s
 	return 0;
 }
 
-int_t MSM_ready_schedule(struct MvStateMachine *machine)
+int_t MSM_ready_construction(struct MvStateMachine *machine)
 {
 	machine->load_construction_queue = 1;
 	return 0;
 }
 
-uint_t MSM_get_schedule_index(struct MvStateMachine *machine)
+uint_t MSM_get_construction_index(struct MvStateMachine *machine)
 {
 	return machine->construction_index;
 }
 
-int_t MSM_is_schedule_full(struct MvStateMachine *machine)
+int_t MSM_is_construction_full(struct MvStateMachine *machine)
 {
 	return machine->construction_index >= MV_STATEMACHINE_LENGTH;
 }
 
 int MSM_is_busy(struct MvStateMachine *machine)
 {
-	return machine->index == MV_STATEMACHINE_LENGTH;
+	return machine->state_queue[machine->index] == 0;
 }
 
 int MSM_update(struct MvStateMachine *machine, float delta_time)
@@ -114,5 +114,11 @@ int MSM_update(struct MvStateMachine *machine, float delta_time)
 
 	if (current_state != 0) current_state->run(machine, current_env, delta_time);
 
+	return 0;
+}
+
+int_t MSM_set_state_finished(struct MvStateMachine *machine)
+{
+	machine->state_finished = 1;
 	return 0;
 }

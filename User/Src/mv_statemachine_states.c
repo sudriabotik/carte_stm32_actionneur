@@ -21,6 +21,9 @@
 
 
 
+struct MvStateMachine MV_STATEMACHINE;
+
+
 /*
 ##########
 STATE HOLD
@@ -79,7 +82,7 @@ void state_hold_stop(struct MvStateMachine* statemachine, struct MvStateEnv* env
 	motor_drive(motor_L, 0.0f);
 }
 
-struct State MV_STATE_HOLD =
+struct MvState MV_STATE_HOLD =
 {
 	.wake = state_hold_wake,
 	.run = state_hold_run,
@@ -140,7 +143,7 @@ void state_translation_run(struct MvStateMachine* statemachine, struct MvStateEn
 
 	if (is_val_near(distance_travelled, env->distance, 3.0f))
 	{
-		MSM_begin_hold();
+		MSM_set_state_finished(statemachine);
 	}
 
 	
@@ -154,7 +157,7 @@ void state_translation_stop(struct MvStateMachine* statemachine, struct MvStateE
 	motor_drive(motor_L, 0.0f);
 }
 
-struct State MV_STATE_TRANSLATION =
+struct MvState MV_STATE_TRANSLATION =
 {
 	.wake = state_translation_wake,
 	.run = state_translation_run,

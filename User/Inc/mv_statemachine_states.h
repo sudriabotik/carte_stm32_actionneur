@@ -1,5 +1,5 @@
-#ifndef __MV_STATEMACHINE_H
-#define __MV_STATEMACHINE_H
+#ifndef __MV_STATEMACHINE_STATES_H
+#define __MV_STATEMACHINE_STATES_H
 
 /**
   * @file mv_statemachine_states.h
@@ -11,6 +11,7 @@
 #include "mv_statemachine.h"
 
 
+extern struct MvStateMachine MV_STATEMACHINE;
 
 extern struct MvState MV_STATE_HOLD;
 struct MvStateEnv genenv_mv_state_hold();
