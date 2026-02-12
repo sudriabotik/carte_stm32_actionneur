@@ -12,8 +12,11 @@
 
 
 
-extern struct MvStateEnv mv_state_hold;
-void genenv_mv_state_hold();
+extern struct MvState MV_STATE_HOLD;
+struct MvStateEnv genenv_mv_state_hold();
+
+extern struct MvState MV_STATE_TRANSLATION;
+struct MvStateEnv genenv_mv_state_translation(float acceleration, float speed, float distance);
 
 
 
