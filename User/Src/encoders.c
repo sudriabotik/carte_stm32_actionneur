@@ -1,6 +1,7 @@
 # include "encoders.h"
 
 # include <inttypes.h>
+# include <stdio.h>
 
 
 uint32_t GetEncoderSituation(struct Encoder16Handle *handle)
