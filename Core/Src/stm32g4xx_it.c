@@ -214,8 +214,8 @@ void TIM2_IRQHandler(void)
   if (MSM_busy() == 0)
     {
       //if (toggle) MSM_begin_recalibration(1, 15000, 20, POSITIVE_X);
-      if (toggle_test) MSM_begin_translation(500, 0.3, 0.06);
-      else MSM_begin_translation(-500, 0.3, 0.06);
+      if (toggle_test) MSM_begin_translation(500, 0.3, 0.002);
+      else MSM_begin_translation(-500, 0.3, 0.002);
       toggle_test = !toggle_test;
     }
   /* USER CODE END TIM2_IRQn 0 */
