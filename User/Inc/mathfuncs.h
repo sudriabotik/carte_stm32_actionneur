@@ -39,6 +39,9 @@ struct FuncPositionSlope
 	float c1;
 	/** The final value at the end of the straight part */
 	float c2;
+
+	// TEMP used to obtain negative values
+	float multiplier;
 };
 
 /**

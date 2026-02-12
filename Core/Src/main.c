@@ -134,6 +134,7 @@ int main(void)
   //movement_statemachine_switch(&MOVEMENT_STATE_MOTOR_SPEED_CONTROL_TEST);
   //MSM_begin_translation(200, 0.04, 0.02);
   //MSM_begin_recalibration(1, 10000, 20, POSITIVE_X);
+  MSM_begin_hold();
   HAL_Delay(4000);
   HAL_TIM_Base_Start_IT(&htim2);
 
