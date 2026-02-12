@@ -115,9 +115,9 @@ void state_translation_run(struct StateMachine *state_machine, float delta_time)
 	
 	
 
-	float distance_travelled = (encoder_R.total_count + encoder_L.total_count) / 2;
+	float distance_travelled = (encoder_R.total_count + encoder_L.total_count) / 2.0f;
 	distance_travelled = (distance_travelled / encoder_R.ticks_per_revolution) * M_PI * ROBOT_ENCODER_WHEEL_DIAMETER;
-	float rotation_error = (encoder_R.total_count - encoder_L.total_count) / 2;
+	float rotation_error = (encoder_R.total_count - encoder_L.total_count) / 2.0f;
 	rotation_error = (rotation_error / encoder_R.ticks_per_revolution) * M_PI * ROBOT_ENCODER_WHEEL_DIAMETER; // INCORRECT, TEMP
 
 	printf("distance travelled : %2.3f\n", distance_travelled);
