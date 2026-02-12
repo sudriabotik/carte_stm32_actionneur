@@ -130,10 +130,12 @@ void state_translation_run(struct MvStateMachine* statemachine, struct MvStateEn
 	rotation_error = (rotation_error / encoder_R.ticks_per_revolution) * M_PI * ROBOT_ENCODER_WHEEL_DIAMETER; // INCORRECT, TEMP
 
 	float desired_position = eval_position_slope(env->elapsed_time, env->pos_slope);
-	//printf("position slope : %f", desired_position);
+	
 
 	float motor_command_position = PID_Run(&pid_translation_runtime, &pid_translation, distance_travelled, desired_position, delta_time);
 	float motor_command_rotation = PID_Run(&pid_rotation_runtime, &pid_rotation, rotation_error, 0, delta_time);
+
+	printf("derivative : %f\n", pid_translation_runtime.d);
 
 	//printf("translation pid command : %2.3f\n", motor_command_position);
 	//printf("rotation pid command : %2.3f\n", motor_command_rotation);
@@ -141,7 +143,7 @@ void state_translation_run(struct MvStateMachine* statemachine, struct MvStateEn
 	motor_drive_pid(delta_time, motor_command_position + motor_command_rotation, motor_R, encoder_R, pid_motor_R, &pid_motor_R_runtime);
 	motor_drive_pid(delta_time, motor_command_position - motor_command_rotation, motor_L, encoder_L, pid_motor_L, &pid_motor_L_runtime);
 
-	if (is_val_near(distance_travelled, env->distance, 3.0f))
+	if (is_val_near(distance_travelled, env->distance, 3.0f) && fabs(pid_translation_runtime.p) < 0.05f)
 	{
 		MSM_set_state_finished(statemachine);
 	}

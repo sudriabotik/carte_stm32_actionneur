@@ -22,6 +22,7 @@
 #include "stm32g4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdio.h>
 #include "mv_statemachine.h"
 #include "mv_statemachine_states.h"
 /* USER CODE END Includes */
@@ -214,10 +215,12 @@ void TIM2_IRQHandler(void)
 
   if (MSM_is_busy(&MV_STATEMACHINE) == 0)
     {
+      printf("not busy\n");
       //if (toggle) MSM_begin_recalibration(1, 15000, 20, POSITIVE_X);
       MSM_reset_construction(&MV_STATEMACHINE);
-      MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_TRANSLATION, genenv_mv_state_translation(0.001, 0.3, 500));
-      MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_TRANSLATION, genenv_mv_state_translation(0.001, 0.3, -500));
+      MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_TRANSLATION, genenv_mv_state_translation(0.001, 0.8, -500));
+      MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_TRANSLATION, genenv_mv_state_translation(0.001, 0.8, 500));
+      MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_HOLD, genenv_mv_state_hold());
       MSM_ready_construction(&MV_STATEMACHINE);
     }
   /* USER CODE END TIM2_IRQn 0 */

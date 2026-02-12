@@ -7,13 +7,13 @@ void PID_reset_runtime(struct PidRuntime *runtime)
 	runtime->d = 0;
 	runtime->i = 0;
 
-	runtime->last_val = 0;
+	runtime->last_err = 0;
 }
 
 
 void PID_set_runtime_last_value(struct PidRuntime *runtime, float last_val)
 {
-	runtime->last_val = last_val;
+	runtime->last_err = last_val;
 }
 
 
@@ -24,7 +24,7 @@ float PID_Run(struct PidRuntime *runtime, const struct PidSettings *settings, fl
 	runtime->p = target_val - current_val;
 
 	/** filtered derivative */
-	runtime->d = (runtime->last_val - current_val) * delta * (1 - settings->fratio)
+	runtime->d = (runtime->last_err - runtime->p) * delta * (1 - settings->fratio)
 				+ runtime->d * settings->fratio;
 
 	runtime->i = runtime->i + runtime->p * delta;
@@ -49,7 +49,7 @@ float PID_Run(struct PidRuntime *runtime, const struct PidSettings *settings, fl
 	if (out >= 0 && out < settings->min_output) out = settings->min_output;
 	else if (out <= 0 && out > -settings->min_output) out = -settings->min_output;
 
-	runtime->last_val = out;
+	runtime->last_err = runtime->p;
 
 	return out;
 }

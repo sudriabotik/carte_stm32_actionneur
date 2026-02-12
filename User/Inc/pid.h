@@ -47,7 +47,7 @@ struct PidRuntime
 	float d;
 
 	/** The output of the PID the last time it was ran */
-	float last_val;
+	float last_err;
 };
 
 

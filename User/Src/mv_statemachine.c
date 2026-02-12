@@ -53,7 +53,7 @@ int_t MSM_is_construction_full(struct MvStateMachine *machine)
 
 int MSM_is_busy(struct MvStateMachine *machine)
 {
-	return machine->state_queue[machine->index] == 0;
+	return machine->state_queue[machine->index] != 0;
 }
 
 int MSM_update(struct MvStateMachine *machine, float delta_time)
@@ -73,6 +73,7 @@ int MSM_update(struct MvStateMachine *machine, float delta_time)
 		for (i = 0; i < machine->construction_index; i++)
 		{
 			machine->state_queue[i] = machine->construction_state_queue[i];
+			machine->envs_queue[i] = machine->construction_envs_queue[i];
 		}
 		for (; i < MV_STATEMACHINE_LENGTH; i++)
 		{
@@ -88,6 +89,8 @@ int MSM_update(struct MvStateMachine *machine, float delta_time)
 
 		// wakes up the new state
 		if (current_state != 0) if (current_state->stop != 0) current_state->wake(machine, current_env, delta_time);
+
+		printf("loaded new state queue\n");
 	}
 
 	// test if the currently active state has finished
