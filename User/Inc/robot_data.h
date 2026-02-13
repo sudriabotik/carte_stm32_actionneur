@@ -38,6 +38,20 @@ extern const float ROBOT_COEF_WHEEL_DIFFERENCE;
  */
 extern const float ROBOT_COEF_ROTATION;
 
+/**
+ * @brief The distance between the wall and the robot's wheelbase when the front face is pressed agains the wall.
+ */
+extern const float ROBOT_BUMPER_OFFSET_FRONT;
+
+/**
+ * @brief The distance between the wall and the robot's wheelbase when the back face is pressed agains the wall.
+ */
+extern const float ROBOT_BUMPER_OFFSET_BACK;
+
+
+extern const float TABLE_WIDTH;
+extern const float TABLE_HEIGHT;
+
 
 extern struct Encoder16Handle encoder_R;
 extern struct MotorHandle motor_R;

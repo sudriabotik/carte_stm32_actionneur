@@ -3,7 +3,6 @@
 # undef __USE_MISC
 # include <stdio.h>
 # include "coordonne_absolue.h"
-# include "mv_statemachine.h"
 # include "mv_statemachine_states.h"
 
 
@@ -126,6 +125,8 @@ int robot_calage(enum Facing facing, float linear_speed, float linear_accel, flo
 	MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_ROTATION, genenv_mv_state_rotation(angular_accel, angular_speed, angle_command));
 	MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_RECALIBRATION, genenv_mv_state_recalibration(linear_accel, linear_speed, facing));
 	MSM_ready_construction(&MV_STATEMACHINE);
+
+	return 0;
 }
 
 

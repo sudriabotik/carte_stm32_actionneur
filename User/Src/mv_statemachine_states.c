@@ -347,6 +347,29 @@ void state_recalibration_stop(struct MvStateMachine* statemachine, struct MvStat
 
 	motor_drive(motor_R, 0.0f);
 	motor_drive(motor_L, 0.0f);
+
+	float offset;
+	if (env->speed > 0) offset = ROBOT_BUMPER_OFFSET_FRONT;
+	else offset = ROBOT_BUMPER_OFFSET_BACK;
+
+	switch (env->facing)
+	{
+		case POSITIVE_X :
+			robot_update_x(TABLE_WIDTH - offset);
+			break;
+		
+		case NEGATIVE_X :
+			robot_update_x(offset);
+			break;
+		
+		case POSITIVE_Y :
+			robot_update_y(TABLE_HEIGHT - offset);
+			break;
+
+		case NEGATIVE_Y :
+			robot_update_y(offset);
+			break;
+	}
 }
 
 struct MvState MV_STATE_RECALIBRATION =

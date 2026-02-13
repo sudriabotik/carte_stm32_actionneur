@@ -9,6 +9,12 @@ const float ROBOT_COEF_TRANSLATION_DISTANCE = 1.0f;
 const float ROBOT_COEF_WHEEL_DIFFERENCE = 1.0f;
 const float ROBOT_COEF_ROTATION = 1.0f;
 
+const float ROBOT_BUMPER_OFFSET_FRONT = 10.0f;
+const float ROBOT_BUMPER_OFFSET_BACK = 10.0f;
+
+const float TABLE_WIDTH = 3000.0f;
+const float TABLE_HEIGHT = 2000.0f;
+
 struct Encoder16Handle encoder_R;
 struct MotorHandle motor_R;
 
