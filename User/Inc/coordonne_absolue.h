@@ -114,6 +114,8 @@ void robot_update_theta(float t);
 int goto_xy(Point2D target, float linear_speed, float linear_accel, float angular_speed, float angular_accel, Face face);
 
 
+int robot_calage(enum Facing facing, float speed, float accel);
+
 
 /* -- debugging functions -- */
 
