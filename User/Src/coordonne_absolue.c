@@ -83,7 +83,6 @@ int goto_xy(Point2D target, float linear_speed, float linear_accel, float angula
 
     MSM_reset_construction(&MV_STATEMACHINE);
 
-    // TODO : remplacer les constantes d'accélération par des paramètres ou des defines
     MSM_enqueue_state(&MV_STATEMACHINE,
         &MV_STATE_ROTATION,
         genenv_mv_state_rotation(angular_accel, angular_speed, rotation));
