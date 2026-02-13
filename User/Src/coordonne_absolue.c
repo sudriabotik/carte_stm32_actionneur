@@ -1,4 +1,7 @@
+# define __USE_MISC
 # include <math.h>
+# undef __USE_MISC
+# include <stdio.h>
 # include "coordonne_absolue.h"
 # include "mv_statemachine.h"
 # include "mv_statemachine_states.h"
@@ -41,6 +44,17 @@ float compute_distance(Pose from, Point2D target, Face face)
     return (face == FACE_ARRIERE) ? -dist : dist;
 }
 
+void robot_add_distance(float distance)
+{
+    robot_pose.x = robot_pose.x + distance * sin(robot_pose.theta);
+    robot_pose.y = robot_pose.y + distance * cos(robot_pose.theta);
+}
+
+void robot_add_rotation(float angle)
+{
+    robot_pose.theta += angle;
+}
+
 
 /* ── Mise à jour de pose ──────────────────────────────────────────────────── */
 
@@ -70,11 +84,11 @@ int goto_xy(Point2D target, float speed, Face face)
     // TODO : remplacer les constantes d'accélération par des paramètres ou des defines
     MSM_enqueue_state(&MV_STATEMACHINE,
         &MV_STATE_TRANSLATION,
-        genenv_mv_state_translation(500.0f, speed, rotation));
+        genenv_mv_state_translation(0.001f, speed, rotation));
 
     MSM_enqueue_state(&MV_STATEMACHINE,
         &MV_STATE_TRANSLATION,
-        genenv_mv_state_translation(500.0f, speed, distance));
+        genenv_mv_state_translation(0.001f, speed, distance));
 
     MSM_ready_construction(&MV_STATEMACHINE);
 
@@ -82,3 +96,7 @@ int goto_xy(Point2D target, float speed, Face face)
 }
 
 
+void robot_print_pose()
+{
+    printf("the current pose is x:%4.3f y%3.3f t%4.3f\n", robot_pose.x, robot_pose.y, robot_pose.theta);
+}

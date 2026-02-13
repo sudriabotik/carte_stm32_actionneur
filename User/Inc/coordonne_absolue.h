@@ -72,6 +72,7 @@ float compute_relative_rotation(float current_theta, float target_angle, Face fa
 float compute_distance(Pose from, Point2D target, Face face);
 
 
+
 /* ── Mise à jour de pose ──────────────────────────────────────────────────── */
 
 /**
@@ -79,6 +80,22 @@ float compute_distance(Pose from, Point2D target, Face face);
  *        Appelée par les fonctions de rotation et de translation.
  */
 void robot_update_pose(float new_x, float new_y, float new_theta);
+
+/**
+ * @brief Ajoute la longueur donnée aux coordonnées xy absolues, on utilisant l'angle actuel comme sens de déplacement.
+ * @param distance the distance added, in mm
+ * 
+ * @return A pose with updated position
+ */
+void robot_add_distance(float distance);
+
+/**
+ * @brief Ajoute l'angle donné à la rotation absolue, en gardant xy tels quel.
+ * @param angle the angle added, in radians
+ * 
+ * @return A pose with updated position
+ */
+void robot_add_rotation(float angle);
 
 void robot_update_x(float x) ;
 void robot_update_y(float y) ;
@@ -95,6 +112,12 @@ void robot_update_theta(float t);
  * @return 0 si OK, -1 si la statemachine est occupée ou la file pleine.
  */
 int goto_xy(Point2D target, float speed, Face face);
+
+
+
+/* -- debugging functions -- */
+
+void robot_print_pose();
 
 
 # endif // __COORDONNE_ABSOLUE_H

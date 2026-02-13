@@ -51,6 +51,7 @@ struct MvStateEnv
 	enum Facing facing;
 
 	float elapsed_time;
+	float real_outcome;
 };
 
 

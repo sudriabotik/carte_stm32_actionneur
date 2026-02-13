@@ -61,6 +61,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     User/Src/logicfuncs.c
     User/Src/mv_statemachine.c
     User/Src/mv_statemachine_states.c
+    User/Src/coordonne_absolue.c
 )
 
 # Add include paths

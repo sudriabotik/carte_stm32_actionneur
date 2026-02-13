@@ -18,6 +18,7 @@
 # include "recorder.h"
 # include "mathfuncs.h"
 # include "logicfuncs.h"
+# include "coordonne_absolue.h"
 
 
 
@@ -178,6 +179,7 @@ void state_translation_run(struct MvStateMachine* statemachine, struct MvStateEn
 
 	if (is_val_near(distance_travelled, env->distance, 3.0f) && fabs(pid_translation_runtime.d) < 0.05f)
 	{
+		env->real_outcome = distance_travelled;
 		MSM_set_state_finished(statemachine);
 	}
 
@@ -187,6 +189,9 @@ void state_translation_run(struct MvStateMachine* statemachine, struct MvStateEn
 void state_translation_stop(struct MvStateMachine* statemachine, struct MvStateEnv* env, float delta_time)
 {
 	printf("finished a translation of distance %.3f mm\n", env->distance);
+
+	robot_add_distance(env->real_outcome);
+	robot_print_pose();
 
 	motor_drive(motor_R, 0.0f);
 	motor_drive(motor_L, 0.0f);
@@ -253,6 +258,7 @@ void state_rotation_run(struct MvStateMachine* statemachine, struct MvStateEnv* 
 
 	if (is_val_near(rotation_delta, env->distance, 3.0f) && fabs(pid_rotation_runtime.d) < 0.05f)
 	{
+		env->real_outcome = rotation_delta;
 		MSM_set_state_finished(statemachine);
 	}
 
@@ -262,6 +268,9 @@ void state_rotation_run(struct MvStateMachine* statemachine, struct MvStateEnv* 
 void state_rotation_stop(struct MvStateMachine* statemachine, struct MvStateEnv* env, float delta_time)
 {
 	printf("finished a rotation of %.3f degrees\n", env->distance);
+
+	robot_add_rotation(env->real_outcome * M_PI / 180);
+	robot_print_pose();
 
 	motor_drive(motor_R, 0.0f);
 	motor_drive(motor_L, 0.0f);
