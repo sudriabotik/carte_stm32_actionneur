@@ -241,7 +241,7 @@ void state_rotation_run(struct MvStateMachine* statemachine, struct MvStateEnv* 
 	// state exit condition
 	
 	float distance_error = get_avg_distance_travelled();
-	float rotation_delta = get_avg_rotation_delta();
+	float rotation_delta = get_avg_rotation_delta() * 180 / M_PI;
 
 	float desired_rotation = eval_position_slope(env->elapsed_time, env->pos_slope); // the angle in degrees we want to point at this moment in time
 	

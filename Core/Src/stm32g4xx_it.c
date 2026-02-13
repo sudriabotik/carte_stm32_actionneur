@@ -219,7 +219,8 @@ void TIM2_IRQHandler(void)
       //if (toggle) MSM_begin_recalibration(1, 15000, 20, POSITIVE_X);
       MSM_reset_construction(&MV_STATEMACHINE);
       MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_TRANSLATION, genenv_mv_state_translation(0.001, 0.8, -500));
-      MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_TRANSLATION, genenv_mv_state_translation(0.001, 0.8, 500));
+      MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_ROTATION, genenv_mv_state_rotation(0.001, 0.2, 180));
+      MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_TRANSLATION, genenv_mv_state_translation(0.001, 0.8, -500));
       MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_HOLD, genenv_mv_state_hold());
       MSM_ready_construction(&MV_STATEMACHINE);
     }
