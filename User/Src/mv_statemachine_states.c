@@ -169,10 +169,10 @@ void state_translation_run(struct MvStateMachine* statemachine, struct MvStateEn
 	float motor_command_position = PID_Run(&pid_translation_runtime, &pid_translation, distance_travelled, desired_position, delta_time);
 	float motor_command_rotation = PID_Run(&pid_rotation_runtime, &pid_rotation, rotation_error, 0, delta_time);
 
-	printf("derivative : %f\n", pid_translation_runtime.d);
-
 	//printf("translation pid command : %2.3f\n", motor_command_position);
 	//printf("rotation pid command : %2.3f\n", motor_command_rotation);
+
+	//printf("distance : %2.3f\n", distance_travelled);
 
 	motor_drive_pid(delta_time, motor_command_position + motor_command_rotation, motor_R, encoder_R, pid_motor_R, &pid_motor_R_runtime);
 	motor_drive_pid(delta_time, motor_command_position - motor_command_rotation, motor_L, encoder_L, pid_motor_L, &pid_motor_L_runtime);
@@ -256,7 +256,7 @@ void state_rotation_run(struct MvStateMachine* statemachine, struct MvStateEnv* 
 	motor_drive_pid(delta_time, motor_command_position + motor_command_rotation, motor_R, encoder_R, pid_motor_R, &pid_motor_R_runtime);
 	motor_drive_pid(delta_time, motor_command_position - motor_command_rotation, motor_L, encoder_L, pid_motor_L, &pid_motor_L_runtime);
 
-	if (is_val_near(rotation_delta, env->distance, 3.0f) && fabs(pid_rotation_runtime.d) < 0.05f)
+	if (is_val_near(rotation_delta, env->distance, 1.0f) && fabs(pid_rotation_runtime.d) < 0.01f)
 	{
 		env->real_outcome = rotation_delta;
 		MSM_set_state_finished(statemachine);

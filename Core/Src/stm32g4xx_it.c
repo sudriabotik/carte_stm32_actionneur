@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include "mv_statemachine.h"
 #include "mv_statemachine_states.h"
+#include "coordonne_absolue.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -210,20 +211,32 @@ void TIM2_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM2_IRQn 0 */
   //printf("irq_tim2_interrupt %lu\n", counter_test);
-  counter_test ++;
   MSM_update(&MV_STATEMACHINE, 10);
 
   if (MSM_is_busy(&MV_STATEMACHINE) == 0)
-    {
+  {
       printf("not busy\n");
       //if (toggle) MSM_begin_recalibration(1, 15000, 20, POSITIVE_X);
+      /*
       MSM_reset_construction(&MV_STATEMACHINE);
       MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_TRANSLATION, genenv_mv_state_translation(0.001, 0.8, -500));
       MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_ROTATION, genenv_mv_state_rotation(0.001, 0.2, 180));
       MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_TRANSLATION, genenv_mv_state_translation(0.001, 0.8, -500));
       MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_HOLD, genenv_mv_state_hold());
       MSM_ready_construction(&MV_STATEMACHINE);
-    }
+      */
+     if (counter_test % 2 == 0)
+     {
+      Point2D target = {.x = 200, .y = 500};
+      goto_xy(target, 0.8, 0.001, 0.1, 0.001, FACE_ARRIERE);
+     }
+     else
+     {
+      Point2D target = {.x = 0, .y = 0};
+      goto_xy(target, 0.8, 0.001, 0.1, 0.001, FACE_AVANT);
+     }
+     counter_test ++;
+  }
   /* USER CODE END TIM2_IRQn 0 */
   HAL_TIM_IRQHandler(&htim2);
   /* USER CODE BEGIN TIM2_IRQn 1 */

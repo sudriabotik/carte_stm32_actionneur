@@ -34,8 +34,8 @@ struct PidRuntime pid_motor_L_runtime = {};
 
 struct PidSettings pid_translation =
 {
-	.kp = 0.6f,
-	.kd = 0.002f,
+	.kp = 0.4f,
+	.kd = 0.0005f,
 	.ki = 0.000f,
 	.fratio = 0.2f,
 	.decay = 0.2f,
@@ -50,8 +50,8 @@ struct PidRuntime pid_translation_runtime = {};
 
 struct PidSettings pid_rotation =
 {
-	.kp = 0.6f,
-	.kd = 0.002f,
+	.kp = 0.4f,
+	.kd = 0.0005f,
 	.ki = 0,
 	.fratio = 0.2f,
 	.decay = 0.5f,

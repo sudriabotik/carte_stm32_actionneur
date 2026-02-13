@@ -111,7 +111,7 @@ void robot_update_theta(float t);
  * @param face       Sens de déplacement.
  * @return 0 si OK, -1 si la statemachine est occupée ou la file pleine.
  */
-int goto_xy(Point2D target, float speed, Face face);
+int goto_xy(Point2D target, float linear_speed, float linear_accel, float angular_speed, float angular_accel, Face face);
 
 
 

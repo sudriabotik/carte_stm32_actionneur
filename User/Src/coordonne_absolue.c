@@ -16,7 +16,7 @@ Pose robot_pose = { .x = 0.0f, .y = 0.0f, .theta = 0.0f };
 
 float compute_target_angle(Pose from, Point2D target)
 {
-    return atan2f(target.y - from.y, target.x - from.x);
+    return atan2f(target.x - from.x, target.y - from.y);
 }
 
 float compute_relative_rotation(float current_theta, float target_angle, Face face)
@@ -71,24 +71,26 @@ void robot_update_theta(float t) { robot_pose.theta = t; }
 
 /* ── Commande principale ──────────────────────────────────────────────────── */
 
-int goto_xy(Point2D target, float speed, Face face)
+int goto_xy(Point2D target, float linear_speed, float linear_accel, float angular_speed, float angular_accel, Face face)
 {
     if (MSM_is_busy(&MV_STATEMACHINE)) return -1;
 
     float target_angle = compute_target_angle(robot_pose, target);
-    float rotation     = compute_relative_rotation(robot_pose.theta, target_angle, face);
+    float rotation     = compute_relative_rotation(robot_pose.theta, target_angle, face) * 180 / M_PI;
     float distance     = compute_distance(robot_pose, target, face);
+
+    printf("goto x:%.3f y:%.3f requires translation %.3fmm and rotation %.3fdeg\n", target.x, target.y, distance, rotation);
 
     MSM_reset_construction(&MV_STATEMACHINE);
 
     // TODO : remplacer les constantes d'accélération par des paramètres ou des defines
     MSM_enqueue_state(&MV_STATEMACHINE,
-        &MV_STATE_TRANSLATION,
-        genenv_mv_state_translation(0.001f, speed, rotation));
+        &MV_STATE_ROTATION,
+        genenv_mv_state_rotation(angular_accel, angular_speed, rotation));
 
     MSM_enqueue_state(&MV_STATEMACHINE,
         &MV_STATE_TRANSLATION,
-        genenv_mv_state_translation(0.001f, speed, distance));
+        genenv_mv_state_translation(linear_accel, linear_speed, distance));
 
     MSM_ready_construction(&MV_STATEMACHINE);
 
@@ -98,5 +100,5 @@ int goto_xy(Point2D target, float speed, Face face)
 
 void robot_print_pose()
 {
-    printf("the current pose is x:%4.3f y%3.3f t%4.3f\n", robot_pose.x, robot_pose.y, robot_pose.theta);
+    printf("the current pose is x:%4.3f y%3.3f t%4.3f\n", robot_pose.x, robot_pose.y, robot_pose.theta * 180 / M_PI);
 }
