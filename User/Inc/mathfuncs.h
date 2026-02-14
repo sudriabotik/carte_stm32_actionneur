@@ -26,6 +26,11 @@ float func_trapezoid(float t, struct Trapezoid trapez);
  */
 struct FuncPositionSlope
 {
+	/** Whether or not there is time to reach the max speed without overshooting the distance.
+	 * In other words, whether or not the steady speed state is reachable.
+	 */
+	int overlap;
+
 	float dist;
 	float top_speed;
 	float accel;
@@ -40,7 +45,7 @@ struct FuncPositionSlope
 	/** The final value at the end of the straight part */
 	float c2;
 
-	// TEMP used to obtain negative values
+	// used to output negative values if the distance is negative (TEMP)
 	float multiplier;
 };
 
@@ -49,6 +54,7 @@ struct FuncPositionSlope
  * 
  * @note Use any accel / speed / distance / time units as long as they are coherent with each other. \n
  * Example : mm/s^2, mm/s, mm and s
+ * Acceleration and speed are always positive values, while distance can be negative.
  */
 struct FuncPositionSlope pregen_position_slope(float accel, float top_speed, float dist);
 float eval_position_slope(float t, struct FuncPositionSlope function);
