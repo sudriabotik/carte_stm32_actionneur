@@ -1,0 +1,12 @@
+C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/coordonne_absolue.c:16:7:compute_target_angle	32	static
+C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/coordonne_absolue.c:21:7:compute_relative_rotation	32	static
+C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/coordonne_absolue.c:36:7:compute_distance	40	static
+C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/coordonne_absolue.c:46:6:robot_add_distance	32	static
+C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/coordonne_absolue.c:52:6:robot_add_rotation	16	static
+C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/coordonne_absolue.c:60:6:robot_update_pose	24	static
+C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/coordonne_absolue.c:66:6:robot_update_x	16	static
+C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/coordonne_absolue.c:67:6:robot_update_y	16	static
+C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/coordonne_absolue.c:68:6:robot_update_theta	16	static
+C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/coordonne_absolue.c:73:5:goto_xy	328	static
+C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/coordonne_absolue.c:98:5:robot_calage	288	static
+C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/coordonne_absolue.c:133:6:robot_print_pose	40	static

@@ -1,0 +1,2 @@
+C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/uart_messenger.c:7:6:uart_messenger_init	8	static
+C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/uart_messenger.c:13:6:HAL_UART_RxCpltCallback	16	static

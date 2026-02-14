@@ -1,0 +1,4 @@
+C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/Core/Src/main.c:77:1:__io_putchar	16	static
+C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/Core/Src/main.c:89:5:main	824	static
+C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/Core/Src/main.c:232:6:SystemClock_Config	88	static
+C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/Core/Src/main.c:282:6:Error_Handler	4	static,ignoring_inline_asm
