@@ -1,6 +1,6 @@
 Src/robot_data.o: \
  C:/Users/PAUL/OneDrive\ -\ ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/robot_data.c \
- ../../User/Inc/robot_data.h ../../User/Inc/encoders.h \
+ ../../User/Inc/robot_data.h ../../lib_robot/inc_lib/encoders.h \
  ../../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h \
  ../../Drivers/CMSIS/Include/core_cm4.h \
  ../../Drivers/CMSIS/Include/cmsis_version.h \
@@ -41,9 +41,9 @@ Src/robot_data.o: \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h \
- ../../User/Inc/motors.h ../../Core/Inc/gpio.h
+ ../../lib_robot/inc_lib/motors.h ../../Core/Inc/gpio.h
 ../../User/Inc/robot_data.h:
-../../User/Inc/encoders.h:
+../../lib_robot/inc_lib/encoders.h:
 ../../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h:
 ../../Drivers/CMSIS/Include/core_cm4.h:
 ../../Drivers/CMSIS/Include/cmsis_version.h:
@@ -85,5 +85,5 @@ Src/robot_data.o: \
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h:
-../../User/Inc/motors.h:
+../../lib_robot/inc_lib/motors.h:
 ../../Core/Inc/gpio.h:

@@ -27,4 +27,13 @@ extern struct PidRuntime pid_translation_runtime;
 extern struct PidSettings pid_rotation;
 extern struct PidRuntime pid_rotation_runtime;
 
+
+/** @brief PID de position de l'ascenseur vertical (utilise motor_R / encoder_R) */
+extern struct PidSettings pid_position_elevator_V;
+extern struct PidRuntime  pid_position_elevator_V_runtime;
+
+/** @brief PID de position de l'ascenseur horizontal (utilise motor_L / encoder_L) */
+extern struct PidSettings pid_position_elevator_H;
+extern struct PidRuntime  pid_position_elevator_H_runtime;
+
 # endif

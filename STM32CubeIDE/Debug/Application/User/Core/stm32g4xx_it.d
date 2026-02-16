@@ -40,8 +40,10 @@ Application/User/Core/stm32g4xx_it.o: \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h \
  ../../Core/Inc/stm32g4xx_it.h ../../User/Inc/mv_statemachine.h \
- ../../User/Inc/mathfuncs.h ../../User/Inc/mv_statemachine_states.h \
- ../../User/Inc/mv_statemachine.h ../../User/Inc/coordonne_absolue.h
+ ../../lib_robot/inc_lib/mathfuncs.h \
+ ../../User/Inc/mv_statemachine_states.h ../../User/Inc/mv_statemachine.h \
+ ../../User/Inc/coordonne_absolue.h ../../User/Inc/elevator_states.h \
+ ../../User/Inc/mv_statemachine_states.h
 ../../Core/Inc/main.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
 ../../Core/Inc/stm32g4xx_hal_conf.h:
@@ -83,7 +85,9 @@ Application/User/Core/stm32g4xx_it.o: \
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h:
 ../../Core/Inc/stm32g4xx_it.h:
 ../../User/Inc/mv_statemachine.h:
-../../User/Inc/mathfuncs.h:
+../../lib_robot/inc_lib/mathfuncs.h:
 ../../User/Inc/mv_statemachine_states.h:
 ../../User/Inc/mv_statemachine.h:
 ../../User/Inc/coordonne_absolue.h:
+../../User/Inc/elevator_states.h:
+../../User/Inc/mv_statemachine_states.h:

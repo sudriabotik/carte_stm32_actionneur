@@ -42,14 +42,16 @@ Application/User/Core/main.o: \
  ../../Core/Inc/adc.h ../../Core/Inc/main.h ../../Core/Inc/fdcan.h \
  ../../Core/Inc/spi.h ../../Core/Inc/tim.h ../../Core/Inc/usart.h \
  ../../Core/Inc/usb.h ../../Core/Inc/gpio.h ../../User/Inc/robot_data.h \
- ../../User/Inc/encoders.h \
+ ../../lib_robot/inc_lib/encoders.h \
  ../../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h \
- ../../User/Inc/motors.h ../../User/Inc/motors.h \
- ../../User/Inc/motor_asserv.h ../../User/Inc/pid.h \
- ../../User/Inc/pid_config.h ../../User/Inc/recorder.h \
- ../../User/Inc/ax_controller.h ../../User/Inc/mv_statemachine.h \
- ../../User/Inc/mathfuncs.h ../../User/Inc/mv_statemachine_states.h \
- ../../User/Inc/mv_statemachine.h
+ ../../lib_robot/inc_lib/motors.h ../../lib_robot/inc_lib/motor_asserv.h \
+ ../../lib_robot/inc_lib/pid.h ../../lib_robot/inc_lib/motors.h \
+ ../../lib_robot/inc_lib/encoders.h ../../User/Inc/pid_config.h \
+ ../../lib_robot/inc_lib/pid.h ../../User/Inc/recorder.h \
+ ../../lib_robot/inc_lib/ax_controller.h ../../User/Inc/mv_statemachine.h \
+ ../../lib_robot/inc_lib/mathfuncs.h \
+ ../../User/Inc/mv_statemachine_states.h ../../User/Inc/mv_statemachine.h \
+ ../../User/Inc/elevator_states.h ../../User/Inc/mv_statemachine_states.h
 ../../Core/Inc/main.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
 ../../Core/Inc/stm32g4xx_hal_conf.h:
@@ -98,16 +100,20 @@ Application/User/Core/main.o: \
 ../../Core/Inc/usb.h:
 ../../Core/Inc/gpio.h:
 ../../User/Inc/robot_data.h:
-../../User/Inc/encoders.h:
+../../lib_robot/inc_lib/encoders.h:
 ../../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h:
-../../User/Inc/motors.h:
-../../User/Inc/motors.h:
-../../User/Inc/motor_asserv.h:
-../../User/Inc/pid.h:
+../../lib_robot/inc_lib/motors.h:
+../../lib_robot/inc_lib/motor_asserv.h:
+../../lib_robot/inc_lib/pid.h:
+../../lib_robot/inc_lib/motors.h:
+../../lib_robot/inc_lib/encoders.h:
 ../../User/Inc/pid_config.h:
+../../lib_robot/inc_lib/pid.h:
 ../../User/Inc/recorder.h:
-../../User/Inc/ax_controller.h:
+../../lib_robot/inc_lib/ax_controller.h:
 ../../User/Inc/mv_statemachine.h:
-../../User/Inc/mathfuncs.h:
+../../lib_robot/inc_lib/mathfuncs.h:
 ../../User/Inc/mv_statemachine_states.h:
 ../../User/Inc/mv_statemachine.h:
+../../User/Inc/elevator_states.h:
+../../User/Inc/mv_statemachine_states.h:

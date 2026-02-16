@@ -2,7 +2,7 @@
 
 
 const float ROBOT_WHEEL_DIAMETER = 20.0f;
-const float ROBOT_ENCODER_WHEEL_DIAMETER = 62.5f;
+const float ROBOT_ENCODER_WHEEL_DIAMETER = 25.0f;
 const float ROBOT_WHEELBASE_WIDTH = 300.0f;
 
 const float ROBOT_COEF_TRANSLATION_DISTANCE = 1.0f;
@@ -26,7 +26,7 @@ void robot_data_init()
 	// encoder R
 	encoder_R.tim_counter = &TIM3->CNT;
 	encoder_R.close_distance = 20000u;
-	encoder_R.ticks_per_revolution = 14000;
+	encoder_R.ticks_per_revolution = 37000;
 	Encoder16Reset(&encoder_R);
 
 	// motor R
@@ -39,7 +39,7 @@ void robot_data_init()
 	// encoder L
 	encoder_L.tim_counter = &TIM4->CNT;
 	encoder_L.close_distance = 20000u;
-	encoder_L.ticks_per_revolution = 14000;
+	encoder_L.ticks_per_revolution = 37000;
 	Encoder16Reset(&encoder_L);
 
 	// motor L

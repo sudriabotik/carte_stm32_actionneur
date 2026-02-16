@@ -1,0 +1,3 @@
+[submodule "lib_robot"]
+	path = lib_robot
+	url = git@github.com:sudriabotik/lib_robot.git

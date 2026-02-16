@@ -4,6 +4,7 @@
 
 
 
+// Crée et retourne une machine à états vide avec toutes les files initialisées à zéro
 struct MvStateMachine MSM_init()
 {
 	struct MvStateMachine machine =
@@ -18,12 +19,14 @@ struct MvStateMachine MSM_init()
 	return machine;
 }
 
+// Remet la file de construction à zéro pour pouvoir en préparer une nouvelle séquence
 int_t MSM_reset_construction(struct MvStateMachine *machine)
 {
 	machine->construction_index = 0;
 	return 0;
 }
 
+// Ajoute un état et ses paramètres à la fin de la file de construction
 int_t MSM_enqueue_state(struct MvStateMachine *machine, struct MvState *state, struct MvStateEnv env)
 {
 	if (MSM_is_construction_full(machine)) return -1;
@@ -35,27 +38,32 @@ int_t MSM_enqueue_state(struct MvStateMachine *machine, struct MvState *state, s
 	return 0;
 }
 
+// Marque la file de construction comme prête : elle sera chargée au prochain appel à MSM_update()
 int_t MSM_ready_construction(struct MvStateMachine *machine)
 {
 	machine->load_construction_queue = 1;
 	return 0;
 }
 
+// Retourne le nombre d'états actuellement dans la file de construction
 uint_t MSM_get_construction_index(struct MvStateMachine *machine)
 {
 	return machine->construction_index;
 }
 
+// Retourne 1 si la file de construction a atteint sa capacité maximale (MV_STATEMACHINE_LENGTH)
 int_t MSM_is_construction_full(struct MvStateMachine *machine)
 {
 	return machine->construction_index >= MV_STATEMACHINE_LENGTH;
 }
 
+// Retourne 1 si la machine exécute encore un état (file active non terminée)
 int MSM_is_busy(struct MvStateMachine *machine)
 {
 	return machine->state_queue[machine->index] != 0;
 }
 
+// Coeur de la machine : charge la file de construction si prête, avance à l'état suivant si le courant est terminé, puis exécute run() de l'état actif
 int MSM_update(struct MvStateMachine *machine, float delta_time)
 {
 	struct MvState *current_state = machine->state_queue[machine->index];
@@ -120,6 +128,7 @@ int MSM_update(struct MvStateMachine *machine, float delta_time)
 	return 0;
 }
 
+// Signale que l'état en cours est terminé ; MSM_update() passera au suivant lors du prochain appel
 int_t MSM_set_state_finished(struct MvStateMachine *machine)
 {
 	machine->state_finished = 1;

@@ -26,6 +26,7 @@
 #include "mv_statemachine.h"
 #include "mv_statemachine_states.h"
 #include "coordonne_absolue.h"
+#include "elevator_states.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -210,6 +211,8 @@ void SysTick_Handler(void)
 void TIM2_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM2_IRQn 0 */
+
+  /* 
   //printf("irq_tim2_interrupt %lu\n", counter_test);
   MSM_update(&MV_STATEMACHINE, 10);
 
@@ -217,14 +220,14 @@ void TIM2_IRQHandler(void)
   {
       printf("not busy\n");
       //if (toggle) MSM_begin_recalibration(1, 15000, 20, POSITIVE_X);
-      /*
-      MSM_reset_construction(&MV_STATEMACHINE);
-      MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_TRANSLATION, genenv_mv_state_translation(0.001, 0.8, -500));
-      MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_ROTATION, genenv_mv_state_rotation(0.001, 0.2, 180));
-      MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_TRANSLATION, genenv_mv_state_translation(0.001, 0.8, -500));
-      MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_HOLD, genenv_mv_state_hold());
-      MSM_ready_construction(&MV_STATEMACHINE);
-      */
+      
+      //MSM_reset_construction(&MV_STATEMACHINE);
+      //MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_TRANSLATION, genenv_mv_state_translation(0.001, 0.8, -500));
+      //MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_ROTATION, genenv_mv_state_rotation(0.001, 0.2, 180));
+      //MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_TRANSLATION, genenv_mv_state_translation(0.001, 0.8, -500));
+      //MSM_enqueue_state(&MV_STATEMACHINE, &MV_STATE_HOLD, genenv_mv_state_hold());
+      //MSM_ready_construction(&MV_STATEMACHINE);
+      
      if (counter_test % 2 == 0)
      {
       Point2D target = {.x = 200, .y = 500};
@@ -237,6 +240,44 @@ void TIM2_IRQHandler(void)
      }
      counter_test ++;
   }
+  */
+  
+  MSM_update(&elevator_V_statemachine, 0.020f);
+  MSM_update(&elevator_H_statemachine, 0.020f);
+  /* 
+  if (MSM_is_busy(&elevator_V_statemachine) == 0)
+  {
+    if (counter_test == 0)
+    {
+      counter_test ++;
+      printf("counter_test == 1");
+      MSM_reset_construction(&elevator_V_statemachine);
+      MSM_enqueue_state(&elevator_V_statemachine, &ELV_STATE_HOME_V, genenv_elv_home_v(10.0f));
+      MSM_enqueue_state(&elevator_V_statemachine, &ELV_STATE_MOVE_V, genenv_elv_move_v(30.0f, 15.0f, -40.0f));
+      MSM_enqueue_state(&elevator_V_statemachine, &ELV_STATE_HOLD_V, genenv_elv_hold_v());
+      MSM_ready_construction(&elevator_V_statemachine);
+    }
+  }
+  */
+  
+    if (MSM_is_busy(&elevator_H_statemachine) == 0)
+  {
+    if (counter_test == 0)
+    {
+      counter_test ++;
+      printf("counter_test == 1");
+      MSM_reset_construction(&elevator_H_statemachine);
+
+      MSM_enqueue_state(&elevator_H_statemachine, &ELV_STATE_HOME_H, genenv_elv_home_h(-10.0f));
+      MSM_enqueue_state(&elevator_H_statemachine, &ELV_STATE_MOVE_H, genenv_elv_move_h(20.0f, 10.0f, 20.0f));
+      MSM_enqueue_state(&elevator_H_statemachine, &ELV_STATE_HOLD_H, genenv_elv_hold_h());
+      
+      MSM_ready_construction(&elevator_H_statemachine);
+    }
+  }
+	
+  
+
   /* USER CODE END TIM2_IRQn 0 */
   HAL_TIM_IRQHandler(&htim2);
   /* USER CODE BEGIN TIM2_IRQn 1 */

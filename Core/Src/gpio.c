@@ -59,6 +59,12 @@ void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
 
+  /*Configure GPIO pin : end_switch_vertical_Pin */
+  GPIO_InitStruct.Pin = end_switch_vertical_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  HAL_GPIO_Init(end_switch_vertical_GPIO_Port, &GPIO_InitStruct);
+
   /*Configure GPIO pins : N_fault_D_Pin V_Bus_Sensing_Pin */
   GPIO_InitStruct.Pin = N_fault_D_Pin|V_Bus_Sensing_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;

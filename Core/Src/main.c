@@ -39,6 +39,7 @@
 # include "ax_controller.h"
 # include "mv_statemachine.h"
 # include "mv_statemachine_states.h"
+# include "elevator_states.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -139,6 +140,8 @@ int main(void)
   //MSM_begin_hold();
 
   MV_STATEMACHINE = MSM_init();
+  elevator_V_statemachine = MSM_init();
+  elevator_H_statemachine = MSM_init();
 
   HAL_Delay(4000);
   HAL_TIM_Base_Start_IT(&htim2);
@@ -218,6 +221,7 @@ int main(void)
       toggle = !toggle;
     }
       */
+    //printf("R encoder register %"PRIu32"\n\r", TIM3->CNT);
 
     HAL_Delay(10);
     trig_count ++;

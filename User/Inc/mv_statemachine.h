@@ -24,6 +24,11 @@ struct MvStateEnv;
 typedef unsigned int uint_t;
 typedef int int_t;
 
+// Type "pointeur de fonction" utilisé pour wake/run/stop.
+// Toutes ces fonctions ont la même signature :
+//   - struct MvStateMachine* : la machine elle-même (pour pouvoir appeler MSM_set_state_finished par exemple)
+//   - struct MvStateEnv*     : les paramètres de l'état (distance, vitesse...)
+//   - float delta_time       : temps écoulé depuis le dernier appel (en secondes)
 typedef void (*MvStateCall)(struct MvStateMachine*, struct MvStateEnv*, float delta_time);
 
 
@@ -67,15 +72,19 @@ struct MvState
 
 struct MvStateMachine
 {
-	struct MvState* state_queue[MV_STATEMACHINE_LENGTH+1];
-	struct MvStateEnv envs_queue[MV_STATEMACHINE_LENGTH+1];
-	uint_t index;
-	int_t state_finished;
+	// --- FILE ACTIVE : la séquence de mouvements en cours d'exécution ---
 
-	struct MvState* construction_state_queue[MV_STATEMACHINE_LENGTH];
-	struct MvStateEnv construction_envs_queue[MV_STATEMACHINE_LENGTH];
-	uint_t construction_index;
-	uint_t load_construction_queue;
+	struct MvState* state_queue[MV_STATEMACHINE_LENGTH+1];  // tableau des états à exécuter (pointeurs vers HOLD, TRANSLATION...), NULL = fin de séquence
+	struct MvStateEnv envs_queue[MV_STATEMACHINE_LENGTH+1]; // paramètres associés à chaque état (distance, vitesse, temps écoulé...)
+	uint_t index;                                           // indice de l'état actuellement en cours d'exécution dans state_queue
+	int_t state_finished;                                   // flag mis à 1 par MSM_set_state_finished() pour signaler que l'état courant est terminé
+
+	// --- FILE DE CONSTRUCTION : la prochaine séquence préparée en coulisse ---
+
+	struct MvState* construction_state_queue[MV_STATEMACHINE_LENGTH];  // états de la prochaine séquence (remplie via MSM_enqueue_state)
+	struct MvStateEnv construction_envs_queue[MV_STATEMACHINE_LENGTH]; // paramètres associés à chaque état de la construction
+	uint_t construction_index;                                         // nombre d'états déjà ajoutés à la file de construction
+	uint_t load_construction_queue;                                    // flag mis à 1 par MSM_ready_construction() : au prochain update, remplace la file active
 };
 
 
