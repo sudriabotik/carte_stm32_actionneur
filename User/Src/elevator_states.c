@@ -15,11 +15,11 @@
 #include "gpio.h"
 #include "main.h"
 
-// Endstop vertical : PF1, PULLDOWN, cliqué = GPIO_PIN_SET
+// Endstop vertical : PULLDOWN, repos = RESET, cliqué = SET
 #define ENDSTOP_V_TRIGGERED() (HAL_GPIO_ReadPin(end_switch_vertical_GPIO_Port, end_switch_vertical_Pin) == GPIO_PIN_SET)
 
-// TODO : configurer l'endstop horizontal (port + pin) quand disponible
-#define ENDSTOP_H_TRIGGERED() (HAL_GPIO_ReadPin(end_switch_vertical_GPIO_Port, end_switch_vertical_Pin) == GPIO_PIN_SET)
+// Endstop horizontal : PULLDOWN, repos = RESET, cliqué = SET
+#define ENDSTOP_H_TRIGGERED() (HAL_GPIO_ReadPin(end_switch_horizontal_GPIO_Port, end_switch_horizontal_Pin) == GPIO_PIN_SET)
 
 
 // Machines à états des 2 ascenseurs — initialisées dans main via MSM_init()
@@ -105,7 +105,7 @@ ELV_STATE_HOLD_V  (vertical)
 
 void elv_hold_v_wake(struct MvStateMachine* statemachine, struct MvStateEnv* env, float delta_time)
 {
-	printf("elevator V : holding position\n");
+	printf("elevator V : holding position wake \r\n");
 
 	Encoder16Reset(&encoder_R);
 	PID_reset_runtime(&pid_position_elevator_V_runtime);
@@ -163,9 +163,10 @@ void elv_home_v_run(struct MvStateMachine* statemachine, struct MvStateEnv* env,
 {
 	// Avance à vitesse fixe vers l'endstop (env->speed en %, entre -100 et +100)
 	motor_drive(motor_R, env->speed);
-
+	
 	if (ENDSTOP_V_TRIGGERED())
 	{
+		printf("endstop_vertical\n");
 		MSM_set_state_finished(statemachine);
 	}
 }

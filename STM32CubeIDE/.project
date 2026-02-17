@@ -39,7 +39,7 @@
 		<link>
 			<name>carte_stm32_actionneur.ioc</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/shield_raspberry_main.ioc</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/carte_stm32_actionneur.ioc</locationURI>
 		</link>
 		<link>
 			<name>src_lib</name>

@@ -68,7 +68,7 @@ struct PidRuntime pid_rotation_runtime = {};
 // TODO : régler kp, kd, ki selon le comportement réel de l'ascenseur vertical
 struct PidSettings pid_position_elevator_V =
 {
-	.kp = 0.5f,
+	.kp = 0.6f,
 	.kd = 0.0000f,
 	.ki = 0.0f,
 	.fratio = 0.2f,
@@ -86,8 +86,8 @@ struct PidRuntime pid_position_elevator_V_runtime = {};
 // TODO : régler kp, kd, ki selon le comportement réel de l'ascenseur horizontal
 struct PidSettings pid_position_elevator_H =
 {
-	.kp = 0.2f,
-	.kd = 0.005f,
+	.kp = 0.6f,
+	.kd = 0.000f,
 	.ki = 0.0f,
 	.fratio = 0.5f,
 	.decay = 0.2f,

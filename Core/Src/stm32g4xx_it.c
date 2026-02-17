@@ -47,6 +47,7 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
 uint32_t counter_test = 0;
+uint32_t counter_test_2 = 0;
 int toggle_test = 0;
 /* USER CODE END PV */
 
@@ -241,10 +242,10 @@ void TIM2_IRQHandler(void)
      counter_test ++;
   }
   */
-  
-  MSM_update(&elevator_V_statemachine, 0.020f);
-  MSM_update(&elevator_H_statemachine, 0.020f);
-  /* 
+  MSM_update(&elevator_V_statemachine,10);
+  MSM_update(&elevator_H_statemachine, 10);
+
+
   if (MSM_is_busy(&elevator_V_statemachine) == 0)
   {
     if (counter_test == 0)
@@ -253,18 +254,18 @@ void TIM2_IRQHandler(void)
       printf("counter_test == 1");
       MSM_reset_construction(&elevator_V_statemachine);
       MSM_enqueue_state(&elevator_V_statemachine, &ELV_STATE_HOME_V, genenv_elv_home_v(10.0f));
-      MSM_enqueue_state(&elevator_V_statemachine, &ELV_STATE_MOVE_V, genenv_elv_move_v(30.0f, 15.0f, -40.0f));
+      //MSM_enqueue_state(&elevator_V_statemachine, &ELV_STATE_MOVE_V, genenv_elv_move_v(30.0f, 15.0f, -40.0f));
       MSM_enqueue_state(&elevator_V_statemachine, &ELV_STATE_HOLD_V, genenv_elv_hold_v());
       MSM_ready_construction(&elevator_V_statemachine);
     }
   }
-  */
   
+  /*
     if (MSM_is_busy(&elevator_H_statemachine) == 0)
   {
-    if (counter_test == 0)
+    if (counter_test_2 == 0)
     {
-      counter_test ++;
+      counter_test_2 ++;
       printf("counter_test == 1");
       MSM_reset_construction(&elevator_H_statemachine);
 
@@ -275,7 +276,7 @@ void TIM2_IRQHandler(void)
       MSM_ready_construction(&elevator_H_statemachine);
     }
   }
-	
+	*/
   
 
   /* USER CODE END TIM2_IRQn 0 */
