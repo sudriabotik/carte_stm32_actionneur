@@ -43,7 +43,8 @@ Application/User/Core/stm32g4xx_it.o: \
  ../../lib_robot/inc_lib/mathfuncs.h \
  ../../User/Inc/mv_statemachine_states.h ../../User/Inc/mv_statemachine.h \
  ../../User/Inc/coordonne_absolue.h ../../User/Inc/elevator_states.h \
- ../../User/Inc/mv_statemachine_states.h
+ ../../User/Inc/mv_statemachine_states.h ../../User/Inc/sequencer.h \
+ ../../User/Inc/robot_sequences.h ../../User/Inc/sequencer.h
 ../../Core/Inc/main.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
 ../../Core/Inc/stm32g4xx_hal_conf.h:
@@ -91,3 +92,6 @@ Application/User/Core/stm32g4xx_it.o: \
 ../../User/Inc/coordonne_absolue.h:
 ../../User/Inc/elevator_states.h:
 ../../User/Inc/mv_statemachine_states.h:
+../../User/Inc/sequencer.h:
+../../User/Inc/robot_sequences.h:
+../../User/Inc/sequencer.h:

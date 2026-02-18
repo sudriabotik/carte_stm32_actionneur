@@ -12,6 +12,8 @@ C:/Users/PAUL/OneDrive\ -\ ESME/Documents/botique/2026/info/stm32_project/stm32_
 C:/Users/PAUL/OneDrive\ -\ ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/pid_config.c \
 C:/Users/PAUL/OneDrive\ -\ ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/recorder.c \
 C:/Users/PAUL/OneDrive\ -\ ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/robot_data.c \
+C:/Users/PAUL/OneDrive\ -\ ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/robot_sequences.c \
+C:/Users/PAUL/OneDrive\ -\ ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/sequencer.c \
 C:/Users/PAUL/OneDrive\ -\ ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/state_machine.c \
 C:/Users/PAUL/OneDrive\ -\ ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/uart_messenger.c 
 
@@ -23,6 +25,8 @@ OBJS += \
 ./Src/pid_config.o \
 ./Src/recorder.o \
 ./Src/robot_data.o \
+./Src/robot_sequences.o \
+./Src/sequencer.o \
 ./Src/state_machine.o \
 ./Src/uart_messenger.o 
 
@@ -34,6 +38,8 @@ C_DEPS += \
 ./Src/pid_config.d \
 ./Src/recorder.d \
 ./Src/robot_data.d \
+./Src/robot_sequences.d \
+./Src/sequencer.d \
 ./Src/state_machine.d \
 ./Src/uart_messenger.d 
 
@@ -53,6 +59,10 @@ Src/recorder.o: C:/Users/PAUL/OneDrive\ -\ ESME/Documents/botique/2026/info/stm3
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G431xx -c -I../../Core/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../../Drivers/CMSIS/Include -I../../User/Inc -I../../lib_robot/inc_lib -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 Src/robot_data.o: C:/Users/PAUL/OneDrive\ -\ ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/robot_data.c Src/subdir.mk
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G431xx -c -I../../Core/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../../Drivers/CMSIS/Include -I../../User/Inc -I../../lib_robot/inc_lib -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
+Src/robot_sequences.o: C:/Users/PAUL/OneDrive\ -\ ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/robot_sequences.c Src/subdir.mk
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G431xx -c -I../../Core/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../../Drivers/CMSIS/Include -I../../User/Inc -I../../lib_robot/inc_lib -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
+Src/sequencer.o: C:/Users/PAUL/OneDrive\ -\ ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/sequencer.c Src/subdir.mk
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G431xx -c -I../../Core/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../../Drivers/CMSIS/Include -I../../User/Inc -I../../lib_robot/inc_lib -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 Src/state_machine.o: C:/Users/PAUL/OneDrive\ -\ ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/state_machine.c Src/subdir.mk
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G431xx -c -I../../Core/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc -I../../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../../Drivers/CMSIS/Include -I../../User/Inc -I../../lib_robot/inc_lib -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 Src/uart_messenger.o: C:/Users/PAUL/OneDrive\ -\ ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/uart_messenger.c Src/subdir.mk
@@ -61,7 +71,7 @@ Src/uart_messenger.o: C:/Users/PAUL/OneDrive\ -\ ESME/Documents/botique/2026/inf
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/coordonne_absolue.cyclo ./Src/coordonne_absolue.d ./Src/coordonne_absolue.o ./Src/coordonne_absolue.su ./Src/elevator_states.cyclo ./Src/elevator_states.d ./Src/elevator_states.o ./Src/elevator_states.su ./Src/mv_statemachine.cyclo ./Src/mv_statemachine.d ./Src/mv_statemachine.o ./Src/mv_statemachine.su ./Src/mv_statemachine_states.cyclo ./Src/mv_statemachine_states.d ./Src/mv_statemachine_states.o ./Src/mv_statemachine_states.su ./Src/pid_config.cyclo ./Src/pid_config.d ./Src/pid_config.o ./Src/pid_config.su ./Src/recorder.cyclo ./Src/recorder.d ./Src/recorder.o ./Src/recorder.su ./Src/robot_data.cyclo ./Src/robot_data.d ./Src/robot_data.o ./Src/robot_data.su ./Src/state_machine.cyclo ./Src/state_machine.d ./Src/state_machine.o ./Src/state_machine.su ./Src/uart_messenger.cyclo ./Src/uart_messenger.d ./Src/uart_messenger.o ./Src/uart_messenger.su
+	-$(RM) ./Src/coordonne_absolue.cyclo ./Src/coordonne_absolue.d ./Src/coordonne_absolue.o ./Src/coordonne_absolue.su ./Src/elevator_states.cyclo ./Src/elevator_states.d ./Src/elevator_states.o ./Src/elevator_states.su ./Src/mv_statemachine.cyclo ./Src/mv_statemachine.d ./Src/mv_statemachine.o ./Src/mv_statemachine.su ./Src/mv_statemachine_states.cyclo ./Src/mv_statemachine_states.d ./Src/mv_statemachine_states.o ./Src/mv_statemachine_states.su ./Src/pid_config.cyclo ./Src/pid_config.d ./Src/pid_config.o ./Src/pid_config.su ./Src/recorder.cyclo ./Src/recorder.d ./Src/recorder.o ./Src/recorder.su ./Src/robot_data.cyclo ./Src/robot_data.d ./Src/robot_data.o ./Src/robot_data.su ./Src/robot_sequences.cyclo ./Src/robot_sequences.d ./Src/robot_sequences.o ./Src/robot_sequences.su ./Src/sequencer.cyclo ./Src/sequencer.d ./Src/sequencer.o ./Src/sequencer.su ./Src/state_machine.cyclo ./Src/state_machine.d ./Src/state_machine.o ./Src/state_machine.su ./Src/uart_messenger.cyclo ./Src/uart_messenger.d ./Src/uart_messenger.o ./Src/uart_messenger.su
 
 .PHONY: clean-Src
 

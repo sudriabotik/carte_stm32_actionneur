@@ -27,6 +27,8 @@
 #include "mv_statemachine_states.h"
 #include "coordonne_absolue.h"
 #include "elevator_states.h"
+#include "sequencer.h"
+#include "robot_sequences.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -49,6 +51,8 @@
 uint32_t counter_test = 0;
 uint32_t counter_test_2 = 0;
 int toggle_test = 0;
+struct Sequencer main_sequencer;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -242,10 +246,11 @@ void TIM2_IRQHandler(void)
      counter_test ++;
   }
   */
-  MSM_update(&elevator_V_statemachine,10);
-  MSM_update(&elevator_H_statemachine, 10);
-
-
+  MSM_update(&elevator_V_statemachine, 0.020f);
+  MSM_update(&elevator_H_statemachine, 0.020f);
+  sequencer_update(&main_sequencer);
+  
+  /* 
   if (MSM_is_busy(&elevator_V_statemachine) == 0)
   {
     if (counter_test == 0)
@@ -259,6 +264,7 @@ void TIM2_IRQHandler(void)
       MSM_ready_construction(&elevator_V_statemachine);
     }
   }
+    */ 
   
   /*
     if (MSM_is_busy(&elevator_H_statemachine) == 0)

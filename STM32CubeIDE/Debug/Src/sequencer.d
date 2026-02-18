@@ -1,6 +1,6 @@
-Application/User/Core/main.o: \
- C:/Users/PAUL/OneDrive\ -\ ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/Core/Src/main.c \
- ../../Core/Inc/main.h \
+Src/sequencer.o: \
+ C:/Users/PAUL/OneDrive\ -\ ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src/sequencer.c \
+ ../../User/Inc/sequencer.h ../../Core/Inc/main.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h \
  ../../Core/Inc/stm32g4xx_hal_conf.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h \
@@ -39,21 +39,8 @@ Application/User/Core/main.o: \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h \
- ../../Core/Inc/adc.h ../../Core/Inc/main.h ../../Core/Inc/fdcan.h \
- ../../Core/Inc/spi.h ../../Core/Inc/tim.h ../../Core/Inc/usart.h \
- ../../Core/Inc/usb.h ../../Core/Inc/gpio.h ../../User/Inc/robot_data.h \
- ../../lib_robot/inc_lib/encoders.h \
- ../../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h \
- ../../lib_robot/inc_lib/motors.h ../../lib_robot/inc_lib/motor_asserv.h \
- ../../lib_robot/inc_lib/pid.h ../../lib_robot/inc_lib/motors.h \
- ../../lib_robot/inc_lib/encoders.h ../../User/Inc/pid_config.h \
- ../../lib_robot/inc_lib/pid.h ../../User/Inc/recorder.h \
- ../../lib_robot/inc_lib/ax_controller.h ../../User/Inc/mv_statemachine.h \
- ../../lib_robot/inc_lib/mathfuncs.h \
- ../../User/Inc/mv_statemachine_states.h ../../User/Inc/mv_statemachine.h \
- ../../User/Inc/elevator_states.h ../../User/Inc/mv_statemachine_states.h \
- ../../User/Inc/sequencer.h ../../User/Inc/robot_sequences.h \
- ../../User/Inc/sequencer.h
+ ../../User/Inc/mv_statemachine.h ../../lib_robot/inc_lib/mathfuncs.h
+../../User/Inc/sequencer.h:
 ../../Core/Inc/main.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
 ../../Core/Inc/stm32g4xx_hal_conf.h:
@@ -93,32 +80,5 @@ Application/User/Core/main.o: \
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h:
-../../Core/Inc/adc.h:
-../../Core/Inc/main.h:
-../../Core/Inc/fdcan.h:
-../../Core/Inc/spi.h:
-../../Core/Inc/tim.h:
-../../Core/Inc/usart.h:
-../../Core/Inc/usb.h:
-../../Core/Inc/gpio.h:
-../../User/Inc/robot_data.h:
-../../lib_robot/inc_lib/encoders.h:
-../../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h:
-../../lib_robot/inc_lib/motors.h:
-../../lib_robot/inc_lib/motor_asserv.h:
-../../lib_robot/inc_lib/pid.h:
-../../lib_robot/inc_lib/motors.h:
-../../lib_robot/inc_lib/encoders.h:
-../../User/Inc/pid_config.h:
-../../lib_robot/inc_lib/pid.h:
-../../User/Inc/recorder.h:
-../../lib_robot/inc_lib/ax_controller.h:
 ../../User/Inc/mv_statemachine.h:
 ../../lib_robot/inc_lib/mathfuncs.h:
-../../User/Inc/mv_statemachine_states.h:
-../../User/Inc/mv_statemachine.h:
-../../User/Inc/elevator_states.h:
-../../User/Inc/mv_statemachine_states.h:
-../../User/Inc/sequencer.h:
-../../User/Inc/robot_sequences.h:
-../../User/Inc/sequencer.h:

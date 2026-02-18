@@ -45,6 +45,8 @@
 "./Src/pid_config.o"
 "./Src/recorder.o"
 "./Src/robot_data.o"
+"./Src/robot_sequences.o"
+"./Src/sequencer.o"
 "./Src/state_machine.o"
 "./Src/uart_messenger.o"
 "./src_lib/ax_controller.o"

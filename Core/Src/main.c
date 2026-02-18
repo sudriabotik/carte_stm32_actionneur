@@ -40,6 +40,8 @@
 # include "mv_statemachine.h"
 # include "mv_statemachine_states.h"
 # include "elevator_states.h"
+# include "sequencer.h"
+# include "robot_sequences.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -134,16 +136,20 @@ int main(void)
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
 
   robot_data_init();
-  //movement_statemachine_switch(&MOVEMENT_STATE_MOTOR_SPEED_CONTROL_TEST);
-  //MSM_begin_translation(200, 0.04, 0.02);
-  //MSM_begin_recalibration(1, 10000, 20, POSITIVE_X);
-  //MSM_begin_hold();
 
   MV_STATEMACHINE = MSM_init();
   elevator_V_statemachine = MSM_init();
   elevator_H_statemachine = MSM_init();
 
-  HAL_Delay(4000);
+  extern struct Sequencer main_sequencer;
+  main_sequencer = sequencer_init();
+  sequencer_set_idle(&main_sequencer, &elevator_V_statemachine, &ELV_STATE_HOLD_V, genenv_elv_hold_v());
+  sequencer_set_idle(&main_sequencer, &elevator_H_statemachine, &ELV_STATE_HOLD_H, genenv_elv_hold_h());
+
+  seq_build_homing_all(&main_sequencer, 10.0f, -10.0f);
+  sequencer_start(&main_sequencer);
+
+  HAL_Delay(500);
   HAL_TIM_Base_Start_IT(&htim2);
 
   /* USER CODE END 2 */
