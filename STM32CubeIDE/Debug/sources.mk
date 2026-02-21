@@ -24,6 +24,15 @@ C_DEPS :=
 SUBDIRS := \
 Application/User/Core \
 Application/User/Startup \
+CANopenNode/301 \
+CANopenNode/303 \
+CANopenNode/304 \
+CANopenNode/305 \
+CANopenNode/309 \
+CANopenNode \
+CANopenNode/extra \
+CANopenNode/storage \
+CANopenNode_STM32 \
 Drivers/CMSIS \
 Drivers/STM32G4xx_HAL_Driver \
 Src \

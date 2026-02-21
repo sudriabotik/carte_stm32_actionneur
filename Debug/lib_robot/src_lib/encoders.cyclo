@@ -1,0 +1,4 @@
+../lib_robot/src_lib/encoders.c:7:10:GetEncoderSituation	3
+../lib_robot/src_lib/encoders.c:14:5:Encoder16Reset	2
+../lib_robot/src_lib/encoders.c:29:5:Encoder16Update	6
+../lib_robot/src_lib/encoders.c:53:6:Encoder16PrintStatus	1

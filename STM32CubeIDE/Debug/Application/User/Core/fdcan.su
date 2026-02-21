@@ -1,3 +1,0 @@
-C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/Core/Src/fdcan.c:30:6:MX_FDCAN1_Init	8	static
-C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/Core/Src/fdcan.c:68:6:HAL_FDCAN_MspInit	112	static
-C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/Core/Src/fdcan.c:109:6:HAL_FDCAN_MspDeInit	16	static

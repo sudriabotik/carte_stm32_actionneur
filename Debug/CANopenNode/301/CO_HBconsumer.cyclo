@@ -1,0 +1,9 @@
+../CANopenNode/301/CO_driver.h:617:1:CO_getUint32	1
+../CANopenNode/301/CO_ODinterface.h:343:1:OD_getIndex	2
+../CANopenNode/301/CO_ODinterface.h:463:1:OD_extension_init	2
+../CANopenNode/301/CO_ODinterface.h:530:1:OD_get_u32	1
+../CANopenNode/301/CO_HBconsumer.c:38:1:CO_HBcons_receive	2
+../CANopenNode/301/CO_HBconsumer.c:77:1:OD_write_1016	8
+../CANopenNode/301/CO_HBconsumer.c:105:1:CO_HBconsumer_init	14
+../CANopenNode/301/CO_HBconsumer.c:169:1:CO_HBconsumer_initEntry	12
+../CANopenNode/301/CO_HBconsumer.c:304:1:CO_HBconsumer_process	18

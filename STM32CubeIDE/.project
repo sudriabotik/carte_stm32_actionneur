@@ -32,6 +32,16 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>CANopenNode</name>
+			<type>2</type>
+			<location>C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/CANopenNode</location>
+		</link>
+		<link>
+			<name>CANopenNode_STM32</name>
+			<type>2</type>
+			<location>C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/CANopenNode_STM32</location>
+		</link>
+		<link>
 			<name>Src</name>
 			<type>2</type>
 			<location>C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/User/Src</location>

@@ -1,0 +1,9 @@
+../User/Src/sequencer.c:8:13:send_to_machine	1
+../User/Src/sequencer.c:16:24:find_idle	3
+../User/Src/sequencer.c:27:18:sequencer_init	1
+../User/Src/sequencer.c:35:6:sequencer_set_idle	2
+../User/Src/sequencer.c:53:5:sequencer_add	2
+../User/Src/sequencer.c:72:6:sequencer_start	2
+../User/Src/sequencer.c:84:6:sequencer_reset	1
+../User/Src/sequencer.c:98:6:sequencer_update	6
+../User/Src/sequencer.c:140:9:sequencer_is_active	1

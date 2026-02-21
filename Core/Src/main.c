@@ -20,10 +20,8 @@
 #include "main.h"
 #include "adc.h"
 #include "fdcan.h"
-#include "spi.h"
 #include "tim.h"
 #include "usart.h"
-#include "usb.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -42,6 +40,8 @@
 # include "elevator_states.h"
 # include "sequencer.h"
 # include "robot_sequences.h"
+
+#include "CO_app_STM32.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -116,14 +116,13 @@ int main(void)
   MX_GPIO_Init();
   MX_ADC1_Init();
   MX_FDCAN1_Init();
-  MX_SPI2_Init();
   MX_TIM1_Init();
   MX_TIM3_Init();
   MX_TIM4_Init();
-  MX_USB_PCD_Init();
   MX_UART4_Init();
   MX_USART3_UART_Init();
   MX_TIM2_Init();
+  MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL); // right
   HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL); // left
@@ -132,8 +131,20 @@ int main(void)
   HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_4);
 
+  ////////////
+  // CONFIG CAN //
+  //////////
+  CANopenNodeSTM32 canopenNodeSTM32;
+  canopenNodeSTM32.CANHandle = &hfdcan1;
+  canopenNodeSTM32.HWInitFunction = MX_FDCAN1_Init;
+  canopenNodeSTM32.timerHandle = &htim6;
+  canopenNodeSTM32.desiredNodeID = 2;
+  canopenNodeSTM32.baudrate = 500; // de memoir ce parametre ne ser à rien mais c'est comme le tuto. 
+  canopen_app_init(&canopenNodeSTM32);
+
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, GPIO_PIN_RESET);
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
+
 
   robot_data_init();
 
@@ -143,11 +154,11 @@ int main(void)
 
   extern struct Sequencer main_sequencer;
   main_sequencer = sequencer_init();
-  sequencer_set_idle(&main_sequencer, &elevator_V_statemachine, &ELV_STATE_HOLD_V, genenv_elv_hold_v());
-  sequencer_set_idle(&main_sequencer, &elevator_H_statemachine, &ELV_STATE_HOLD_H, genenv_elv_hold_h());
+  //sequencer_set_idle(&main_sequencer, &elevator_V_statemachine, &ELV_STATE_HOLD_V, genenv_elv_hold_v());
+  //sequencer_set_idle(&main_sequencer, &elevator_H_statemachine, &ELV_STATE_HOLD_H, genenv_elv_hold_h());
 
-  seq_build_homing_all(&main_sequencer, 10.0f, -10.0f);
-  sequencer_start(&main_sequencer);
+  //seq_build_homing_all(&main_sequencer, 10.0f, -10.0f);
+  //sequencer_start(&main_sequencer);
 
   HAL_Delay(500);
   HAL_TIM_Base_Start_IT(&htim2);
@@ -158,6 +169,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    canopen_app_process();
+    HAL_GPIO_WritePin(led_can_1_GPIO_Port, led_can_1_Pin,!canopenNodeSTM32.outStatusLEDGreen);
+    HAL_GPIO_WritePin(led_can_2_GPIO_Port, led_can_2_Pin,!canopenNodeSTM32.outStatusLEDRed);
+
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -228,8 +244,6 @@ int main(void)
     }
       */
     //printf("R encoder register %"PRIu32"\n\r", TIM3->CNT);
-
-    HAL_Delay(10);
     trig_count ++;
   }
   /* USER CODE END 3 */
@@ -246,7 +260,7 @@ void SystemClock_Config(void)
 
   /** Configure the main internal regulator output voltage
   */
-  HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1);
+  HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1_BOOST);
 
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
@@ -256,8 +270,8 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV1;
-  RCC_OscInitStruct.PLL.PLLN = 12;
+  RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV4;
+  RCC_OscInitStruct.PLL.PLLN = 85;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV4;
   RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
@@ -270,12 +284,12 @@ void SystemClock_Config(void)
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK)
   {
     Error_Handler();
   }

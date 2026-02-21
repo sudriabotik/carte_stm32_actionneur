@@ -1,0 +1,6 @@
+../CANopenNode/305/CO_LSSslave.c:43:1:CO_LSSslave_receive	32
+../CANopenNode/305/CO_LSSslave.c:182:1:CO_LSSslave_init	10
+../CANopenNode/305/CO_LSSslave.c:233:1:CO_LSSslave_initCkBitRateCall	2
+../CANopenNode/305/CO_LSSslave.c:242:1:CO_LSSslave_initActBitRateCall	2
+../CANopenNode/305/CO_LSSslave.c:251:1:CO_LSSslave_initCfgStoreCall	2
+../CANopenNode/305/CO_LSSslave.c:260:1:CO_LSSslave_process	27

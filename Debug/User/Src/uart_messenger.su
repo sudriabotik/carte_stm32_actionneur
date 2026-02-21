@@ -1,0 +1,2 @@
+../User/Src/uart_messenger.c:7:6:uart_messenger_init	8	static
+../User/Src/uart_messenger.c:13:6:HAL_UART_RxCpltCallback	16	static

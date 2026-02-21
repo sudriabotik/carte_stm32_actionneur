@@ -1,0 +1,5 @@
+../lib_robot/src_lib/ax_controller.c:10:6:ax_init	1
+../lib_robot/src_lib/ax_controller.c:20:6:ax_calculate_checksum	2
+../lib_robot/src_lib/ax_controller.c:35:6:ax_send_packet	1
+../lib_robot/src_lib/ax_controller.c:52:6:ax_send_instruction_write	1
+../lib_robot/src_lib/ax_controller.c:76:6:ax_write_position	1

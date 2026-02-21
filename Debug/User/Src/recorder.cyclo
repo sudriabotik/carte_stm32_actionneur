@@ -1,0 +1,3 @@
+../User/Src/recorder.c:11:6:recorder_append	4
+../User/Src/recorder.c:28:6:recorder_print_recorded_data	3
+../User/Src/recorder.c:48:5:recorder_is_track_full	2

@@ -1,0 +1,14 @@
+../CANopenNode/301/CO_driver.h:601:1:CO_getUint8	24	static
+../CANopenNode/301/CO_driver.h:617:1:CO_getUint32	24	static
+../CANopenNode/301/CO_ODinterface.h:343:1:OD_getIndex	16	static
+../CANopenNode/301/CO_ODinterface.h:463:1:OD_extension_init	16	static
+../CANopenNode/301/CO_ODinterface.h:518:1:OD_get_u8	32	static
+../CANopenNode/301/CO_ODinterface.h:530:1:OD_get_u32	32	static
+../CANopenNode/301/CO_ODinterface.h:605:1:OD_set_u32	32	static
+../CANopenNode/301/CO_SDOserver.c:51:1:CO_SDO_receive	32	static
+../CANopenNode/301/CO_SDOserver.c:147:1:CO_SDOserver_init_canRxTx	48	static
+../CANopenNode/301/CO_SDOserver.c:191:1:OD_write_1201_additional	72	static
+../CANopenNode/301/CO_SDOserver.c:254:1:CO_SDOserver_init	56	static
+../CANopenNode/301/CO_SDOserver.c:398:1:validateAndWriteToOD	56	static,ignoring_inline_asm
+../CANopenNode/301/CO_SDOserver.c:510:1:readFromOd	64	static,ignoring_inline_asm
+../CANopenNode/301/CO_SDOserver.c:594:1:CO_SDOserver_process	120	static,ignoring_inline_asm

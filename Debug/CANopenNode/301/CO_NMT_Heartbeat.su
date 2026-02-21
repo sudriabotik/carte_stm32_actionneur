@@ -1,0 +1,10 @@
+../CANopenNode/301/CO_driver.h:609:1:CO_getUint16	24	static
+../CANopenNode/301/CO_ODinterface.h:343:1:OD_getIndex	16	static
+../CANopenNode/301/CO_ODinterface.h:463:1:OD_extension_init	16	static
+../CANopenNode/301/CO_ODinterface.h:524:1:OD_get_u16	32	static
+../CANopenNode/301/CO_Emergency.h:454:1:CO_isError	24	static
+../CANopenNode/301/CO_Emergency.h:472:1:CO_getErrorRegister	16	static
+../CANopenNode/301/CO_NMT_Heartbeat.c:30:1:CO_NMT_receive	32	static
+../CANopenNode/301/CO_NMT_Heartbeat.c:56:1:OD_write_1017	32	static
+../CANopenNode/301/CO_NMT_Heartbeat.c:73:1:CO_NMT_init	48	static
+../CANopenNode/301/CO_NMT_Heartbeat.c:176:1:CO_NMT_process	64	static
