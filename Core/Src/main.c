@@ -20,6 +20,7 @@
 #include "main.h"
 #include "adc.h"
 #include "fdcan.h"
+#include "i2c.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -42,6 +43,7 @@
 # include "robot_sequences.h"
 
 #include "CO_app_STM32.h"
+#include "can_debug.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -66,6 +68,10 @@ GPIO_PinState pin_a;
 GPIO_PinState pin_b;
 int trig_count = 0;
 bool toggle = false;
+
+// Variables pour la réception CAN bas niveau
+FDCAN_RxHeaderTypeDef RxHeader;
+uint8_t RxData[8];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -123,6 +129,8 @@ int main(void)
   MX_USART3_UART_Init();
   MX_TIM2_Init();
   MX_TIM6_Init();
+  MX_I2C3_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL); // right
   HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL); // left
@@ -139,7 +147,7 @@ int main(void)
   canopenNodeSTM32.HWInitFunction = MX_FDCAN1_Init;
   canopenNodeSTM32.timerHandle = &htim6;
   canopenNodeSTM32.desiredNodeID = 2;
-  canopenNodeSTM32.baudrate = 500; // de memoir ce parametre ne ser à rien mais c'est comme le tuto. 
+  canopenNodeSTM32.baudrate = 500; //  ce parametre ne ser à rien, c'est comme le tuto. 
   canopen_app_init(&canopenNodeSTM32);
 
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, GPIO_PIN_RESET);
@@ -154,13 +162,19 @@ int main(void)
 
   extern struct Sequencer main_sequencer;
   main_sequencer = sequencer_init();
-  //sequencer_set_idle(&main_sequencer, &elevator_V_statemachine, &ELV_STATE_HOLD_V, genenv_elv_hold_v());
-  //sequencer_set_idle(&main_sequencer, &elevator_H_statemachine, &ELV_STATE_HOLD_H, genenv_elv_hold_h());
+  sequencer_set_idle(&main_sequencer, &elevator_V_statemachine, &ELV_STATE_HOLD_V, genenv_elv_hold_v());
+  sequencer_set_idle(&main_sequencer, &elevator_H_statemachine, &ELV_STATE_HOLD_H, genenv_elv_hold_h());
 
-  //seq_build_homing_all(&main_sequencer, 10.0f, -10.0f);
-  //sequencer_start(&main_sequencer);
+  seq_build_homing_all(&main_sequencer, 10.0f, -10.0f);
+  sequencer_start(&main_sequencer);
 
   HAL_Delay(500);
+
+  // Enable CAN debug logging
+  printf("=== CAN Debug Initialized ===\n");
+  can_debug_enable_rx_logging(false);  // Set to false to disable automatic logging
+  can_debug_print_canopen_detailed(&canopenNodeSTM32);
+
   HAL_TIM_Base_Start_IT(&htim2);
 
   /* USER CODE END 2 */
@@ -173,7 +187,23 @@ int main(void)
     HAL_GPIO_WritePin(led_can_1_GPIO_Port, led_can_1_Pin,!canopenNodeSTM32.outStatusLEDGreen);
     HAL_GPIO_WritePin(led_can_2_GPIO_Port, led_can_2_Pin,!canopenNodeSTM32.outStatusLEDRed);
 
-
+    
+    // Test bas niveau : vérifier si une trame CAN est reçue
+    if (HAL_FDCAN_GetRxFifoFillLevel(&hfdcan1, FDCAN_RX_FIFO0) > 0)
+    {
+      // Lire le message
+      if (HAL_FDCAN_GetRxMessage(&hfdcan1, FDCAN_RX_FIFO0, &RxHeader, RxData) == HAL_OK)
+      {
+        // Afficher la trame reçue
+        printf("[HAL_CAN] ID=0x%03lX DLC=%lu DATA=[ ", RxHeader.Identifier,
+               (RxHeader.DataLength >> 16));
+        for (uint8_t i = 0; i < 8; i++) {
+          printf("%02X ", RxData[i]);
+        }
+        printf("]\n");
+      }
+    }
+    
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -209,11 +239,6 @@ int main(void)
     }
     */
 
-    
-    
-
-    
-    
     //printf("a\n");
     //ax_write_position(2, 20);
 

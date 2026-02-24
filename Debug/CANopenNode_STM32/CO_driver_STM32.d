@@ -28,6 +28,8 @@ CANopenNode_STM32/CO_driver_STM32.o: \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h \
+ ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_i2c.h \
+ ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_i2c_ex.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h \
@@ -49,7 +51,9 @@ CANopenNode_STM32/CO_driver_STM32.o: \
  ../CANopenNode/305/CO_LSS.h ../CANopenNode/305/CO_LSSmaster.h \
  ../CANopenNode/309/CO_gateway_ascii.h ../CANopenNode/301/CO_SDOclient.h \
  ../CANopenNode/305/CO_LSSmaster.h ../CANopenNode/303/CO_LEDs.h \
- ../CANopenNode/extra/CO_trace.h
+ ../CANopenNode/extra/CO_trace.h ../User/inc/can_debug.h \
+ ../Core/Inc/fdcan.h ../Core/Inc/main.h \
+ ../CANopenNode_STM32/CO_app_STM32.h
 ../CANopenNode/301/CO_driver.h:
 ../CANopenNode/301/CO_config.h:
 ../CANopenNode_STM32/CO_driver_target.h:
@@ -81,6 +85,8 @@ CANopenNode_STM32/CO_driver_STM32.o: \
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h:
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_i2c.h:
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_i2c_ex.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h:
@@ -117,3 +123,7 @@ CANopenNode_STM32/CO_driver_STM32.o: \
 ../CANopenNode/305/CO_LSSmaster.h:
 ../CANopenNode/303/CO_LEDs.h:
 ../CANopenNode/extra/CO_trace.h:
+../User/inc/can_debug.h:
+../Core/Inc/fdcan.h:
+../Core/Inc/main.h:
+../CANopenNode_STM32/CO_app_STM32.h:

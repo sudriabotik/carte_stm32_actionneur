@@ -30,6 +30,7 @@
  */
 #include "301/CO_driver.h"
 #include "CO_app_STM32.h"
+#include "can_debug.h"  // For CAN debug logging
 
 /* Local CAN module object */
 static CO_CANmodule_t* CANModule_local = NULL; /* Local instance of global CAN module */
@@ -538,6 +539,9 @@ prv_read_can_received_msg(CAN_HandleTypeDef* hcan, uint32_t fifo, uint32_t fifo_
             break; /* Invalid length when more than 8 */
     }
     rcvMsgIdent = rcvMsg.ident;
+    
+    /* Debug hook: log raw CAN frame */
+    can_debug_rx_hook(&rx_hdr, rcvMsg.data);
 #else
     static CAN_RxHeaderTypeDef rx_hdr;
     /* Read received message from FIFO */

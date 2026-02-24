@@ -81,6 +81,10 @@ void Error_Handler(void);
 #define N_fault_G_GPIO_Port GPIOB
 #define DIR_G_Pin GPIO_PIN_2
 #define DIR_G_GPIO_Port GPIOB
+#define DIR_AX_Pin GPIO_PIN_6
+#define DIR_AX_GPIO_Port GPIOC
+#define COULEUR_Pin GPIO_PIN_8
+#define COULEUR_GPIO_Port GPIOC
 #define encoder_D_A_Pin GPIO_PIN_4
 #define encoder_D_A_GPIO_Port GPIOB
 #define encoder_D_B_Pin GPIO_PIN_5

@@ -1,0 +1,8 @@
+../User/Src/can_debug.c:16:6:can_debug_print_raw_frame	24	static
+../User/Src/can_debug.c:51:6:can_debug_print_can_id	16	static
+../User/Src/can_debug.c:56:6:can_debug_print_data_hex	24	static
+../User/Src/can_debug.c:68:6:can_debug_print_canopen_state	24	static
+../User/Src/can_debug.c:104:6:can_debug_print_canopen_detailed	24	static
+../User/Src/can_debug.c:174:6:can_debug_enable_rx_logging	16	static
+../User/Src/can_debug.c:184:6:can_debug_is_rx_logging_enabled	4	static
+../User/Src/can_debug.c:189:6:can_debug_rx_hook	16	static
