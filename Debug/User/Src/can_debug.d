@@ -52,7 +52,7 @@ User/Src/can_debug.o: ../User/Src/can_debug.c ../User/inc/can_debug.h \
  ../CANopenNode/305/CO_LSS.h ../CANopenNode/305/CO_LSSmaster.h \
  ../CANopenNode/309/CO_gateway_ascii.h ../CANopenNode/301/CO_SDOclient.h \
  ../CANopenNode/305/CO_LSSmaster.h ../CANopenNode/303/CO_LEDs.h \
- ../CANopenNode/extra/CO_trace.h
+ ../CANopenNode/extra/CO_trace.h ../CANopenNode_STM32/OD.h
 ../User/inc/can_debug.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
@@ -125,3 +125,4 @@ User/Src/can_debug.o: ../User/Src/can_debug.c ../User/inc/can_debug.h \
 ../CANopenNode/305/CO_LSSmaster.h:
 ../CANopenNode/303/CO_LEDs.h:
 ../CANopenNode/extra/CO_trace.h:
+../CANopenNode_STM32/OD.h:

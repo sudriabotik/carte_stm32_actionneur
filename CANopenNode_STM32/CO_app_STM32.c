@@ -210,6 +210,13 @@ canopen_app_process() {
         uint32_t timeDifference_us = (time_current - time_old) * 1000;
         time_old = time_current;
         reset_status = CO_process(CO, false, timeDifference_us, NULL);
+
+        /* Process RPDO - CRITICAL: This must be called to process received PDOs */
+        CO_process_RPDO(CO, false, timeDifference_us, NULL);
+
+        /* Process TPDO - Process transmitted PDOs */
+        CO_process_TPDO(CO, false, timeDifference_us, NULL);
+
         canopenNodeSTM32->outStatusLEDRed = CO_LED_RED(CO->LEDs, CO_LED_CANopen);
         canopenNodeSTM32->outStatusLEDGreen = CO_LED_GREEN(CO->LEDs, CO_LED_CANopen);
 

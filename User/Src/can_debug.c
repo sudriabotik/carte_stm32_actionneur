@@ -6,6 +6,7 @@
 
 #include "can_debug.h"
 #include "CANopen.h"
+#include "OD.h"
 #include <stdio.h>
 #include <inttypes.h>
 
@@ -190,4 +191,56 @@ void can_debug_rx_hook(FDCAN_RxHeaderTypeDef* rxHeader, uint8_t* data) {
     if (rx_logging_enabled && rxHeader != NULL && data != NULL) {
         can_debug_print_raw_frame(rxHeader, data);
     }
+}
+
+/* Monitor RPDO variables and print only when they change */
+void can_debug_monitor_rpdo_changes(void) {
+    // Variables statiques pour mémoriser les anciennes valeurs
+    static uint16_t last_action_id = 0xFFFF;  // Init avec valeur invalide
+    static int16_t last_param_1 = 0x7FFF;
+    static int16_t last_param_2 = 0x7FFF;
+    static int16_t last_param_3 = 0x7FFF;
+    static int16_t last_param_4 = 0x7FFF;
+    static int16_t last_param_5 = 0x7FFF;
+    static int16_t last_param_6 = 0x7FFF;
+    static uint16_t last_command_id = 0xFFFF;
+    static bool first_call = true;
+
+    // Lecture des valeurs actuelles depuis OD_RAM
+    uint16_t action_id = OD_RAM.x2000_ACTION_ID;
+    int16_t param_1 = OD_RAM.x2001_param_1;
+    int16_t param_2 = OD_RAM.x2002_param_2;
+    int16_t param_3 = OD_RAM.x2003_param_3;
+    int16_t param_4 = OD_RAM.x2004_param_4;
+    int16_t param_5 = OD_RAM.x2005_param_5;
+    int16_t param_6 = OD_RAM.x2006_param_6;
+    uint16_t command_id = OD_RAM.x2007_command_ID;
+
+    // Détection de changements RPDO1 (COB-ID 0x202)
+    if (first_call || action_id != last_action_id || param_1 != last_param_1 ||
+        param_2 != last_param_2 || param_3 != last_param_3) {
+
+        printf("[RPDO1 0x202] ACTION_ID=%u param1=%d param2=%d param3=%d\n",
+               action_id, param_1, param_2, param_3);
+
+        last_action_id = action_id;
+        last_param_1 = param_1;
+        last_param_2 = param_2;
+        last_param_3 = param_3;
+    }
+
+    // Détection de changements RPDO2 (COB-ID 0x302)
+    if (first_call || param_4 != last_param_4 || param_5 != last_param_5 ||
+        param_6 != last_param_6 || command_id != last_command_id) {
+
+        printf("[RPDO2 0x302] param4=%d param5=%d param6=%d CMD_ID=%u\n",
+               param_4, param_5, param_6, command_id);
+
+        last_param_4 = param_4;
+        last_param_5 = param_5;
+        last_param_6 = param_6;
+        last_command_id = command_id;
+    }
+
+    first_call = false;
 }

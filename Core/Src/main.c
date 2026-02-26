@@ -43,6 +43,7 @@
 # include "robot_sequences.h"
 
 #include "CO_app_STM32.h"
+#include "OD.h"
 #include "can_debug.h"
 /* USER CODE END Includes */
 
@@ -172,10 +173,12 @@ int main(void)
 
   // Enable CAN debug logging
   printf("=== CAN Debug Initialized ===\n");
-  can_debug_enable_rx_logging(false);  // Set to false to disable automatic logging
+  can_debug_enable_rx_logging(true);  // Set to false to disable automatic logging
   can_debug_print_canopen_detailed(&canopenNodeSTM32);
 
   HAL_TIM_Base_Start_IT(&htim2);
+
+  static int action_id = 0;
 
   /* USER CODE END 2 */
 
@@ -187,7 +190,21 @@ int main(void)
     HAL_GPIO_WritePin(led_can_1_GPIO_Port, led_can_1_Pin,!canopenNodeSTM32.outStatusLEDGreen);
     HAL_GPIO_WritePin(led_can_2_GPIO_Port, led_can_2_Pin,!canopenNodeSTM32.outStatusLEDRed);
 
-    
+    if (action_id != OD_RAM.x2000_ACTION_ID)
+    {
+      printf("ActionID %d \r\n",OD_RAM.x2000_ACTION_ID);
+    }
+    can_debug_monitor_rpdo_changes();
+
+    /* 
+    printf("RPDO1: ACTION_ID=%u p1=%d p2=%d p3=%d\n\r", 
+       OD_RAM.x2000_ACTION_ID, 
+       OD_RAM.x2001_param_1,
+       OD_RAM.x2002_param_2,
+       OD_RAM.x2003_param_3);
+    */
+    //printf("ActionID %d \r\n",OD_RAM.x2000_ACTION_ID);
+    /* 
     // Test bas niveau : vérifier si une trame CAN est reçue
     if (HAL_FDCAN_GetRxFifoFillLevel(&hfdcan1, FDCAN_RX_FIFO0) > 0)
     {
@@ -203,7 +220,7 @@ int main(void)
         printf("]\n");
       }
     }
-    
+    */
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

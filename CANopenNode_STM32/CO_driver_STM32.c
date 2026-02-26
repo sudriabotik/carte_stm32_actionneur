@@ -31,6 +31,8 @@
 #include "301/CO_driver.h"
 #include "CO_app_STM32.h"
 #include "can_debug.h"  // For CAN debug logging
+#include "OD.h"         // For OD_RAM access in debug code
+#include <stdio.h>      // For printf in debug code
 
 /* Local CAN module object */
 static CO_CANmodule_t* CANModule_local = NULL; /* Local instance of global CAN module */
@@ -574,12 +576,33 @@ prv_read_can_received_msg(CAN_HandleTypeDef* hcan, uint32_t fifo, uint32_t fifo_
         }
     }
 
+    // Debug: Print if RPDO message was not found in rxArray
+    if (!messageFound && (rcvMsgIdent == 0x202 || rcvMsgIdent == 0x302)) {
+        printf("[CO_RX] RPDO ID=0x%03lX NOT MATCHED in rxArray!\n", rcvMsgIdent);
+    }
+
     /* Call specific function, which will process the message */
     if (messageFound && buffer != NULL && buffer->CANrx_callback != NULL) {
+        // Debug: Print when RPDO callback is about to be called
+        if (rcvMsgIdent == 0x202 || rcvMsgIdent == 0x302) {
+            printf("[CO_RX] RPDO match! ID=0x%03lX calling callback\n", rcvMsgIdent);
+            printf("[CO_RX] CAN msg before callback: ident=0x%03X dlc=%u data=[%02X %02X %02X %02X %02X %02X %02X %02X]\n",
+                   rcvMsg.ident, rcvMsg.dlc,
+                   rcvMsg.data[0], rcvMsg.data[1], rcvMsg.data[2], rcvMsg.data[3],
+                   rcvMsg.data[4], rcvMsg.data[5], rcvMsg.data[6], rcvMsg.data[7]);
+        }
         buffer->CANrx_callback(buffer->object, (void*)&rcvMsg);
+
+        // Debug: Print OD_RAM values immediately after RPDO callback
+        if (rcvMsgIdent == 0x202) {
+            printf("[CO_RX] After callback: ACTION_ID=%u p1=%d p2=%d p3=%d\n",
+                   OD_RAM.x2000_ACTION_ID, OD_RAM.x2001_param_1,
+                   OD_RAM.x2002_param_2, OD_RAM.x2003_param_3);
+        }
     }
 }
 
+/*****************************************************************************/
 #ifdef CO_STM32_FDCAN_Driver
 /**
  * \brief           Rx FIFO 0 callback.
@@ -598,7 +621,7 @@ HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef* hfdcan, uint32_t RxFifo0ITs) {
  * \brief           Rx FIFO 1 callback.
  * \param[in]       hfdcan: pointer to an FDCAN_HandleTypeDef structure that contains
  *                      the configuration information for the specified FDCAN.
- * \param[in]       RxFifo1ITs: indicates which Rx FIFO 0 interrupts are signaled.
+ * \param[in]       RxFifo1ITs: indicates which Rx FIFO 1 interrupts are signaled.
  */
 void
 HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef* hfdcan, uint32_t RxFifo1ITs) {
