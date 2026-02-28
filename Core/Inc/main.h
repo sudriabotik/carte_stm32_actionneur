@@ -65,6 +65,14 @@ void Error_Handler(void);
 #define end_switch_horizontal_GPIO_Port GPIOF
 #define end_switch_vertical_Pin GPIO_PIN_2
 #define end_switch_vertical_GPIO_Port GPIOC
+#define Pomp_4_Pin GPIO_PIN_3
+#define Pomp_4_GPIO_Port GPIOC
+#define Pomp_3_Pin GPIO_PIN_0
+#define Pomp_3_GPIO_Port GPIOA
+#define Pomp_1_Pin GPIO_PIN_1
+#define Pomp_1_GPIO_Port GPIOA
+#define Pomp_2_Pin GPIO_PIN_2
+#define Pomp_2_GPIO_Port GPIOA
 #define curr_sens_M_D_Pin GPIO_PIN_3
 #define curr_sens_M_D_GPIO_Port GPIOA
 #define N_fault_D_Pin GPIO_PIN_4

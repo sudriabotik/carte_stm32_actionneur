@@ -21,7 +21,6 @@ void seq_build_homing_all(struct Sequencer* seq, float speed_V, float speed_H)
                   &ELV_STATE_HOME_H, genenv_elv_home_h(speed_H));
 }
 
-
 void seq_build_grab(struct Sequencer* seq, float pos_V_mm, float pos_H_mm)
 {
     sequencer_reset(seq);
@@ -34,7 +33,6 @@ void seq_build_grab(struct Sequencer* seq, float pos_V_mm, float pos_H_mm)
     // HOLD automatique via idle enregistré dans le séquenceur
 }
 
-
 void seq_build_deposit(struct Sequencer* seq, float pos_V_mm, float pos_H_mm)
 {
     sequencer_reset(seq);
@@ -45,4 +43,21 @@ void seq_build_deposit(struct Sequencer* seq, float pos_V_mm, float pos_H_mm)
     sequencer_add(seq, &elevator_H_statemachine,
                   &ELV_STATE_MOVE_H, genenv_elv_move_h(SEQ_ACCEL_H, SEQ_SPEED_H, pos_H_mm));
     // HOLD automatique via idle enregistré dans le séquenceur
+}
+
+void seq_add_deplacement_H(struct Sequencer* seq, float pos_H_mm)
+{
+    //sequencer_reset(seq);
+
+     sequencer_add(seq, &elevator_H_statemachine,
+                  &ELV_STATE_MOVE_H, genenv_elv_move_h(SEQ_ACCEL_H, SEQ_SPEED_H, pos_H_mm));
+}
+
+void seq_add_deplacement_V(struct Sequencer* seq, float pos_V_mm)
+{
+    //sequencer_reset(seq);
+
+    sequencer_add(seq, &elevator_V_statemachine,
+                  &ELV_STATE_MOVE_V, genenv_elv_move_v(SEQ_ACCEL_V, SEQ_SPEED_V, pos_V_mm));
+
 }

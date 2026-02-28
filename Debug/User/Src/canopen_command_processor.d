@@ -1,5 +1,7 @@
-Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
- ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h \
+User/Src/canopen_command_processor.o: \
+ ../User/Src/canopen_command_processor.c \
+ ../User/inc/canopen_command_processor.h ../User/inc/sequencer.h \
+ ../Core/Inc/main.h ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h \
  ../Core/Inc/stm32g4xx_hal_conf.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h \
@@ -34,21 +36,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h \
- ../Core/Inc/adc.h ../Core/Inc/main.h ../Core/Inc/fdcan.h \
- ../Core/Inc/i2c.h ../Core/Inc/tim.h ../Core/Inc/usart.h \
- ../Core/Inc/gpio.h ../User/inc/robot_data.h \
- ../lib_robot/inc_lib/encoders.h \
- ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h \
- ../lib_robot/inc_lib/motors.h ../lib_robot/inc_lib/motor_asserv.h \
- ../lib_robot/inc_lib/pid.h ../lib_robot/inc_lib/motors.h \
- ../lib_robot/inc_lib/encoders.h ../User/inc/pid_config.h \
- ../lib_robot/inc_lib/pid.h ../User/inc/recorder.h \
- ../lib_robot/inc_lib/ax_controller.h ../User/inc/mv_statemachine.h \
- ../lib_robot/inc_lib/mathfuncs.h ../User/inc/mv_statemachine_states.h \
- ../User/inc/mv_statemachine.h ../User/inc/elevator_states.h \
- ../User/inc/mv_statemachine_states.h ../User/inc/sequencer.h \
- ../User/inc/robot_sequences.h ../User/inc/sequencer.h \
- ../CANopenNode_STM32/CO_app_STM32.h ../CANopenNode/CANopen.h \
+ ../User/inc/mv_statemachine.h ../lib_robot/inc_lib/mathfuncs.h \
+ ../User/inc/robot_sequences.h ../CANopenNode/CANopen.h \
  ../CANopenNode/301/CO_driver.h ../CANopenNode/301/CO_config.h \
  ../CANopenNode_STM32/CO_driver_target.h \
  ../CANopenNode/301/CO_ODinterface.h ../CANopenNode/301/CO_driver.h \
@@ -65,9 +54,9 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../CANopenNode/305/CO_LSS.h ../CANopenNode/305/CO_LSSmaster.h \
  ../CANopenNode/309/CO_gateway_ascii.h ../CANopenNode/301/CO_SDOclient.h \
  ../CANopenNode/305/CO_LSSmaster.h ../CANopenNode/303/CO_LEDs.h \
- ../CANopenNode/extra/CO_trace.h ../CANopenNode_STM32/OD.h \
- ../User/inc/can_debug.h ../User/inc/canopen_command_processor.h \
- ../User/inc/robot_sequences.h
+ ../CANopenNode/extra/CO_trace.h ../CANopenNode_STM32/OD.h
+../User/inc/canopen_command_processor.h:
+../User/inc/sequencer.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
 ../Core/Inc/stm32g4xx_hal_conf.h:
@@ -104,35 +93,9 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h:
-../Core/Inc/adc.h:
-../Core/Inc/main.h:
-../Core/Inc/fdcan.h:
-../Core/Inc/i2c.h:
-../Core/Inc/tim.h:
-../Core/Inc/usart.h:
-../Core/Inc/gpio.h:
-../User/inc/robot_data.h:
-../lib_robot/inc_lib/encoders.h:
-../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h:
-../lib_robot/inc_lib/motors.h:
-../lib_robot/inc_lib/motor_asserv.h:
-../lib_robot/inc_lib/pid.h:
-../lib_robot/inc_lib/motors.h:
-../lib_robot/inc_lib/encoders.h:
-../User/inc/pid_config.h:
-../lib_robot/inc_lib/pid.h:
-../User/inc/recorder.h:
-../lib_robot/inc_lib/ax_controller.h:
 ../User/inc/mv_statemachine.h:
 ../lib_robot/inc_lib/mathfuncs.h:
-../User/inc/mv_statemachine_states.h:
-../User/inc/mv_statemachine.h:
-../User/inc/elevator_states.h:
-../User/inc/mv_statemachine_states.h:
-../User/inc/sequencer.h:
 ../User/inc/robot_sequences.h:
-../User/inc/sequencer.h:
-../CANopenNode_STM32/CO_app_STM32.h:
 ../CANopenNode/CANopen.h:
 ../CANopenNode/301/CO_driver.h:
 ../CANopenNode/301/CO_config.h:
@@ -166,6 +129,3 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../CANopenNode/303/CO_LEDs.h:
 ../CANopenNode/extra/CO_trace.h:
 ../CANopenNode_STM32/OD.h:
-../User/inc/can_debug.h:
-../User/inc/canopen_command_processor.h:
-../User/inc/robot_sequences.h:

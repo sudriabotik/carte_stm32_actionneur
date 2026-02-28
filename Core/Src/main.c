@@ -45,6 +45,7 @@
 #include "CO_app_STM32.h"
 #include "OD.h"
 #include "can_debug.h"
+#include "canopen_command_processor.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -161,13 +162,30 @@ int main(void)
   elevator_V_statemachine = MSM_init();
   elevator_H_statemachine = MSM_init();
 
+  // Initialisation du séquenceur principal
   extern struct Sequencer main_sequencer;
   main_sequencer = sequencer_init();
   sequencer_set_idle(&main_sequencer, &elevator_V_statemachine, &ELV_STATE_HOLD_V, genenv_elv_hold_v());
   sequencer_set_idle(&main_sequencer, &elevator_H_statemachine, &ELV_STATE_HOLD_H, genenv_elv_hold_h());
 
-  seq_build_homing_all(&main_sequencer, 10.0f, -10.0f);
+  // Initialisation du processeur de commandes CANopen
+  canopen_cmd_init(&main_sequencer);
+
+  // ========== TEST MANUEL DES MOUVEMENTS ==========
+  // Décommenter pour tester les mouvements sans CANopen
+
+  // 1. Homing (mise à l'origine)
+  seq_build_homing_all(&main_sequencer, 10.0f, 10.0f);
   sequencer_start(&main_sequencer);
+
+  // 2. Déplacement horizontal après le homing
+  seq_add_deplacement_H(&main_sequencer, -200.0f);
+  sequencer_add_gpio(&main_sequencer, Pomp_4_GPIO_Port, Pomp_4_Pin, GPIO_PIN_SET);
+  // 3. Pour tester d'autres mouvements, ajouter ici:
+  // seq_build_grab(&main_sequencer, 50.0f, 20.0f);  // Exemple: grab à V=50mm, H=20mm
+  // seq_build_deposit(&main_sequencer, 80.0f, 40.0f);  // Exemple: deposit à V=80mm, H=40mm
+  // ================================================
+
 
   HAL_Delay(500);
 
@@ -178,7 +196,7 @@ int main(void)
 
   HAL_TIM_Base_Start_IT(&htim2);
 
-  static int action_id = 0;
+  static int command_id = 0;
 
   /* USER CODE END 2 */
 
@@ -186,14 +204,17 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    // Traitement CANopen (RPDO/TPDO)
     canopen_app_process();
-    HAL_GPIO_WritePin(led_can_1_GPIO_Port, led_can_1_Pin,!canopenNodeSTM32.outStatusLEDGreen);
-    HAL_GPIO_WritePin(led_can_2_GPIO_Port, led_can_2_Pin,!canopenNodeSTM32.outStatusLEDRed);
 
-    if (action_id != OD_RAM.x2000_ACTION_ID)
-    {
-      printf("ActionID %d \r\n",OD_RAM.x2000_ACTION_ID);
-    }
+    // Traitement des commandes reçues via CANopen
+    canopen_cmd_process();
+
+    // Mise à jour des LEDs CANopen
+    HAL_GPIO_WritePin(led_can_1_GPIO_Port, led_can_1_Pin, !canopenNodeSTM32.outStatusLEDGreen);
+    HAL_GPIO_WritePin(led_can_2_GPIO_Port, led_can_2_Pin, !canopenNodeSTM32.outStatusLEDRed);
+
+    // Debug: Surveillance des changements RPDO
     can_debug_monitor_rpdo_changes();
 
     /* 

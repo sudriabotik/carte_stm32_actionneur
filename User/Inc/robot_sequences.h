@@ -64,5 +64,7 @@ void seq_build_grab(struct Sequencer* seq, float pos_V_mm, float pos_H_mm);
  */
 void seq_build_deposit(struct Sequencer* seq, float pos_V_mm, float pos_H_mm);
 
+void seq_add_deplacement_H(struct Sequencer* seq, float pos_H_mm);
+
 
 #endif // __ROBOT_SEQUENCES_H

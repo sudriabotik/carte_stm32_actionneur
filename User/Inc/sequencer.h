@@ -32,13 +32,39 @@
 
 
 /**
- * @brief Une étape de séquence : une machine cible, un état, et ses paramètres.
+ * @brief Type d'étape dans la séquence
+ */
+enum SeqStepType
+{
+    SEQ_STEP_MOTOR,    // Étape moteur (attend fin d'état machine)
+    SEQ_STEP_ACTION    // Étape action (callback immédiat)
+};
+
+
+/**
+ * @brief Une étape de séquence : soit un mouvement moteur, soit une action.
+ *
+ * Utilise une union pour économiser la mémoire : une étape est SOIT un mouvement,
+ * SOIT une action, jamais les deux en même temps.
  */
 struct SeqStep
 {
-    struct MvStateMachine* machine;
-    struct MvState*        state;
-    struct MvStateEnv      env;
+    enum SeqStepType type;  // Discriminant : indique quel membre de l'union utiliser
+
+    union {
+        // Option 1 : Étape moteur (type == SEQ_STEP_MOTOR)
+        struct {
+            struct MvStateMachine* machine;
+            struct MvState*        state;
+            struct MvStateEnv      env;
+        } motor;
+
+        // Option 2 : Étape action (type == SEQ_STEP_ACTION)
+        struct {
+            void (*callback)(void* param);  // Fonction à exécuter
+            void* param;                     // Paramètres de la fonction
+        } action;
+    };
 };
 
 /**
@@ -84,13 +110,24 @@ void sequencer_set_idle(struct Sequencer* seq,
                         struct MvStateEnv idle_env);
 
 /**
- * @brief Ajoute une étape à la fin de la séquence.
+ * @brief Ajoute une étape MOTEUR à la fin de la séquence.
  * @return 0 si succès, -1 si la séquence est pleine.
  */
 int sequencer_add(struct Sequencer* seq,
                   struct MvStateMachine* machine,
                   struct MvState* state,
                   struct MvStateEnv env);
+
+/**
+ * @brief Ajoute une étape ACTION à la fin de la séquence.
+ *        L'action sera exécutée immédiatement quand son tour arrive.
+ * @param callback  Fonction à appeler (signature: void callback(void* param))
+ * @param param     Paramètre à passer à la fonction (peut être NULL)
+ * @return 0 si succès, -1 si la séquence est pleine.
+ */
+int sequencer_add_action(struct Sequencer* seq,
+                         void (*callback)(void* param),
+                         void* param);
 
 /**
  * @brief Démarre l'exécution de la séquence depuis le début.
@@ -113,6 +150,55 @@ void sequencer_update(struct Sequencer* seq);
  * @brief Indique si la séquence est en cours d'exécution.
  */
 uint8_t sequencer_is_active(const struct Sequencer* seq);
+
+
+// ============================================================================
+// Helpers pour actions courantes
+// ============================================================================
+
+/**
+ * @brief Paramètres pour action GPIO
+ */
+struct SeqGpioAction
+{
+    GPIO_TypeDef* port;
+    uint16_t pin;
+    GPIO_PinState state;  // GPIO_PIN_SET ou GPIO_PIN_RESET
+};
+
+/**
+ * @brief Paramètres pour action délai
+ */
+struct SeqDelayAction
+{
+    uint32_t delay_ms;
+    uint32_t start_tick;   // Rempli automatiquement
+};
+
+/**
+ * @brief Ajoute une action GPIO (mise à l'état haut ou bas d'une pin)
+ * @param port   Port GPIO (ex: GPIOA)
+ * @param pin    Pin GPIO (ex: GPIO_PIN_5)
+ * @param state  État à appliquer (GPIO_PIN_SET ou GPIO_PIN_RESET)
+ * @return 0 si succès, -1 si la séquence est pleine.
+ *
+ * ATTENTION : Les paramètres GPIO sont copiés dans un buffer statique interne.
+ *             Limite : 8 actions GPIO maximum dans une séquence.
+ */
+int sequencer_add_gpio(struct Sequencer* seq,
+                       GPIO_TypeDef* port,
+                       uint16_t pin,
+                       GPIO_PinState state);
+
+/**
+ * @brief Ajoute un délai (pause) dans la séquence
+ * @param delay_ms  Durée du délai en millisecondes
+ * @return 0 si succès, -1 si la séquence est pleine.
+ *
+ * ATTENTION : Le délai utilise HAL_GetTick() et bloque l'avancement de la séquence.
+ *             Limite : 8 délais maximum dans une séquence.
+ */
+int sequencer_add_delay(struct Sequencer* seq, uint32_t delay_ms);
 
 
 #endif // __SEQUENCER_H

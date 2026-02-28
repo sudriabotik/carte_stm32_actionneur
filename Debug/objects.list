@@ -61,6 +61,7 @@
 "./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.o"
 "./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_adc.o"
 "./User/Src/can_debug.o"
+"./User/Src/canopen_command_processor.o"
 "./User/Src/coordonne_absolue.o"
 "./User/Src/elevator_states.o"
 "./User/Src/mv_statemachine.o"
