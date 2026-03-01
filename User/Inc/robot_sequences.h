@@ -49,7 +49,7 @@ void seq_build_homing_all(struct Sequencer* seq, float speed_V, float speed_H);
  * @param pos_V_mm  Position verticale cible en mm.
  * @param pos_H_mm  Position horizontale cible en mm.
  */
-void seq_build_grab(struct Sequencer* seq, float pos_V_mm, float pos_H_mm);
+void seq_build_grab(struct Sequencer* seq);
 
 
 /**
@@ -59,12 +59,12 @@ void seq_build_grab(struct Sequencer* seq, float pos_V_mm, float pos_H_mm);
  *        3. Maintient la position verticale (hold)
  *
  * @param seq       Séquenceur à remplir.
- * @param pos_V_mm  Position verticale cible en mm.
- * @param pos_H_mm  Position horizontale cible en mm.
  */
-void seq_build_deposit(struct Sequencer* seq, float pos_V_mm, float pos_H_mm);
+void seq_build_deposit(struct Sequencer* seq);
 
-void seq_add_deplacement_H(struct Sequencer* seq, float pos_H_mm);
+void seq_deplacement_H(struct Sequencer* seq, float pos_H_mm);
+
+void seq_deplacement_V(struct Sequencer* seq, float pos_V_mm);
 
 
 #endif // __ROBOT_SEQUENCES_H

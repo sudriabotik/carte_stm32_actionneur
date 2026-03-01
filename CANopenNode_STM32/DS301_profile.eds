@@ -8,8 +8,8 @@ Description=
 CreationTime=1:00PM
 CreationDate=11-23-2020
 CreatedBy=
-ModificationTime=10:41PM
-ModificationDate=02-26-2026
+ModificationTime=5:35PM
+ModificationDate=02-28-2026
 ModifiedBy=
 
 [DeviceInfo]
@@ -866,7 +866,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0006
 AccessType=rw
-DefaultValue=300
+DefaultValue=0
 PDOMapping=0
 
 [1800sub6]
@@ -882,7 +882,7 @@ PDOMapping=0
 ParameterName=TPDO mapping parameter
 ObjectType=0x9
 ;StorageLocation=PERSIST_COMM
-SubNumber=0x2
+SubNumber=0x6
 
 [1A00sub0]
 ParameterName=Number of mapped objects
@@ -890,7 +890,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0005
 AccessType=rw
-DefaultValue=1
+DefaultValue=5
 PDOMapping=0
 
 [1A00sub1]
@@ -899,11 +899,47 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0007
 AccessType=rw
-DefaultValue=0x21000010
+DefaultValue=0x21000008
+PDOMapping=0
+
+[1A00sub2]
+ParameterName=Mapped object 2
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x21010010
+PDOMapping=0
+
+[1A00sub3]
+ParameterName=Mapped object 3
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x21020010
+PDOMapping=0
+
+[1A00sub4]
+ParameterName=Mapped object 4
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x21030010
+PDOMapping=0
+
+[1A00sub5]
+ParameterName=Mapped object 5
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x21040008
 PDOMapping=0
 
 [ManufacturerObjects]
-SupportedObjects=9
+SupportedObjects=13
 1=0x2000
 2=0x2001
 3=0x2002
@@ -913,6 +949,10 @@ SupportedObjects=9
 7=0x2006
 8=0x2007
 9=0x2100
+10=0x2101
+11=0x2102
+12=0x2103
+13=0x2104
 
 [2000]
 ParameterName=ACTION_ID
@@ -987,11 +1027,47 @@ DefaultValue=0
 PDOMapping=1
 
 [2100]
-ParameterName=tpdo_test
+ParameterName=current_command_status
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rww
+DefaultValue=0
+PDOMapping=1
+
+[2101]
+ParameterName=current_command_id
 ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0006
 AccessType=rww
-DefaultValue=7
+DefaultValue=0
+PDOMapping=1
+
+[2102]
+ParameterName=current_action_id
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rww
+DefaultValue=0
+PDOMapping=1
+
+[2103]
+ParameterName=last_completed_command_id
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=rww
+DefaultValue=0
+PDOMapping=1
+
+[2104]
+ParameterName=command_error_code
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=rww
+DefaultValue=0
 PDOMapping=1
 

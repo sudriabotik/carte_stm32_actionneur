@@ -179,8 +179,8 @@ int main(void)
   sequencer_start(&main_sequencer);
 
   // 2. Déplacement horizontal après le homing
-  seq_add_deplacement_H(&main_sequencer, -200.0f);
-  sequencer_add_gpio(&main_sequencer, Pomp_4_GPIO_Port, Pomp_4_Pin, GPIO_PIN_SET);
+  //seq_deplacement_H(&main_sequencer, -100.0f);
+  //sequencer_add_gpio(&main_sequencer, Pomp_4_GPIO_Port, Pomp_4_Pin, GPIO_PIN_SET);
   // 3. Pour tester d'autres mouvements, ajouter ici:
   // seq_build_grab(&main_sequencer, 50.0f, 20.0f);  // Exemple: grab à V=50mm, H=20mm
   // seq_build_deposit(&main_sequencer, 80.0f, 40.0f);  // Exemple: deposit à V=80mm, H=40mm
@@ -195,8 +195,6 @@ int main(void)
   can_debug_print_canopen_detailed(&canopenNodeSTM32);
 
   HAL_TIM_Base_Start_IT(&htim2);
-
-  static int command_id = 0;
 
   /* USER CODE END 2 */
 
@@ -216,6 +214,8 @@ int main(void)
 
     // Debug: Surveillance des changements RPDO
     can_debug_monitor_rpdo_changes();
+    //CO_TPDOsendRequest(&canopenNodeSTM32.canOpenStack->TPDO[0]);
+    //HAL_Delay(10);
 
     /* 
     printf("RPDO1: ACTION_ID=%u p1=%d p2=%d p3=%d\n\r", 
@@ -225,8 +225,9 @@ int main(void)
        OD_RAM.x2003_param_3);
     */
     //printf("ActionID %d \r\n",OD_RAM.x2000_ACTION_ID);
-    /* 
+     
     // Test bas niveau : vérifier si une trame CAN est reçue
+    /*
     if (HAL_FDCAN_GetRxFifoFillLevel(&hfdcan1, FDCAN_RX_FIFO0) > 0)
     {
       // Lire le message
@@ -242,6 +243,7 @@ int main(void)
       }
     }
     */
+    
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

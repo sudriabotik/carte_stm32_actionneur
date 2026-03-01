@@ -15,7 +15,7 @@
         <ProfileTechnology>CANopen</ProfileTechnology>
       </ISO15745Reference>
     </ProfileHeader>
-    <ProfileBody xmlns:q1="http://www.canopen.org/xml/1.1" xsi:type="q1:ProfileBody_Device_CANopen" formatName="CANopen" formatVersion="1.0" fileName="DS301_profile.xdd" fileCreator="" fileCreationDate="2020-11-23" fileCreationTime="13:00:00.0000000+01:00" fileModifiedBy="" fileModificationDate="2026-02-26" fileModificationTime="22:41:35.2308616+01:00" fileVersion="1" supportedLanguages="en" xmlns="">
+    <ProfileBody xmlns:q1="http://www.canopen.org/xml/1.1" xsi:type="q1:ProfileBody_Device_CANopen" formatName="CANopen" formatVersion="1.0" fileName="DS301_profile.xdd" fileCreator="" fileCreationDate="2020-11-23" fileCreationTime="13:00:00.0000000+01:00" fileModifiedBy="" fileModificationDate="2026-02-28" fileModificationTime="17:35:59.2508899+01:00" fileVersion="1" supportedLanguages="en" xmlns="">
       <q1:DeviceIdentity>
         <q1:vendorName></q1:vendorName>
         <q1:vendorID></q1:vendorID>
@@ -186,6 +186,18 @@
               <USINT />
             </q1:varDeclaration>
             <q1:varDeclaration name="Mapped object 1" uniqueID="UID_RECSUB_1A0001">
+              <UDINT />
+            </q1:varDeclaration>
+            <q1:varDeclaration name="Mapped object 2" uniqueID="UID_RECSUB_1A0002">
+              <UDINT />
+            </q1:varDeclaration>
+            <q1:varDeclaration name="Mapped object 3" uniqueID="UID_RECSUB_1A0003">
+              <UDINT />
+            </q1:varDeclaration>
+            <q1:varDeclaration name="Mapped object 4" uniqueID="UID_RECSUB_1A0004">
+              <UDINT />
+            </q1:varDeclaration>
+            <q1:varDeclaration name="Mapped object 5" uniqueID="UID_RECSUB_1A0005">
               <UDINT />
             </q1:varDeclaration>
           </q1:struct>
@@ -640,7 +652,7 @@
           <q1:parameter uniqueID="UID_SUB_180005" access="readWrite">
             <label lang="en">event timer</label>
             <UINT />
-            <q1:defaultValue value="300" />
+            <q1:defaultValue value="0" />
           </q1:parameter>
           <q1:parameter uniqueID="UID_SUB_180006" access="readWrite">
             <label lang="en">SYNC start value</label>
@@ -655,12 +667,32 @@
           <q1:parameter uniqueID="UID_SUB_1A0000" access="readWrite">
             <label lang="en">Number of mapped objects</label>
             <USINT />
-            <q1:defaultValue value="1" />
+            <q1:defaultValue value="5" />
           </q1:parameter>
           <q1:parameter uniqueID="UID_SUB_1A0001" access="readWrite">
             <label lang="en">Mapped object 1</label>
             <UDINT />
-            <q1:defaultValue value="0x21000010" />
+            <q1:defaultValue value="0x21000008" />
+          </q1:parameter>
+          <q1:parameter uniqueID="UID_SUB_1A0002" access="readWrite">
+            <label lang="en">Mapped object 2</label>
+            <UDINT />
+            <q1:defaultValue value="0x21010010" />
+          </q1:parameter>
+          <q1:parameter uniqueID="UID_SUB_1A0003" access="readWrite">
+            <label lang="en">Mapped object 3</label>
+            <UDINT />
+            <q1:defaultValue value="0x21020010" />
+          </q1:parameter>
+          <q1:parameter uniqueID="UID_SUB_1A0004" access="readWrite">
+            <label lang="en">Mapped object 4</label>
+            <UDINT />
+            <q1:defaultValue value="0x21030010" />
+          </q1:parameter>
+          <q1:parameter uniqueID="UID_SUB_1A0005" access="readWrite">
+            <label lang="en">Mapped object 5</label>
+            <UDINT />
+            <q1:defaultValue value="0x21040008" />
           </q1:parameter>
           <q1:parameter uniqueID="UID_OBJ_2000" access="readWriteInput">
             <description lang="en">action identifiant permet de choisir qu elle fonction appeller. </description>
@@ -703,9 +735,29 @@
             <q1:defaultValue value="0" />
           </q1:parameter>
           <q1:parameter uniqueID="UID_OBJ_2100" access="readWriteOutput">
-            <label lang="en">tpdo_test</label>
+            <label lang="en">current_command_status</label>
+            <USINT />
+            <q1:defaultValue value="0" />
+          </q1:parameter>
+          <q1:parameter uniqueID="UID_OBJ_2101" access="readWriteOutput">
+            <label lang="en">current_command_id</label>
             <UINT />
-            <q1:defaultValue value="7" />
+            <q1:defaultValue value="0" />
+          </q1:parameter>
+          <q1:parameter uniqueID="UID_OBJ_2102" access="readWriteOutput">
+            <label lang="en">current_action_id</label>
+            <UINT />
+            <q1:defaultValue value="0" />
+          </q1:parameter>
+          <q1:parameter uniqueID="UID_OBJ_2103" access="readWriteOutput">
+            <label lang="en">last_completed_command_id</label>
+            <UINT />
+            <q1:defaultValue value="0" />
+          </q1:parameter>
+          <q1:parameter uniqueID="UID_OBJ_2104" access="readWriteOutput">
+            <label lang="en">command_error_code</label>
+            <USINT />
+            <q1:defaultValue value="0" />
           </q1:parameter>
         </q1:parameterList>
       </q1:ApplicationProcess>
@@ -724,7 +776,7 @@
         <ProfileTechnology>CANopen</ProfileTechnology>
       </ISO15745Reference>
     </ProfileHeader>
-    <ProfileBody xmlns:q2="http://www.canopen.org/xml/1.1" xsi:type="q2:ProfileBody_CommunicationNetwork_CANopen" formatName="CANopen" formatVersion="1.0" fileName="DS301_profile.xdd" fileCreator="" fileCreationDate="2020-11-23" fileCreationTime="13:00:00.0000000+01:00" fileModificationDate="2026-02-26" fileModificationTime="22:41:35.2308616+01:00" fileVersion="1" supportedLanguages="en" xmlns="">
+    <ProfileBody xmlns:q2="http://www.canopen.org/xml/1.1" xsi:type="q2:ProfileBody_CommunicationNetwork_CANopen" formatName="CANopen" formatVersion="1.0" fileName="DS301_profile.xdd" fileCreator="" fileCreationDate="2020-11-23" fileCreationTime="13:00:00.0000000+01:00" fileModificationDate="2026-02-28" fileModificationTime="17:35:59.2508899+01:00" fileVersion="1" supportedLanguages="en" xmlns="">
       <ApplicationLayers>
         <q2:CANopenObjectList>
           <CANopenObject index="1000" name="Device type" objectType="7" PDOmapping="no" uniqueIDRef="UID_OBJ_1000" />
@@ -832,9 +884,13 @@
             <CANopenSubObject subIndex="05" name="event timer" objectType="7" PDOmapping="no" uniqueIDRef="UID_SUB_180005" />
             <CANopenSubObject subIndex="06" name="SYNC start value" objectType="7" PDOmapping="no" uniqueIDRef="UID_SUB_180006" />
           </CANopenObject>
-          <CANopenObject index="1A00" name="TPDO mapping parameter" objectType="9" uniqueIDRef="UID_OBJ_1A00" subNumber="2">
+          <CANopenObject index="1A00" name="TPDO mapping parameter" objectType="9" uniqueIDRef="UID_OBJ_1A00" subNumber="6">
             <CANopenSubObject subIndex="00" name="Number of mapped objects" objectType="7" PDOmapping="no" uniqueIDRef="UID_SUB_1A0000" />
             <CANopenSubObject subIndex="01" name="Mapped object 1" objectType="7" PDOmapping="no" uniqueIDRef="UID_SUB_1A0001" />
+            <CANopenSubObject subIndex="02" name="Mapped object 2" objectType="7" PDOmapping="no" uniqueIDRef="UID_SUB_1A0002" />
+            <CANopenSubObject subIndex="03" name="Mapped object 3" objectType="7" PDOmapping="no" uniqueIDRef="UID_SUB_1A0003" />
+            <CANopenSubObject subIndex="04" name="Mapped object 4" objectType="7" PDOmapping="no" uniqueIDRef="UID_SUB_1A0004" />
+            <CANopenSubObject subIndex="05" name="Mapped object 5" objectType="7" PDOmapping="no" uniqueIDRef="UID_SUB_1A0005" />
           </CANopenObject>
           <CANopenObject index="2000" name="ACTION_ID" objectType="7" PDOmapping="RPDO" uniqueIDRef="UID_OBJ_2000" />
           <CANopenObject index="2001" name="param_1" objectType="7" PDOmapping="RPDO" uniqueIDRef="UID_OBJ_2001" />
@@ -844,7 +900,11 @@
           <CANopenObject index="2005" name="param_5" objectType="7" PDOmapping="RPDO" uniqueIDRef="UID_OBJ_2005" />
           <CANopenObject index="2006" name="param_6" objectType="7" PDOmapping="RPDO" uniqueIDRef="UID_OBJ_2006" />
           <CANopenObject index="2007" name="Command_ID" objectType="7" PDOmapping="RPDO" uniqueIDRef="UID_OBJ_2007" />
-          <CANopenObject index="2100" name="tpdo_test" objectType="7" PDOmapping="TPDO" uniqueIDRef="UID_OBJ_2100" />
+          <CANopenObject index="2100" name="current_command_status" objectType="7" PDOmapping="TPDO" uniqueIDRef="UID_OBJ_2100" />
+          <CANopenObject index="2101" name="current_command_id" objectType="7" PDOmapping="TPDO" uniqueIDRef="UID_OBJ_2101" />
+          <CANopenObject index="2102" name="current_action_id" objectType="7" PDOmapping="TPDO" uniqueIDRef="UID_OBJ_2102" />
+          <CANopenObject index="2103" name="last_completed_command_id" objectType="7" PDOmapping="TPDO" uniqueIDRef="UID_OBJ_2103" />
+          <CANopenObject index="2104" name="command_error_code" objectType="7" PDOmapping="TPDO" uniqueIDRef="UID_OBJ_2104" />
         </q2:CANopenObjectList>
         <dummyUsage>
           <dummy entry="Dummy0001=0" />

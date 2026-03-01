@@ -15,6 +15,9 @@
 #include "gpio.h"
 #include "main.h"
 
+float abs_pos_V_mm = 0;
+float abs_pos_H_mm = 0;
+
 // Endstop vertical : PULLDOWN, repos = RESET, cliqué = SET
 #define ENDSTOP_V_TRIGGERED() (HAL_GPIO_ReadPin(end_switch_vertical_GPIO_Port, end_switch_vertical_Pin) == GPIO_PIN_SET)
 
@@ -37,6 +40,9 @@ static float ticks_to_mm_H(int32_t ticks)
 	return ((float)ticks / encoder_L.ticks_per_revolution) * M_PI * ROBOT_ENCODER_WHEEL_DIAMETER;
 }
 
+//////// 
+// calcul abs_position ascenseur 
+/////
 
 
 /*
@@ -47,10 +53,16 @@ ELV_STATE_MOVE_V  (vertical)
 
 void elv_move_v_wake(struct MvStateMachine* statemachine, struct MvStateEnv* env, float delta_time)
 {
-	printf("elevator V : moving to %.1f mm\n", env->distance);
+	// env->distance contient la position absolue cible
+	// Calculer la distance relative à parcourir
+	float distance_relative = env->distance - abs_pos_V_mm;
+
+	printf("elevator V : moving from %.1f mm to %.1f mm (distance: %.1f mm)\n",
+	       abs_pos_V_mm, env->distance, distance_relative);
 
 	Encoder16Reset(&encoder_R);
-	env->pos_slope   = pregen_position_slope(env->acceleration, env->speed, env->distance);
+	// Utiliser la distance RELATIVE pour la trajectoire
+	env->pos_slope   = pregen_position_slope(env->acceleration, env->speed, distance_relative);
 	env->elapsed_time = 0;
 
 	PID_reset_runtime(&pid_position_elevator_V_runtime);
@@ -69,7 +81,10 @@ void elv_move_v_run(struct MvStateMachine* statemachine, struct MvStateEnv* env,
 
 	motor_drive(motor_R, motor_command);
 
-	if (is_val_near(current_pos, env->distance, 3.0f) && fabs(pid_position_elevator_V_runtime.d) < 0.05f)
+	// Calculer la distance relative à parcourir pour la comparaison
+	float distance_relative = env->distance - abs_pos_V_mm;
+
+	if (is_val_near(current_pos, distance_relative, 3.0f) && fabs(pid_position_elevator_V_runtime.d) < 0.05f)
 	{
 		env->real_outcome = current_pos;
 		MSM_set_state_finished(statemachine);
@@ -78,7 +93,10 @@ void elv_move_v_run(struct MvStateMachine* statemachine, struct MvStateEnv* env,
 
 void elv_move_v_stop(struct MvStateMachine* statemachine, struct MvStateEnv* env, float delta_time)
 {
-	printf("elevator V : reached %.1f mm (target %.1f mm)\n", env->real_outcome, env->distance);
+	// Mettre à jour la position absolue : ancienne position + distance parcourue
+	abs_pos_V_mm += env->real_outcome;
+
+	printf("elevator V : reached %.1f mm (target was %.1f mm)\n", abs_pos_V_mm, env->distance);
 	motor_drive(motor_R, 0.0f);
 }
 
@@ -89,9 +107,10 @@ struct MvState ELV_STATE_MOVE_V =
 	.stop = elv_move_v_stop
 };
 
-struct MvStateEnv genenv_elv_move_v(float acceleration, float speed, float distance)
+struct MvStateEnv genenv_elv_move_v(float acceleration, float speed, float target_abs_pos_v)
 {
-	struct MvStateEnv tmp = { .acceleration = acceleration, .speed = speed, .distance = distance };
+
+	struct MvStateEnv tmp = { .acceleration = acceleration, .speed = speed, .distance = target_abs_pos_v };
 	return tmp;
 }
 
@@ -177,6 +196,8 @@ void elv_home_v_stop(struct MvStateMachine* statemachine, struct MvStateEnv* env
 	motor_drive(motor_R, 0.0f);
 	// Remet le zéro de position
 	Encoder16Reset(&encoder_R);
+	// Réinitialiser la position absolue
+	abs_pos_V_mm = 0.0f;
 }
 
 struct MvState ELV_STATE_HOME_V =
@@ -203,10 +224,16 @@ ELV_STATE_MOVE_H  (horizontal)
 
 void elv_move_h_wake(struct MvStateMachine* statemachine, struct MvStateEnv* env, float delta_time)
 {
-	printf("elevator H : moving to %.1f mm\n", env->distance);
+	// env->distance contient la position absolue cible
+	// Calculer la distance relative à parcourir
+	float distance_relative = env->distance - abs_pos_H_mm;
+
+	printf("elevator H : moving from %.1f mm to %.1f mm (distance: %.1f mm)\n",
+	       abs_pos_H_mm, env->distance, distance_relative);
 
 	Encoder16Reset(&encoder_L);
-	env->pos_slope    = pregen_position_slope(env->acceleration, env->speed, env->distance);
+	// Utiliser la distance RELATIVE pour la trajectoire
+	env->pos_slope    = pregen_position_slope(env->acceleration, env->speed, distance_relative);
 	env->elapsed_time = 0;
 
 	PID_reset_runtime(&pid_position_elevator_H_runtime);
@@ -225,7 +252,10 @@ void elv_move_h_run(struct MvStateMachine* statemachine, struct MvStateEnv* env,
 
 	motor_drive(motor_L, motor_command);
 
-	if (is_val_near(current_pos, env->distance, 5.0f))
+	// Calculer la distance relative à parcourir pour la comparaison
+	float distance_relative = env->distance - abs_pos_H_mm;
+
+	if (is_val_near(current_pos, distance_relative, 5.0f))
 	{
 		env->real_outcome = current_pos;
 		MSM_set_state_finished(statemachine);
@@ -234,7 +264,10 @@ void elv_move_h_run(struct MvStateMachine* statemachine, struct MvStateEnv* env,
 
 void elv_move_h_stop(struct MvStateMachine* statemachine, struct MvStateEnv* env, float delta_time)
 {
-	printf("elevator H : reached %.1f mm (target %.1f mm)\n", env->real_outcome, env->distance);
+	// Mettre à jour la position absolue : ancienne position + distance parcourue
+	abs_pos_H_mm += env->real_outcome;
+
+	printf("elevator H : reached %.1f mm (target was %.1f mm)\n", abs_pos_H_mm, env->distance);
 	motor_drive(motor_L, 0.0f);
 }
 
@@ -328,6 +361,8 @@ void elv_home_h_stop(struct MvStateMachine* statemachine, struct MvStateEnv* env
 	motor_drive(motor_L, 0.0f);
 	// Remet le zéro de position
 	Encoder16Reset(&encoder_L);
+	// Réinitialiser la position absolue
+	abs_pos_H_mm = 0.0f;
 }
 
 struct MvState ELV_STATE_HOME_H =

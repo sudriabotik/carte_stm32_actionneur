@@ -26,6 +26,13 @@ extern struct MvStateMachine elevator_V_statemachine;
 extern struct MvStateMachine elevator_H_statemachine;
 
 
+// --- Variables de tracking de position absolue ---
+// Mises à jour automatiquement après chaque mouvement et homing
+
+extern float abs_pos_V_mm;  // Position absolue ascenseur vertical (mm depuis endstop)
+extern float abs_pos_H_mm;  // Position absolue ascenseur horizontal (mm depuis endstop)
+
+
 // --- ELV_STATE_MOVE_V : déplacer l'ascenseur vertical vers une position en mm ---
 
 extern struct MvState ELV_STATE_MOVE_V;
@@ -34,9 +41,10 @@ extern struct MvState ELV_STATE_MOVE_V;
  * @brief Génère un environnement pour ELV_STATE_MOVE_V.
  * @param acceleration  Accélération en mm/s²
  * @param speed         Vitesse max en mm/s
- * @param distance      Position cible en mm (depuis le zéro endstop)
+ * @param target_abs_pos_v  Position ABSOLUE cible en mm (depuis le zéro endstop)
+ *                          La distance relative sera calculée automatiquement
  */
-struct MvStateEnv genenv_elv_move_v(float acceleration, float speed, float distance);
+struct MvStateEnv genenv_elv_move_v(float acceleration, float speed, float target_abs_pos_v);
 
 
 // --- ELV_STATE_HOLD_V : maintenir la position de l'ascenseur vertical ---
@@ -66,9 +74,10 @@ extern struct MvState ELV_STATE_MOVE_H;
  * @brief Génère un environnement pour ELV_STATE_MOVE_H.
  * @param acceleration  Accélération en mm/s²
  * @param speed         Vitesse max en mm/s
- * @param distance      Position cible en mm (depuis le zéro endstop)
+ * @param target_abs_pos_h  Position ABSOLUE cible en mm (depuis le zéro endstop)
+ *                          La distance relative sera calculée automatiquement
  */
-struct MvStateEnv genenv_elv_move_h(float acceleration, float speed, float distance);
+struct MvStateEnv genenv_elv_move_h(float acceleration, float speed, float target_abs_pos_h);
 
 
 // --- ELV_STATE_HOLD_H : maintenir la position de l'ascenseur horizontal ---

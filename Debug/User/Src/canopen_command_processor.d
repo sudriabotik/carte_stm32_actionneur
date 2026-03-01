@@ -54,7 +54,8 @@ User/Src/canopen_command_processor.o: \
  ../CANopenNode/305/CO_LSS.h ../CANopenNode/305/CO_LSSmaster.h \
  ../CANopenNode/309/CO_gateway_ascii.h ../CANopenNode/301/CO_SDOclient.h \
  ../CANopenNode/305/CO_LSSmaster.h ../CANopenNode/303/CO_LEDs.h \
- ../CANopenNode/extra/CO_trace.h ../CANopenNode_STM32/OD.h
+ ../CANopenNode/extra/CO_trace.h ../CANopenNode_STM32/OD.h \
+ ../CANopenNode_STM32/CO_app_STM32.h
 ../User/inc/canopen_command_processor.h:
 ../User/inc/sequencer.h:
 ../Core/Inc/main.h:
@@ -129,3 +130,4 @@ User/Src/canopen_command_processor.o: \
 ../CANopenNode/303/CO_LEDs.h:
 ../CANopenNode/extra/CO_trace.h:
 ../CANopenNode_STM32/OD.h:
+../CANopenNode_STM32/CO_app_STM32.h:
