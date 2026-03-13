@@ -7,6 +7,7 @@ build/
 # ignore the driver folder, because it is very heavy and contains some binary files.
 # The content canbe regenerated with cubemx
 Drivers/
+Debug/
 
 # in case somebody mistakenly commits a zip or other binary files
 *.zip

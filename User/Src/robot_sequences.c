@@ -4,16 +4,28 @@
 
 
 // Paramètres par défaut pour les mouvements (à ajuster selon le robot)
-#define SEQ_ACCEL_V   10.0f   // mm/s²
-#define SEQ_SPEED_V    5.0f   // mm/s
-#define SEQ_ACCEL_H   30.0f   // mm/s²
-#define SEQ_SPEED_H   15.0f   // mm/s
+#define SEQ_ACCEL_V   30.0f   // mm/s²
+#define SEQ_SPEED_V    50.0f   // mm/s
+#define SEQ_ACCEL_H   100.0f   // mm/s²
+#define SEQ_SPEED_H   100.0f   // mm/s
 
 // position enregistrer : 
 #define GRAP_H -495.0f 
 #define GRAP_V -210.0f
 
 #define DEPOSE_1_H -200.0f
+
+
+//// POSITION AX
+#define SERAGE_ax_7	= 497
+#define SERAGE_ax_6	= 521
+
+#define CLOSE_ax_7 = 190
+#define CLOSE_ax_6 = 820
+
+#define OUVERT_ax_7 = 510
+#define OUVERT_ax_6 = 510
+
 
 void seq_build_homing_all(struct Sequencer* seq, float speed_V, float speed_H)
 {

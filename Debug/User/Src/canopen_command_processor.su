@@ -1,5 +1,0 @@
-../CANopenNode/301/CO_PDO.h:354:1:CO_TPDOsendRequest	16	static
-../User/Src/canopen_command_processor.c:29:6:canopen_cmd_init	16	static
-../User/Src/canopen_command_processor.c:44:6:canopen_read_command	72	static
-../User/Src/canopen_command_processor.c:97:6:canopen_update_status	32	static
-../User/Src/canopen_command_processor.c:130:6:canopen_cmd_process	64	static

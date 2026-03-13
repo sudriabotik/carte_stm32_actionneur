@@ -1,3 +1,0 @@
-../lib_robot/src_lib/pid.c:4:6:PID_reset_runtime	16	static
-../lib_robot/src_lib/pid.c:14:6:PID_set_runtime_last_value	16	static
-../lib_robot/src_lib/pid.c:20:7:PID_Run	40	static

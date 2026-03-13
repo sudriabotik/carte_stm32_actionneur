@@ -44,6 +44,7 @@
 
 #include "CO_app_STM32.h"
 #include "OD.h"
+#include "CANopen.h"
 #include "can_debug.h"
 #include "canopen_command_processor.h"
 /* USER CODE END Includes */
@@ -68,12 +69,14 @@
 /* USER CODE BEGIN PV */
 GPIO_PinState pin_a;
 GPIO_PinState pin_b;
-int trig_count = 0;
 bool toggle = false;
 
 // Variables pour la réception CAN bas niveau
 FDCAN_RxHeaderTypeDef RxHeader;
 uint8_t RxData[8];
+
+ODR_t error_obj_assign;
+int test_int;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -152,6 +155,15 @@ int main(void)
   canopenNodeSTM32.baudrate = 500; //  ce parametre ne ser à rien, c'est comme le tuto. 
   canopen_app_init(&canopenNodeSTM32);
 
+  //OD_RAM.x2100_current_command_status = 10;
+  
+  /*
+  CO_LOCK_OD(canopenNodeSTM32.canOpenStack->CANmodule);
+  error_obj_assign = OD_set_u8(OD_find(OD, 0x2100), 0x00, 10, false);
+  CO_UNLOCK_OD(canopenNodeSTM32.canOpenStack->CANmodule);
+  */
+  
+
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, GPIO_PIN_RESET);
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
 
@@ -170,6 +182,9 @@ int main(void)
 
   // Initialisation du processeur de commandes CANopen
   canopen_cmd_init(&main_sequencer);
+
+  OD_RAM.x2100_current_command_status = 10;
+  test_int = OD_RAM.x2100_current_command_status;
 
   // ========== TEST MANUEL DES MOUVEMENTS ==========
   // Décommenter pour tester les mouvements sans CANopen
@@ -191,7 +206,7 @@ int main(void)
 
   // Enable CAN debug logging
   printf("=== CAN Debug Initialized ===\n");
-  can_debug_enable_rx_logging(true);  // Set to false to disable automatic logging
+  can_debug_enable_rx_logging(false);  // Set to false to disable automatic logging
   can_debug_print_canopen_detailed(&canopenNodeSTM32);
 
   HAL_TIM_Base_Start_IT(&htim2);
@@ -205,6 +220,9 @@ int main(void)
     // Traitement CANopen (RPDO/TPDO)
     canopen_app_process();
 
+    // OD_RAM.x2100_current_command_status = 10;
+    // test_int = OD_RAM.x2100_current_command_status;
+
     // Traitement des commandes reçues via CANopen
     canopen_cmd_process();
 
@@ -213,10 +231,17 @@ int main(void)
     HAL_GPIO_WritePin(led_can_2_GPIO_Port, led_can_2_Pin, !canopenNodeSTM32.outStatusLEDRed);
 
     // Debug: Surveillance des changements RPDO
-    can_debug_monitor_rpdo_changes();
+    //can_debug_monitor_rpdo_changes();
     //CO_TPDOsendRequest(&canopenNodeSTM32.canOpenStack->TPDO[0]);
-    //HAL_Delay(10);
 
+    // pose ax serage
+    /* 
+    ax_write_position(7,510);
+    HAL_Delay(5);
+    ax_write_position(6,510);
+    HAL_Delay(5);
+    */ 
+   
     /* 
     printf("RPDO1: ACTION_ID=%u p1=%d p2=%d p3=%d\n\r", 
        OD_RAM.x2000_ACTION_ID, 
@@ -227,14 +252,14 @@ int main(void)
     //printf("ActionID %d \r\n",OD_RAM.x2000_ACTION_ID);
      
     // Test bas niveau : vérifier si une trame CAN est reçue
-    /*
+    
     if (HAL_FDCAN_GetRxFifoFillLevel(&hfdcan1, FDCAN_RX_FIFO0) > 0)
     {
       // Lire le message
       if (HAL_FDCAN_GetRxMessage(&hfdcan1, FDCAN_RX_FIFO0, &RxHeader, RxData) == HAL_OK)
       {
         // Afficher la trame reçue
-        printf("[HAL_CAN] ID=0x%03lX DLC=%lu DATA=[ ", RxHeader.Identifier,
+        printf("[HAL_CAN] _______ID=0x%03lX DLC=%lu DATA=[ ", RxHeader.Identifier,
                (RxHeader.DataLength >> 16));
         for (uint8_t i = 0; i < 8; i++) {
           printf("%02X ", RxData[i]);
@@ -242,7 +267,7 @@ int main(void)
         printf("]\n");
       }
     }
-    */
+    
     
     /* USER CODE END WHILE */
 
@@ -309,7 +334,6 @@ int main(void)
     }
       */
     //printf("R encoder register %"PRIu32"\n\r", TIM3->CNT);
-    trig_count ++;
   }
   /* USER CODE END 3 */
 }

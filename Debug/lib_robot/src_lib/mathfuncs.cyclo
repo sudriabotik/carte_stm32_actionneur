@@ -1,8 +1,0 @@
-../lib_robot/src_lib/mathfuncs.c:7:18:pregen_trapezoid	1
-../lib_robot/src_lib/mathfuncs.c:22:7:func_trapezoid	6
-../lib_robot/src_lib/mathfuncs.c:41:7:eval_position_slope_f1	1
-../lib_robot/src_lib/mathfuncs.c:46:7:eval_position_slope_f2	1
-../lib_robot/src_lib/mathfuncs.c:51:7:eval_position_slope_f3	1
-../lib_robot/src_lib/mathfuncs.c:56:7:eval_position_slope_f3_overlap	1
-../lib_robot/src_lib/mathfuncs.c:61:26:pregen_position_slope	3
-../lib_robot/src_lib/mathfuncs.c:103:7:eval_position_slope	9

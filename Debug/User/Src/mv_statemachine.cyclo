@@ -1,9 +1,0 @@
-../User/Src/mv_statemachine.c:8:23:MSM_init	2
-../User/Src/mv_statemachine.c:23:7:MSM_reset_construction	1
-../User/Src/mv_statemachine.c:30:7:MSM_enqueue_state	2
-../User/Src/mv_statemachine.c:42:7:MSM_ready_construction	1
-../User/Src/mv_statemachine.c:49:8:MSM_get_construction_index	1
-../User/Src/mv_statemachine.c:55:7:MSM_is_construction_full	1
-../User/Src/mv_statemachine.c:61:5:MSM_is_busy	1
-../User/Src/mv_statemachine.c:67:5:MSM_update	15
-../User/Src/mv_statemachine.c:132:7:MSM_set_state_finished	1

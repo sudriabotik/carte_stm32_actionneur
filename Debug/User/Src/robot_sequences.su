@@ -1,5 +1,0 @@
-../User/Src/robot_sequences.c:18:6:seq_build_homing_all	272	static
-../User/Src/robot_sequences.c:29:6:seq_build_grab	264	static
-../User/Src/robot_sequences.c:41:6:seq_build_deposit	264	static
-../User/Src/robot_sequences.c:53:6:seq_deplacement_H	184	static
-../User/Src/robot_sequences.c:61:6:seq_deplacement_V	184	static
