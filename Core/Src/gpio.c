@@ -54,7 +54,7 @@ void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, led_can_2_Pin|led_can_1_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, Pomp_4_Pin|DIR_AX_Pin|COULEUR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, Pomp_4_Pin|DIR_AX_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, Pomp_3_Pin|Pomp_1_Pin|Pomp_2_Pin|DIR_D_Pin, GPIO_PIN_RESET);
@@ -62,10 +62,8 @@ void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(DIR_G_GPIO_Port, DIR_G_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : led_can_2_Pin led_can_1_Pin Pomp_4_Pin DIR_AX_Pin
-                           COULEUR_Pin */
-  GPIO_InitStruct.Pin = led_can_2_Pin|led_can_1_Pin|Pomp_4_Pin|DIR_AX_Pin
-                          |COULEUR_Pin;
+  /*Configure GPIO pins : led_can_2_Pin led_can_1_Pin Pomp_4_Pin DIR_AX_Pin */
+  GPIO_InitStruct.Pin = led_can_2_Pin|led_can_1_Pin|Pomp_4_Pin|DIR_AX_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -96,11 +94,11 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(N_fault_D_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : N_fault_G_Pin */
-  GPIO_InitStruct.Pin = N_fault_G_Pin;
+  /*Configure GPIO pins : N_fault_G_Pin cap_couleur_2_Pin */
+  GPIO_InitStruct.Pin = N_fault_G_Pin|cap_couleur_2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(N_fault_G_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : DIR_G_Pin */
   GPIO_InitStruct.Pin = DIR_G_Pin;
@@ -108,6 +106,12 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(DIR_G_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : cap_presence_2_Pin */
+  GPIO_InitStruct.Pin = cap_presence_2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(cap_presence_2_GPIO_Port, &GPIO_InitStruct);
 
 }
 

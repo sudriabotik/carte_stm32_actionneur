@@ -170,7 +170,10 @@ int main(void)
 
   robot_data_init();
 
-  MV_STATEMACHINE = MSM_init();
+  HAL_Delay(500);
+  servo_init(&hi2c3);
+
+  MV_STATEMACHINE = MSM_init(); // je devrais pouvoi retirer cela. 
   elevator_V_statemachine = MSM_init();
   elevator_H_statemachine = MSM_init();
 
@@ -201,8 +204,6 @@ int main(void)
   // seq_build_deposit(&main_sequencer, 80.0f, 40.0f);  // Exemple: deposit à V=80mm, H=40mm
   // ================================================
 
-
-  HAL_Delay(500);
 
   // Enable CAN debug logging
   printf("=== CAN Debug Initialized ===\n");

@@ -28,6 +28,8 @@ typedef enum {
     CMD_DEPOSIT = 3,        /**< Séquence de dépôt d'objet */
     CMD_POS_ELAVATOR_H = 4,
     CMD_POS_ELAVATOR_V = 5,
+    CMD_POS_AX = 6,
+    CMD_POMP_ON_OFF = 7,
     CMD_EMERGENCY_STOP = 99 /**< Arrêt d'urgence */
 } CommandID_t;
 

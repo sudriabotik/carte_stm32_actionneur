@@ -6,6 +6,8 @@
 #include "canopen_command_processor.h"
 #include "CO_app_STM32.h"  // Pour canopenNodeSTM32
 #include <stdio.h>
+#include "ax_controller.h"
+#include "robot_action_autom.h"
 
 /* Pointeur vers le séquenceur principal (initialisé par canopen_cmd_init) */
 static struct Sequencer* main_sequencer = NULL;
@@ -207,6 +209,32 @@ void canopen_cmd_process(void) {
                 seq_deplacement_V(main_sequencer,pos_v_mm);
                 sequencer_start(main_sequencer);
                 sequencer_was_running = 1;
+                break;
+            
+            case CMD_POS_AX:
+                printf("[CANopen CMD] Executing: AX\n\r");
+                canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
+                uint8_t id_ax = param_1;
+                uint16_t pos_ax = param_2 ;
+
+                ax_write_position(id_ax, pos_ax);
+                sequencer_was_running = 1;
+                break;
+            
+            case CMD_POMP_ON_OFF:
+                printf("[CANopen CMD] Executing: CMD_POMP_ON_OFF\n\r");
+                canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
+                uint8_t on_off = param_1;
+                if (on_off) 
+                {
+                    turn_on_pump_4(NULL);
+                    turn_on_pump_3(NULL);
+                }
+                else
+                {
+                    turn_off_pump_4(NULL);
+                    turn_off_pump_3(NULL);
+                }
                 break;
 
             case CMD_EMERGENCY_STOP:

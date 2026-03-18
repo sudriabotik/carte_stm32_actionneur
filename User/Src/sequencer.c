@@ -5,19 +5,6 @@
 
 
 // ============================================================================
-// Variables statiques pour les buffers d'actions
-// ============================================================================
-// IMPORTANT : Ces variables doivent être déclarées AVANT sequencer_reset()
-// car elles sont utilisées dans cette fonction.
-
-#define SEQ_ACTION_BUFFER_SIZE 8
-static struct SeqGpioAction  gpio_action_buffer[SEQ_ACTION_BUFFER_SIZE];
-static struct SeqDelayAction delay_action_buffer[SEQ_ACTION_BUFFER_SIZE];
-static uint8_t gpio_buffer_index = 0;
-static uint8_t delay_buffer_index = 0;
-
-
-// ============================================================================
 // Fonctions internes
 // ============================================================================
 
@@ -92,7 +79,8 @@ int sequencer_add(struct Sequencer* seq,
 
 int sequencer_add_action(struct Sequencer* seq,
                          void (*callback)(void* param),
-                         void* param)
+                         void* param,
+                         uint32_t delay_after_ms)
 {
     if (seq->step_count >= SEQUENCER_MAX_STEPS)
     {
@@ -102,10 +90,13 @@ int sequencer_add_action(struct Sequencer* seq,
 
     // Type ACTION
     seq->steps[seq->step_count].type = SEQ_STEP_ACTION;
-    seq->steps[seq->step_count].action.callback = callback;
-    seq->steps[seq->step_count].action.param    = param;
+    seq->steps[seq->step_count].action.callback       = callback;
+    seq->steps[seq->step_count].action.param          = param;
+    seq->steps[seq->step_count].action.delay_after_ms = delay_after_ms;
+    seq->steps[seq->step_count].action.elapsed_time_ms = 0;
+    seq->steps[seq->step_count].action.executed       = 0;
 
-    printf("sequencer: add ACTION step %d\n", seq->step_count);
+    printf("sequencer: add ACTION step %d (delay=%lums)\n", seq->step_count, delay_after_ms);
     seq->step_count++;
     return 0;
 }
@@ -134,14 +125,10 @@ void sequencer_reset(struct Sequencer* seq)
 
     seq->idle_count = idle_count;
     memcpy(seq->idles, idles, sizeof(idles));
-
-    // Réinitialise les buffers d'actions
-    gpio_buffer_index = 0;
-    delay_buffer_index = 0;
 }
 
 
-void sequencer_update(struct Sequencer* seq)
+void sequencer_update(struct Sequencer* seq, uint32_t delta_time_ms)
 {
     if (!seq->active)
         return;
@@ -189,19 +176,41 @@ void sequencer_update(struct Sequencer* seq)
     }
     else if (step->type == SEQ_STEP_ACTION)
     {
-        // === ÉTAPE ACTION : Exécution immédiate du callback ===
-        printf("sequencer: executing ACTION step %d/%d\n",
-               seq->current_step + 1, seq->step_count);
+        // === ÉTAPE ACTION : Exécution + délai optionnel ===
 
-        // Exécute le callback
-        if (step->action.callback != 0)
+        // 1. Exécuter le callback (une seule fois)
+        if (!step->action.executed)
         {
-            step->action.callback(step->action.param);
+            printf("sequencer: executing ACTION step %d/%d\n",
+                   seq->current_step + 1, seq->step_count);
+
+            if (step->action.callback != 0)
+            {
+                step->action.callback(step->action.param);
+            }
+
+            step->action.executed = 1;
+
+            // Si pas de délai, passer immédiatement à l'étape suivante
+            if (step->action.delay_after_ms == 0)
+            {
+                seq->current_step++;
+                seq->step_sent = 0;
+                return;
+            }
         }
 
-        // Action terminée immédiatement, passe à l'étape suivante
-        seq->current_step++;
-        seq->step_sent = 0;
+        // 2. Attendre le délai (si delay_after_ms > 0)
+        step->action.elapsed_time_ms += delta_time_ms;
+
+        if (step->action.elapsed_time_ms >= step->action.delay_after_ms)
+        {
+            printf("sequencer: ACTION step %d/%d delay completed (%lums)\n",
+                   seq->current_step + 1, seq->step_count, step->action.delay_after_ms);
+
+            seq->current_step++;
+            seq->step_sent = 0;
+        }
     }
     else
     {
@@ -216,100 +225,4 @@ void sequencer_update(struct Sequencer* seq)
 uint8_t sequencer_is_active(const struct Sequencer* seq)
 {
     return seq->active;
-}
-
-
-// ============================================================================
-// Helpers pour actions courantes
-// ============================================================================
-
-// Callback interne pour action GPIO
-static void seq_gpio_callback(void* param)
-{
-    struct SeqGpioAction* gpio = (struct SeqGpioAction*)param;
-    if (gpio != 0 && gpio->port != 0)
-    {
-        HAL_GPIO_WritePin(gpio->port, gpio->pin, gpio->state);
-        printf("[SEQ_GPIO] Set pin %d to %d\n", gpio->pin, gpio->state);
-    }
-}
-
-
-// Callback interne pour action délai
-static void seq_delay_callback(void* param)
-{
-    struct SeqDelayAction* delay = (struct SeqDelayAction*)param;
-    if (delay != 0)
-    {
-        // Premier appel : mémorise le tick de départ
-        if (delay->start_tick == 0)
-        {
-            delay->start_tick = HAL_GetTick();
-            printf("[SEQ_DELAY] Start delay %lu ms\n", delay->delay_ms);
-        }
-
-        // Attente active (bloquante)
-        uint32_t elapsed = HAL_GetTick() - delay->start_tick;
-        if (elapsed < delay->delay_ms)
-        {
-            HAL_Delay(delay->delay_ms - elapsed);
-        }
-
-        printf("[SEQ_DELAY] Delay %lu ms completed\n", delay->delay_ms);
-        delay->start_tick = 0;  // Reset pour prochaine utilisation
-    }
-}
-
-
-int sequencer_add_gpio(struct Sequencer* seq,
-                       GPIO_TypeDef* port,
-                       uint16_t pin,
-                       GPIO_PinState state)
-{
-    if (gpio_buffer_index >= SEQ_ACTION_BUFFER_SIZE)
-    {
-        printf("sequencer: GPIO buffer full\n");
-        return -1;
-    }
-
-    // Copie les paramètres dans le buffer statique
-    gpio_action_buffer[gpio_buffer_index].port  = port;
-    gpio_action_buffer[gpio_buffer_index].pin   = pin;
-    gpio_action_buffer[gpio_buffer_index].state = state;
-
-    // Ajoute l'action en pointant vers le buffer
-    int result = sequencer_add_action(seq, seq_gpio_callback,
-                                      &gpio_action_buffer[gpio_buffer_index]);
-
-    if (result == 0)
-    {
-        gpio_buffer_index++;
-    }
-
-    return result;
-}
-
-
-int sequencer_add_delay(struct Sequencer* seq, uint32_t delay_ms)
-{
-    if (delay_buffer_index >= SEQ_ACTION_BUFFER_SIZE)
-    {
-        printf("sequencer: Delay buffer full\n");
-        return -1;
-    }
-
-    // Copie les paramètres dans le buffer statique
-    delay_action_buffer[delay_buffer_index].delay_ms   = delay_ms;
-    delay_action_buffer[delay_buffer_index].start_tick = 0;
-
-    // Ajoute l'action en pointant vers le buffer
-    int result = sequencer_add_action(seq, seq_delay_callback,
-                                      &delay_action_buffer[delay_buffer_index]);
-
-    if (result == 0)
-    {
-        delay_buffer_index++;
-    }
-
-    return result;
 }

@@ -4,24 +4,65 @@
 /**
  * @file sequencer.h
  *
- * @brief Séquenceur de mouvements : exécute une séquence d'étapes sur une ou plusieurs
- *        MvStateMachine de façon séquentielle.
+ * @brief Séquenceur générique : exécute une QUEUE d'étapes (moteurs + actions custom) de façon séquentielle.
  *
- * Chaque machine a un état "idle" (typiquement HOLD) qui est chargé automatiquement
- * dès qu'une étape se termine. Ainsi, les moteurs sont toujours maintenus en position.
+ * ## Principe
  *
- * Exemple :
+ * Le séquenceur orchestre plusieurs MvStateMachine indépendantes (ex: moteur H et V).
+ * Quand une étape moteur se termine, la machine repasse automatiquement en état IDLE (HOLD).
+ * Cela permet d'avoir un moteur qui bouge pendant que l'autre reste en position.
  *
- *   sequencer_set_idle_V(&seq, &ELV_STATE_HOLD_V, genenv_elv_hold_v());
- *   sequencer_set_idle_H(&seq, &ELV_STATE_HOLD_H, genenv_elv_hold_h());
+ * ## Types d'étapes
  *
- *   sequencer_add(&seq, &elevator_V_statemachine, &ELV_STATE_HOME_V, genenv_elv_home_v(-20.0f));
- *   sequencer_add(&seq, &elevator_H_statemachine, &ELV_STATE_HOME_H, genenv_elv_home_h(-10.0f));
+ * 1. **SEQ_STEP_MOTOR** : Envoie un état à une MvStateMachine, attend la fin du mouvement
+ * 2. **SEQ_STEP_ACTION** : Exécute un callback custom immédiatement (GPIO, UART, I2C, délai...)
  *
- *   sequencer_start(&seq);
+ * ## Exemple complet
  *
- *   // Dans le timer interrupt :
- *   sequencer_update(&seq);
+ * ```c
+ * // === 1. INITIALISATION (une seule fois) ===
+ * struct Sequencer seq = sequencer_init();
+ *
+ * // Enregistrer les états IDLE pour chaque moteur
+ * sequencer_set_idle(&seq, &elevator_H_statemachine, &ELV_STATE_HOLD_H, env_hold_h);
+ * sequencer_set_idle(&seq, &elevator_V_statemachine, &ELV_STATE_HOLD_V, env_hold_v);
+ *
+ * // === 2. CRÉER VOS FONCTIONS CALLBACK ===
+ * void my_gpio_set(void* param) {
+ *     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+ * }
+ *
+ * void my_uart_send(void* param) {
+ *     HAL_UART_Transmit(&huart3, "OK", 2, 100);
+ * }
+ *
+ * // === 3. CONSTRUIRE LA SÉQUENCE ===
+ * sequencer_reset(&seq);  // Vider la queue
+ *
+ * // Étape 1 : Mouvement horizontal
+ * sequencer_add(&seq, &elevator_H_statemachine, &ELV_STATE_TRANSLATION_H, env_h);
+ * // → Moteur H bouge, moteur V reste en HOLD
+ * // → À la fin, moteur H repasse en HOLD automatiquement
+ *
+ * // Étape 2 : GPIO
+ * sequencer_add_action(&seq, my_gpio_set, NULL);
+ *
+ * // Étape 3 : Mouvement vertical
+ * sequencer_add(&seq, &elevator_V_statemachine, &ELV_STATE_TRANSLATION_V, env_v);
+ * // → Moteur V bouge, moteur H reste en HOLD
+ *
+ * // Étape 4 : UART
+ * sequencer_add_action(&seq, my_uart_send, NULL);
+ *
+ * // === 4. LANCER LA SÉQUENCE ===
+ * sequencer_start(&seq);
+ *
+ * // === 5. DANS LA BOUCLE PRINCIPALE (ou timer interrupt) ===
+ * while(1) {
+ *     sequencer_update(&seq);  // Avance la séquence automatiquement
+ *     HAL_Delay(10);
+ * }
+ * ```
  */
 
 #include "main.h"
@@ -63,6 +104,9 @@ struct SeqStep
         struct {
             void (*callback)(void* param);  // Fonction à exécuter
             void* param;                     // Paramètres de la fonction
+            uint32_t delay_after_ms;         // Délai à attendre APRÈS l'exécution (0 = pas de délai)
+            uint32_t elapsed_time_ms;        // Temps écoulé depuis l'exécution (géré par sequencer_update)
+            uint8_t  executed;               // Flag: 1 = callback déjà exécuté, attend le délai
         } action;
     };
 };
@@ -80,17 +124,35 @@ struct SeqIdle
 
 /**
  * @brief Le séquenceur : liste ordonnée d'étapes + états idle par machine.
+ *
+ * Le séquenceur permet d'exécuter une QUEUE d'étapes de façon séquentielle.
+ * Chaque étape peut être :
+ * - Un mouvement moteur (SEQ_STEP_MOTOR) : attend la fin du mouvement
+ * - Une action custom (SEQ_STEP_ACTION) : exécute un callback immédiatement
+ *
+ * Exemple de séquence :
+ * 1. Bouger moteur H → HOLD automatique après
+ * 2. GPIO haut
+ * 3. Bouger moteur V → HOLD automatique après
+ * 4. Commande UART
  */
 struct Sequencer
 {
-    struct SeqStep  steps[SEQUENCER_MAX_STEPS];
-    uint8_t         step_count;
-    uint8_t         current_step;
-    uint8_t         active;       // 1 = en cours, 0 = terminé ou pas encore démarré
-    uint8_t         step_sent;    // 1 = l'étape courante a été envoyée à la machine
+    // ========== QUEUE D'ÉTAPES ==========
 
-    struct SeqIdle  idles[SEQUENCER_MAX_MACHINES];
-    uint8_t         idle_count;
+    struct SeqStep  steps[SEQUENCER_MAX_STEPS];  // Liste des étapes à exécuter (max 16)
+    uint8_t         step_count;                  // Nombre total d'étapes dans la queue (combien d'étapes ajoutées)
+    uint8_t         current_step;                // Index de l'étape en cours d'exécution (0 à step_count-1)
+
+    // ========== ÉTAT D'EXÉCUTION ==========
+
+    uint8_t         active;       // 1 = séquence en cours, 0 = terminée ou pas encore démarrée
+    uint8_t         step_sent;    // 1 = l'étape courante a été envoyée à la machine (évite double-envoi)
+
+    // ========== ÉTATS IDLE (HOLD) ==========
+
+    struct SeqIdle  idles[SEQUENCER_MAX_MACHINES];  // États idle pour chaque machine (ex: HOLD)
+    uint8_t         idle_count;                     // Nombre de machines enregistrées (max 4)
 };
 
 
@@ -121,13 +183,19 @@ int sequencer_add(struct Sequencer* seq,
 /**
  * @brief Ajoute une étape ACTION à la fin de la séquence.
  *        L'action sera exécutée immédiatement quand son tour arrive.
- * @param callback  Fonction à appeler (signature: void callback(void* param))
- * @param param     Paramètre à passer à la fonction (peut être NULL)
+ * @param callback        Fonction à appeler (signature: void callback(void* param))
+ * @param param           Paramètre à passer à la fonction (peut être NULL)
+ * @param delay_after_ms  Délai NON-BLOQUANT à attendre APRÈS l'exécution (0 = pas de délai)
  * @return 0 si succès, -1 si la séquence est pleine.
+ *
+ * Exemple :
+ *   sequencer_add_action(seq, ax_servo_6_close, NULL, 5);  // Exécute puis attend 5ms
+ *   sequencer_add_action(seq, ax_servo_7_close, NULL, 0);  // Exécute immédiatement
  */
 int sequencer_add_action(struct Sequencer* seq,
                          void (*callback)(void* param),
-                         void* param);
+                         void* param,
+                         uint32_t delay_after_ms);
 
 /**
  * @brief Démarre l'exécution de la séquence depuis le début.
@@ -143,62 +211,15 @@ void sequencer_reset(struct Sequencer* seq);
  * @brief À appeler à chaque cycle dans le timer interrupt.
  *        Avance la séquence quand la machine courante a terminé son état.
  *        Remet automatiquement en idle toute machine qui vient de terminer.
+ * @param seq             Séquenceur à mettre à jour
+ * @param delta_time_ms   Temps écoulé depuis le dernier appel en millisecondes
  */
-void sequencer_update(struct Sequencer* seq);
+void sequencer_update(struct Sequencer* seq, uint32_t delta_time_ms);
 
 /**
  * @brief Indique si la séquence est en cours d'exécution.
  */
 uint8_t sequencer_is_active(const struct Sequencer* seq);
-
-
-// ============================================================================
-// Helpers pour actions courantes
-// ============================================================================
-
-/**
- * @brief Paramètres pour action GPIO
- */
-struct SeqGpioAction
-{
-    GPIO_TypeDef* port;
-    uint16_t pin;
-    GPIO_PinState state;  // GPIO_PIN_SET ou GPIO_PIN_RESET
-};
-
-/**
- * @brief Paramètres pour action délai
- */
-struct SeqDelayAction
-{
-    uint32_t delay_ms;
-    uint32_t start_tick;   // Rempli automatiquement
-};
-
-/**
- * @brief Ajoute une action GPIO (mise à l'état haut ou bas d'une pin)
- * @param port   Port GPIO (ex: GPIOA)
- * @param pin    Pin GPIO (ex: GPIO_PIN_5)
- * @param state  État à appliquer (GPIO_PIN_SET ou GPIO_PIN_RESET)
- * @return 0 si succès, -1 si la séquence est pleine.
- *
- * ATTENTION : Les paramètres GPIO sont copiés dans un buffer statique interne.
- *             Limite : 8 actions GPIO maximum dans une séquence.
- */
-int sequencer_add_gpio(struct Sequencer* seq,
-                       GPIO_TypeDef* port,
-                       uint16_t pin,
-                       GPIO_PinState state);
-
-/**
- * @brief Ajoute un délai (pause) dans la séquence
- * @param delay_ms  Durée du délai en millisecondes
- * @return 0 si succès, -1 si la séquence est pleine.
- *
- * ATTENTION : Le délai utilise HAL_GetTick() et bloque l'avancement de la séquence.
- *             Limite : 8 délais maximum dans une séquence.
- */
-int sequencer_add_delay(struct Sequencer* seq, uint32_t delay_ms);
 
 
 #endif // __SEQUENCER_H

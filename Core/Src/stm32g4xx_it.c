@@ -278,7 +278,7 @@ void TIM2_IRQHandler(void)
   */
   MSM_update(&elevator_V_statemachine, 0.020f);
   MSM_update(&elevator_H_statemachine, 0.020f);
-  sequencer_update(&main_sequencer);
+  sequencer_update(&main_sequencer,10);
   
   /* 
   if (MSM_is_busy(&elevator_V_statemachine) == 0)
