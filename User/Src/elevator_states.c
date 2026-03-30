@@ -76,6 +76,8 @@ void elv_move_v_run(struct MvStateMachine* statemachine, struct MvStateEnv* env,
 	float current_pos    = ticks_to_mm_V(encoder_R.total_count);
 	float desired_pos    = eval_position_slope(env->elapsed_time, env->pos_slope);
 
+	env->real_outcome = current_pos; 
+
 	float motor_command  = PID_Run(&pid_position_elevator_V_runtime, &pid_position_elevator_V,
 	                               current_pos, desired_pos, delta_time);
 
@@ -247,6 +249,8 @@ void elv_move_h_run(struct MvStateMachine* statemachine, struct MvStateEnv* env,
 	float current_pos   = ticks_to_mm_H(encoder_L.total_count);
 	float desired_pos   = eval_position_slope(env->elapsed_time, env->pos_slope);
 
+	env->real_outcome = current_pos;
+
 	float motor_command = PID_Run(&pid_position_elevator_H_runtime, &pid_position_elevator_H,
 	                              current_pos, desired_pos, delta_time);
 
@@ -283,7 +287,6 @@ struct MvStateEnv genenv_elv_move_h(float acceleration, float speed, float dista
 	struct MvStateEnv tmp = { .acceleration = acceleration, .speed = speed, .distance = distance };
 	return tmp;
 }
-
 
 
 /*

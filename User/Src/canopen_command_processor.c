@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include "ax_controller.h"
 #include "robot_action_autom.h"
+#include "i2c_servo_moteur.h"
 
 /* Pointeur vers le séquenceur principal (initialisé par canopen_cmd_init) */
 static struct Sequencer* main_sequencer = NULL;
@@ -235,6 +236,56 @@ void canopen_cmd_process(void) {
                     turn_off_pump_4(NULL);
                     turn_off_pump_3(NULL);
                 }
+                break;
+
+            case CMD_OPEN_PINCE:
+                printf("[CANopen CMD] Executing: CMD_OPEN_PINCE\n\r");
+                canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
+                seq_open_pince(main_sequencer);
+                sequencer_start(main_sequencer);
+                sequencer_was_running = 1;
+                break;
+
+            case CMD_EJECTER:
+                printf("[CANopen CMD] Executing: CMD_OPEN_PINCE\n\r");
+                canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
+                int num_element_a_ejecter = param_1;
+                seq_ejecter_elements(main_sequencer,num_element_a_ejecter);
+                sequencer_start(main_sequencer);
+                sequencer_was_running = 1;
+                break;
+
+            case CMD_I2C_SERVO_MOTEUR:
+                printf("[CANopen CMD] Executing: CMD_I2C_SERVO_MOTEUR\n\r");
+                canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
+
+                int cannal = param_1;
+                int position = param_2; // valeur entre 500 et 2500
+                i2c_servo(cannal, position);
+                break;
+            
+            case CDM_CLOSE_PINCE:
+                printf("[CANopen CMD] Executing: CDM_CLOSE_PINCE\n\r");
+                canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
+                seq_close_pince(main_sequencer);
+                sequencer_start(main_sequencer);
+                sequencer_was_running = 1;
+                break;
+            
+            case CDM_READY_TO_GRAP:
+                printf("[CANopen CMD] Executing: CDM_READY_TO_GRAP\n\r");
+                canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
+                seq_ready_to_grap(main_sequencer);
+                sequencer_start(main_sequencer);
+                sequencer_was_running = 1;
+                break;
+
+            case CDM_SAFE_POSITION_ASCENSEUR:
+                printf("[CANopen CMD] Executing: CDM_SAFE_POSITION_ASCENSEUR\n\r");
+                canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
+                seq_safe_position(main_sequencer);
+                sequencer_start(main_sequencer);
+                sequencer_was_running = 1;
                 break;
 
             case CMD_EMERGENCY_STOP:

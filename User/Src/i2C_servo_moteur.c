@@ -11,7 +11,7 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include "i2c_srevo_moteur.h"
+#include "i2c_servo_moteur.h"
 
 /* Private defines -----------------------------------------------------------*/
 #define PCA9685_MODE1        0x00           // Registre MODE1

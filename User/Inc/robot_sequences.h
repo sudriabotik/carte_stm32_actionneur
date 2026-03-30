@@ -51,20 +51,20 @@ void seq_build_homing_all(struct Sequencer* seq, float speed_V, float speed_H);
  */
 void seq_build_grab(struct Sequencer* seq);
 
+void seq_ready_to_grap(struct Sequencer* seq); // position juste avant la position tous en bas. 
 
-/**
- * @brief Séquence de dépôt à une position donnée :
- *        1. Déplace l'ascenseur vertical à la position de dépôt
- *        2. Déplace l'ascenseur horizontal à la position de dépôt
- *        3. Maintient la position verticale (hold)
- *
- * @param seq       Séquenceur à remplir.
- */
 void seq_build_deposit(struct Sequencer* seq);
+
+void seq_safe_position(struct Sequencer* seq);
 
 void seq_deplacement_H(struct Sequencer* seq, float pos_H_mm);
 
 void seq_deplacement_V(struct Sequencer* seq, float pos_V_mm);
 
+void seq_open_pince(struct Sequencer* seq);
+
+void seq_close_pince(struct Sequencer* seq);
+
+void seq_ejecter_elements(struct Sequencer* seq, int num_element_a_ejecter);
 
 #endif // __ROBOT_SEQUENCES_H

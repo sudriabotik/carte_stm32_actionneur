@@ -30,6 +30,12 @@ typedef enum {
     CMD_POS_ELAVATOR_V = 5,
     CMD_POS_AX = 6,
     CMD_POMP_ON_OFF = 7,
+    CMD_OPEN_PINCE = 8,
+    CMD_EJECTER = 9,
+    CMD_I2C_SERVO_MOTEUR = 10,
+    CDM_CLOSE_PINCE = 11,
+    CDM_READY_TO_GRAP = 12,
+    CDM_SAFE_POSITION_ASCENSEUR = 13,
     CMD_EMERGENCY_STOP = 99 /**< Arrêt d'urgence */
 } CommandID_t;
 

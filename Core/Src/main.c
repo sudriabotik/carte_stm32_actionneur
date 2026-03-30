@@ -41,6 +41,7 @@
 # include "elevator_states.h"
 # include "sequencer.h"
 # include "robot_sequences.h"
+# include "i2c_servo_moteur.h"
 
 #include "CO_app_STM32.h"
 #include "OD.h"
@@ -172,6 +173,7 @@ int main(void)
 
   HAL_Delay(500);
   servo_init(&hi2c3);
+  reset_tobogan(NULL);
 
   MV_STATEMACHINE = MSM_init(); // je devrais pouvoi retirer cela. 
   elevator_V_statemachine = MSM_init();

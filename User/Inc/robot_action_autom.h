@@ -33,6 +33,16 @@ void ax_servo_7_grap(void* param);
 void ax_servo_7_close(void* param);
 void ax_servo_7_open(void* param);
 
+void ax_caca_ejecter (void* param);
+void ax_caca_milieu (void* param);
+void ax_caca_rentrer (void* param);
+
+void servo_porte_fermer(void* param);
+void servo_porte_ouvert(void* param);
+
+void ax_ouverture_pour_cursor (void* param);
+void ax_fermeture_pour_cursor (void* param);
+
 /**
  * @brief Actions pour les pompes à vide
  * @param param Non utilisé (peut être NULL)
@@ -42,6 +52,7 @@ void turn_off_pump_4(void* param);
 void turn_on_pump_3(void* param);
 void turn_off_pump_3(void* param);
 
+void scan_tobogan(void* param);
 void trie_tobogan(void* param);
 void reset_tobogan(void* param);
 

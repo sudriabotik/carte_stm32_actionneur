@@ -32,7 +32,7 @@ extern "C" {
 /* Positions typiques des servos (en microsecondes) */
 #define SERVO_POS_0_DEG      500            // Position 0° (500µs)
 #define SERVO_POS_90_DEG     1500           // Position 90° (1500µs)
-#define SERVO_POS_180_DEG    2500           // Position 180° (2500µs)
+#define SERVO_POS_180_DEG    2450           // Position 180° (2500µs) ( à 2500 le servo moteur peu beuguer)
 
 /* Exported functions prototypes ---------------------------------------------*/
 
