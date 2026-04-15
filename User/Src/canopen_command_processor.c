@@ -185,8 +185,9 @@ void canopen_cmd_process(void) {
                 printf("[CANopen CMD] Executing: DEPOSIT\n");
 
                 canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
-
-                seq_build_deposit(main_sequencer);
+                
+                //seq_build_deposit(main_sequencer);
+                enchement_seq_depose(main_sequencer);
                 sequencer_start(main_sequencer);
                 sequencer_was_running = 1;
                 break;
@@ -214,17 +215,20 @@ void canopen_cmd_process(void) {
             
             case CMD_POS_AX:
                 printf("[CANopen CMD] Executing: AX\n\r");
-                canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
+                //canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
                 uint8_t id_ax = param_1;
                 uint16_t pos_ax = param_2 ;
 
                 ax_write_position(id_ax, pos_ax);
-                sequencer_was_running = 1;
+                //sequencer_was_running = 1;
+                canopen_update_status(CMD_STATUS_COMPLETED, action_id, command_id, CMD_ERROR_NONE);
+                canopen_update_status(CMD_STATUS_IDLE, action_id, command_id, CMD_ERROR_NONE);
                 break;
             
             case CMD_POMP_ON_OFF:
+            { 
                 printf("[CANopen CMD] Executing: CMD_POMP_ON_OFF\n\r");
-                canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
+                //canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
                 uint8_t on_off = param_1;
                 if (on_off) 
                 {
@@ -236,7 +240,11 @@ void canopen_cmd_process(void) {
                     turn_off_pump_4(NULL);
                     turn_off_pump_3(NULL);
                 }
+
+                canopen_update_status(CMD_STATUS_COMPLETED, action_id, command_id, CMD_ERROR_NONE);
+                canopen_update_status(CMD_STATUS_IDLE, action_id, command_id, CMD_ERROR_NONE);
                 break;
+            }
 
             case CMD_OPEN_PINCE:
                 printf("[CANopen CMD] Executing: CMD_OPEN_PINCE\n\r");
@@ -247,21 +255,30 @@ void canopen_cmd_process(void) {
                 break;
 
             case CMD_EJECTER:
-                printf("[CANopen CMD] Executing: CMD_OPEN_PINCE\n\r");
+                printf("[CANopen CMD] Executing: CMD_EJECTER\n\r");
                 canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
                 int num_element_a_ejecter = param_1;
-                seq_ejecter_elements(main_sequencer,num_element_a_ejecter);
-                sequencer_start(main_sequencer);
-                sequencer_was_running = 1;
+
+                if (num_element_a_ejecter == 1)
+                {
+                    // Utilise la nouvelle séquence chaînée qui gère automatiquement
+                    // le fermer_porte + rentrer_ax + éjecter dans le bon ordre
+                    seq_fermer_puis_ejecter_1_element(main_sequencer);
+                    sequencer_start(main_sequencer);
+                    sequencer_was_running = 1;
+                }
+
                 break;
 
             case CMD_I2C_SERVO_MOTEUR:
                 printf("[CANopen CMD] Executing: CMD_I2C_SERVO_MOTEUR\n\r");
-                canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
+                //canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
 
                 int cannal = param_1;
                 int position = param_2; // valeur entre 500 et 2500
                 i2c_servo(cannal, position);
+                canopen_update_status(CMD_STATUS_COMPLETED, action_id, command_id, CMD_ERROR_NONE);
+                canopen_update_status(CMD_STATUS_IDLE, action_id, command_id, CMD_ERROR_NONE);
                 break;
             
             case CDM_CLOSE_PINCE:
@@ -286,6 +303,34 @@ void canopen_cmd_process(void) {
                 seq_safe_position(main_sequencer);
                 sequencer_start(main_sequencer);
                 sequencer_was_running = 1;
+                break;
+
+            case CMD_COULEUR_EQUIPE:
+                printf("[CANopen CMD] Executing: CMD_COULEUR_EQUIPE\n\r");
+                uint8_t bleu_jaune = param_1;
+                couleur_equipe = bleu_jaune ;
+                canopen_update_status(CMD_STATUS_COMPLETED, action_id, command_id, CMD_ERROR_NONE);
+                canopen_update_status(CMD_STATUS_IDLE, action_id, command_id, CMD_ERROR_NONE);
+                break;
+
+            case CMD_FERMER_PORTE_RENTRER_AX_CACA:
+                printf("[CANopen CMD] Executing: CMD_FERMER_PORTE_RENTRER_AX_CACA\n\r");
+                canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
+                seq_fermer_porte_et_rentrer_ax(main_sequencer);
+                sequencer_start(main_sequencer);
+                sequencer_was_running = 1;
+                break;
+
+            case CMD_POS_VITESSE_AX :
+                printf("[CANopen CMD] Executing: CMD_POS_VITESSE_AX\n\r");
+                uint8_t id_ax = param_1;
+                uint16_t pos_ax = param_2 ;
+                uint16_t vitess_ax = param_2 ;
+
+                ax_write_position_and_speed(id_ax, pos_ax, vitess_ax);
+                //sequencer_was_running = 1;
+                canopen_update_status(CMD_STATUS_COMPLETED, action_id, command_id, CMD_ERROR_NONE);
+                canopen_update_status(CMD_STATUS_IDLE, action_id, command_id, CMD_ERROR_NONE);
                 break;
 
             case CMD_EMERGENCY_STOP:

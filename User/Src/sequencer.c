@@ -224,5 +224,6 @@ void sequencer_update(struct Sequencer* seq, uint32_t delta_time_ms)
 
 uint8_t sequencer_is_active(const struct Sequencer* seq)
 {
+    // 1 = séquence en cours, 0 = terminée ou pas encore démarrée
     return seq->active;
 }

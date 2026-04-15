@@ -67,4 +67,21 @@ void seq_close_pince(struct Sequencer* seq);
 
 void seq_ejecter_elements(struct Sequencer* seq, int num_element_a_ejecter);
 
+void seq_ejecter_1_element(struct Sequencer* seq);
+
+void seq_fermer_porte_et_rentrer_ax(struct Sequencer* seq);
+
+/**
+ * @brief Séquence combinée : ferme la porte, rentre l'AX, puis éjecte 1 élément
+ *
+ * Cette fonction enchaîne automatiquement deux séquences :
+ * 1. Fermer porte et rentrer AX (1000ms)
+ * 2. Éjecter 1 élément (réévalue l'état après l'étape 1)
+ *
+ * @param seq Séquenceur à remplir
+ */
+void seq_fermer_puis_ejecter_1_element(struct Sequencer* seq);
+
+void enchement_seq_depose(struct Sequencer* seq);
+
 #endif // __ROBOT_SEQUENCES_H

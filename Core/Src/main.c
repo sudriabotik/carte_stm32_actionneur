@@ -91,7 +91,7 @@ void SystemClock_Config(void);
 
 PUTCHAR_PROTOTYPE
 {
-	HAL_UART_Transmit(&huart3, (uint8_t*)&ch, 1, 0xFFFF);
+	HAL_UART_Transmit(&huart1, (uint8_t*)&ch, 1, 0xFFFF);
 	return ch;
 }
 
@@ -105,7 +105,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-  
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -138,6 +138,8 @@ int main(void)
   MX_I2C3_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  printf("woke up");
+
   HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL); // right
   HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL); // left
 
@@ -194,8 +196,18 @@ int main(void)
   // ========== TEST MANUEL DES MOUVEMENTS ==========
   // Décommenter pour tester les mouvements sans CANopen
 
+  // position de l'ax_caca
+  ax_caca_ejecter(NULL);
+  HAL_Delay(100);
+  //position de l'ax curseur
+  ax_fermeture_cursor(NULL);
+  HAL_Delay(100);
+  // porte fermer
+  servo_porte_fermer(NULL);
+  HAL_Delay(100);
+
   // 1. Homing (mise à l'origine)
-  seq_build_homing_all(&main_sequencer, 10.0f, 10.0f);
+  seq_build_homing_all(&main_sequencer, 12.0f, 12.0f);
   sequencer_start(&main_sequencer);
 
   // 2. Déplacement horizontal après le homing
@@ -206,9 +218,7 @@ int main(void)
   // seq_build_deposit(&main_sequencer, 80.0f, 40.0f);  // Exemple: deposit à V=80mm, H=40mm
   // ================================================
 
-
   // Enable CAN debug logging
-  printf("=== CAN Debug Initialized ===\n");
   can_debug_enable_rx_logging(false);  // Set to false to disable automatic logging
   can_debug_print_canopen_detailed(&canopenNodeSTM32);
 
@@ -256,6 +266,7 @@ int main(void)
      
     // Test bas niveau : vérifier si une trame CAN est reçue
     
+    /* 
     if (HAL_FDCAN_GetRxFifoFillLevel(&hfdcan1, FDCAN_RX_FIFO0) > 0)
     {
       // Lire le message
@@ -270,7 +281,7 @@ int main(void)
         printf("]\n");
       }
     }
-    
+    */
     
     /* USER CODE END WHILE */
 
