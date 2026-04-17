@@ -302,7 +302,8 @@ void enchement_seq_depose(struct Sequencer* seq)
     printf("[DBG] START ench_seq_depose");
     sequencer_reset(seq);
 
-    
+    sequencer_add_action(seq, ax_servo_6_open, NULL, 100);  
+    sequencer_add_action(seq, ax_servo_7_open, NULL, 500); 
 
     sequencer_add(seq, &elevator_V_statemachine,
                   &ELV_STATE_MOVE_V, genenv_elv_move_v(SEQ_ACCEL_V, SEQ_SPEED_V, DEPOSE_V));

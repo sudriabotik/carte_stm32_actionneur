@@ -157,16 +157,8 @@ int main(void)
   canopenNodeSTM32.desiredNodeID = 2;
   canopenNodeSTM32.baudrate = 500; //  ce parametre ne ser à rien, c'est comme le tuto. 
   canopen_app_init(&canopenNodeSTM32);
-
-  //OD_RAM.x2100_current_command_status = 10;
   
-  /*
-  CO_LOCK_OD(canopenNodeSTM32.canOpenStack->CANmodule);
-  error_obj_assign = OD_set_u8(OD_find(OD, 0x2100), 0x00, 10, false);
-  CO_UNLOCK_OD(canopenNodeSTM32.canOpenStack->CANmodule);
-  */
-  
-
+  // ça sert à quoi ça ???
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, GPIO_PIN_RESET);
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
 
@@ -190,9 +182,6 @@ int main(void)
   // Initialisation du processeur de commandes CANopen
   canopen_cmd_init(&main_sequencer);
 
-  OD_RAM.x2100_current_command_status = 10;
-  test_int = OD_RAM.x2100_current_command_status;
-
   // ========== TEST MANUEL DES MOUVEMENTS ==========
   // Décommenter pour tester les mouvements sans CANopen
 
@@ -207,7 +196,10 @@ int main(void)
   HAL_Delay(100);
 
   // 1. Homing (mise à l'origine)
-  seq_build_homing_all(&main_sequencer, 12.0f, 12.0f);
+  canopen_update_status(CMD_STATUS_RUNNING, CMD_HOMING, 0, CMD_ERROR_NONE);
+  canopen_signal_sequence_started(CMD_HOMING, 0);
+
+  seq_build_homing_all(&main_sequencer, 13.0f, 13.0f);
   sequencer_start(&main_sequencer);
 
   // 2. Déplacement horizontal après le homing
@@ -232,9 +224,6 @@ int main(void)
   {
     // Traitement CANopen (RPDO/TPDO)
     canopen_app_process();
-
-    // OD_RAM.x2100_current_command_status = 10;
-    // test_int = OD_RAM.x2100_current_command_status;
 
     // Traitement des commandes reçues via CANopen
     canopen_cmd_process();

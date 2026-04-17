@@ -133,7 +133,8 @@ void turn_off_pump_3(void* param)
 void ax_servo_6_grap(void* param)
 {
     (void)param;
-    ax_write_position(6, SERAGE_ax_6);
+    //ax_write_position(6, SERAGE_ax_6);
+    ax_write_position_and_speed(6, SERAGE_ax_6, 70);
 }
 
 void ax_servo_6_close(void* param)
@@ -152,7 +153,8 @@ void ax_servo_6_open(void* param)
 void ax_servo_7_grap(void* param)
 {
     (void)param;
-    ax_write_position(7, SERAGE_ax_7);
+    //ax_write_position(7, SERAGE_ax_7);
+    ax_write_position_and_speed(7, SERAGE_ax_7, 70);
 }
 
 void ax_servo_7_close(void* param)

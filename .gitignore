@@ -8,6 +8,8 @@ build/
 # The content canbe regenerated with cubemx
 Drivers/
 Debug/
+STM32CubeIDE/Debug/
+
 
 # in case somebody mistakenly commits a zip or other binary files
 *.zip

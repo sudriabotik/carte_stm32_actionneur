@@ -116,6 +116,18 @@ void canopen_update_status(uint8_t status,
  */
 void canopen_cmd_process(void);
 
+/**
+ * @brief Signale qu'une séquence manuelle a démarré (homing initial, etc.)
+ *
+ * Cette fonction permet de notifier le système CANopen qu'une séquence
+ * a été lancée manuellement (hors RPDO), afin qu'il puisse détecter
+ * automatiquement sa fin et passer en statut IDLE.
+ *
+ * @param action_id  ID de l'action en cours (ex: CMD_HOMING)
+ * @param command_id ID de commande fictif (peut être 0 pour homing au démarrage)
+ */
+void canopen_signal_sequence_started(uint16_t action_id, uint16_t command_id);
+
 #ifdef __cplusplus
 }
 #endif

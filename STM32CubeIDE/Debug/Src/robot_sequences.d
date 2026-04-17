@@ -29,6 +29,8 @@ Src/robot_sequences.o: \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h \
+ ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_i2c.h \
+ ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_i2c_ex.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h \
@@ -36,7 +38,12 @@ Src/robot_sequences.o: \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h \
  ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h \
  ../../User/Inc/mv_statemachine.h ../../lib_robot/inc_lib/mathfuncs.h \
- ../../User/Inc/elevator_states.h ../../User/Inc/mv_statemachine_states.h
+ ../../User/Inc/robot_action_autom.h \
+ ../../lib_robot/inc_lib/ax_controller.h \
+ ../../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h \
+ ../../Core/Inc/gpio.h ../../Core/Inc/main.h \
+ ../../User/Inc/i2c_servo_moteur.h ../../User/Inc/elevator_states.h \
+ ../../User/Inc/mv_statemachine_states.h
 ../../User/Inc/robot_sequences.h:
 ../../User/Inc/sequencer.h:
 ../../Core/Inc/main.h:
@@ -67,6 +74,8 @@ Src/robot_sequences.o: \
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h:
+../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_i2c.h:
+../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_i2c_ex.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h:
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h:
@@ -75,5 +84,11 @@ Src/robot_sequences.o: \
 ../../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h:
 ../../User/Inc/mv_statemachine.h:
 ../../lib_robot/inc_lib/mathfuncs.h:
+../../User/Inc/robot_action_autom.h:
+../../lib_robot/inc_lib/ax_controller.h:
+../../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h:
+../../Core/Inc/gpio.h:
+../../Core/Inc/main.h:
+../../User/Inc/i2c_servo_moteur.h:
 ../../User/Inc/elevator_states.h:
 ../../User/Inc/mv_statemachine_states.h:

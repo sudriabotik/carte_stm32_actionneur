@@ -117,8 +117,8 @@ void canopen_update_status(uint8_t status,
     // Déclenchement explicite du TPDO1 (événementiel)
     CO_TPDOsendRequest(&canopenNodeSTM32->canOpenStack->TPDO[0]);
 
-    printf("[CANopen STATUS] status=%u action_id=%u cmd_id=%u error=%u (TPDO sent)\n",
-           status, action_id, command_id, error_code);
+    printf("[CANopen STATUS] status=%u cmd_id=%u action_id=%u completed=%u error=%u (TPDO sent)\n",
+           status, command_id, action_id,OD_RAM.x2103_last_completed_command_id, error_code);
 }
 // ============================================================================
 // Traitement des commandes CANopen
@@ -322,17 +322,18 @@ void canopen_cmd_process(void) {
                 break;
 
             case CMD_POS_VITESSE_AX :
+            { 
                 printf("[CANopen CMD] Executing: CMD_POS_VITESSE_AX\n\r");
                 uint8_t id_ax = param_1;
                 uint16_t pos_ax = param_2 ;
-                uint16_t vitess_ax = param_2 ;
+                uint16_t vitess_ax = param_3 ;
 
                 ax_write_position_and_speed(id_ax, pos_ax, vitess_ax);
                 //sequencer_was_running = 1;
                 canopen_update_status(CMD_STATUS_COMPLETED, action_id, command_id, CMD_ERROR_NONE);
                 canopen_update_status(CMD_STATUS_IDLE, action_id, command_id, CMD_ERROR_NONE);
                 break;
-
+            }
             case CMD_EMERGENCY_STOP:
                 printf("[CANopen CMD] EMERGENCY STOP!\n");
 
@@ -342,22 +343,18 @@ void canopen_cmd_process(void) {
                 sequencer_reset(main_sequencer);
                 sequencer_was_running = 0;
 
-                // Repasser en IDLE immédiatement
-                canopen_update_status(CMD_STATUS_IDLE, 0, 0, CMD_ERROR_NONE);
+                canopen_update_status(CMD_STATUS_COMPLETED, action_id, command_id, CMD_ERROR_NONE);
                 break;
 
             case CMD_IDLE:
                 printf("[CANopen CMD] IDLE - No action\n");
-                canopen_update_status(CMD_STATUS_IDLE, 0, 0, CMD_ERROR_NONE);
+                //canopen_update_status(CMD_STATUS_IDLE, 0, 0, CMD_ERROR_NONE);
                 break;
 
             default:
                 // Commande inconnue = ERREUR
                 printf("[CANopen CMD] Unknown action_id: %u\n", action_id);
                 canopen_update_status(CMD_STATUS_ERROR, action_id, command_id, CMD_ERROR_INVALID_COMMAND);
-
-                // Repasser en IDLE
-                canopen_update_status(CMD_STATUS_IDLE, 0, 0, CMD_ERROR_NONE);
                 break;
         }
 
@@ -373,9 +370,22 @@ void canopen_cmd_process(void) {
         // Signaler la fin (COMPLETED)
         canopen_update_status(CMD_STATUS_COMPLETED, current_action_id, current_cmd_id, CMD_ERROR_NONE);
 
-        // Repasser en IDLE (prêt pour la prochaine commande)
-        canopen_update_status(CMD_STATUS_IDLE, 0, 0, CMD_ERROR_NONE);
-
         sequencer_was_running = 0;
     }
+}
+
+// ============================================================================
+// Notification de séquences manuelles (hors RPDO)
+// ============================================================================
+
+/**
+ * @brief Signale qu'une séquence manuelle a démarré (homing initial, etc.)
+ */
+void canopen_signal_sequence_started(uint16_t action_id, uint16_t command_id)
+{
+    sequencer_was_running = 1;
+    current_action_id = action_id;
+    current_cmd_id = command_id;
+    printf("[CANopen CMD] Manual sequence started: action_id=%u, cmd_id=%u\n",
+           action_id, command_id);
 }
