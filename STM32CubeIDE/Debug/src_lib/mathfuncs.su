@@ -1,8 +1,0 @@
-C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/lib_robot/src_lib/mathfuncs.c:7:18:pregen_trapezoid	56	static
-C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/lib_robot/src_lib/mathfuncs.c:22:7:func_trapezoid	16	static
-C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/lib_robot/src_lib/mathfuncs.c:41:7:eval_position_slope_f1	16	static
-C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/lib_robot/src_lib/mathfuncs.c:46:7:eval_position_slope_f2	16	static
-C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/lib_robot/src_lib/mathfuncs.c:51:7:eval_position_slope_f3	16	static
-C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/lib_robot/src_lib/mathfuncs.c:56:7:eval_position_slope_f3_overlap	16	static
-C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/lib_robot/src_lib/mathfuncs.c:61:26:pregen_position_slope	104	static
-C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/lib_robot/src_lib/mathfuncs.c:104:7:eval_position_slope	48	static

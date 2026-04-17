@@ -1,4 +1,0 @@
-C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/lib_robot/src_lib/encoders.c:7:10:GetEncoderSituation	16	static
-C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/lib_robot/src_lib/encoders.c:14:5:Encoder16Reset	16	static
-C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/lib_robot/src_lib/encoders.c:29:5:Encoder16Update	24	static
-C:/Users/PAUL/OneDrive - ESME/Documents/botique/2026/info/stm32_project/stm32_carte_actionneur/carte_stm32_actionneur/lib_robot/src_lib/encoders.c:53:6:Encoder16PrintStatus	8	static
