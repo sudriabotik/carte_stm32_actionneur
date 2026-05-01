@@ -222,7 +222,6 @@ void canopen_cmd_process(void) {
                 ax_write_position(id_ax, pos_ax);
                 //sequencer_was_running = 1;
                 canopen_update_status(CMD_STATUS_COMPLETED, action_id, command_id, CMD_ERROR_NONE);
-                canopen_update_status(CMD_STATUS_IDLE, action_id, command_id, CMD_ERROR_NONE);
                 break;
             
             case CMD_POMP_ON_OFF:
@@ -242,7 +241,6 @@ void canopen_cmd_process(void) {
                 }
 
                 canopen_update_status(CMD_STATUS_COMPLETED, action_id, command_id, CMD_ERROR_NONE);
-                canopen_update_status(CMD_STATUS_IDLE, action_id, command_id, CMD_ERROR_NONE);
                 break;
             }
 
@@ -267,6 +265,10 @@ void canopen_cmd_process(void) {
                     sequencer_start(main_sequencer);
                     sequencer_was_running = 1;
                 }
+                else 
+                {
+                    canopen_update_status(CMD_STATUS_COMPLETED, action_id, command_id, CMD_ERROR_NONE);
+                }
 
                 break;
 
@@ -278,7 +280,6 @@ void canopen_cmd_process(void) {
                 int position = param_2; // valeur entre 500 et 2500
                 i2c_servo(cannal, position);
                 canopen_update_status(CMD_STATUS_COMPLETED, action_id, command_id, CMD_ERROR_NONE);
-                canopen_update_status(CMD_STATUS_IDLE, action_id, command_id, CMD_ERROR_NONE);
                 break;
             
             case CDM_CLOSE_PINCE:
@@ -310,7 +311,6 @@ void canopen_cmd_process(void) {
                 uint8_t bleu_jaune = param_1;
                 couleur_equipe = bleu_jaune ;
                 canopen_update_status(CMD_STATUS_COMPLETED, action_id, command_id, CMD_ERROR_NONE);
-                canopen_update_status(CMD_STATUS_IDLE, action_id, command_id, CMD_ERROR_NONE);
                 break;
 
             case CMD_FERMER_PORTE_RENTRER_AX_CACA:
@@ -331,9 +331,20 @@ void canopen_cmd_process(void) {
                 ax_write_position_and_speed(id_ax, pos_ax, vitess_ax);
                 //sequencer_was_running = 1;
                 canopen_update_status(CMD_STATUS_COMPLETED, action_id, command_id, CMD_ERROR_NONE);
-                canopen_update_status(CMD_STATUS_IDLE, action_id, command_id, CMD_ERROR_NONE);
                 break;
             }
+
+            case CMD_POS_AX_CACA_CALAGE:
+            {
+                printf("[CANopen CMD] Executing: CMD_POS_AX_CACA_CALAGE\n\r");
+                canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
+                seq_ax_safe_pos_for_calage(main_sequencer);
+                sequencer_start(main_sequencer);
+                sequencer_was_running = 1;
+                break;
+            }
+
+
             case CMD_EMERGENCY_STOP:
                 printf("[CANopen CMD] EMERGENCY STOP!\n");
 

@@ -39,6 +39,7 @@ typedef enum {
     CMD_COULEUR_EQUIPE = 14,
     CMD_FERMER_PORTE_RENTRER_AX_CACA = 15,
     CMD_POS_VITESSE_AX = 16,
+    CMD_POS_AX_CACA_CALAGE= 17,
     CMD_EMERGENCY_STOP = 99 /**< Arrêt d'urgence */
 } CommandID_t;
 

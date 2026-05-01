@@ -73,6 +73,15 @@ void ax_caca_rentrer (void* param)
     ax_caca_situation = POS_RENTRER_AX_CACA;
 }
 
+void ax_caca_calage(void* param)
+{
+    (void)param;
+    if (ax_caca_situation == POS_EJECTER_AX_CACA)
+    {
+        ax_write_position(2, POS_CALAGE_AX_CACA);
+    }
+}
+
 //////////
 /// AX CURSOR
 ////////
@@ -80,13 +89,13 @@ void ax_caca_rentrer (void* param)
 void ax_ouverture_cursor (void* param)
 {
     (void)param; 
-    ax_write_position(5, POS_OUVERTURE_CURSOR);
+    ax_write_position(1, POS_OUVERTURE_CURSOR);
 }
 
 void ax_fermeture_cursor (void* param)
 {
     (void)param; 
-    ax_write_position(5, POS_FERMETURE_CURSOR);
+    ax_write_position(1, POS_FERMETURE_CURSOR);
 }
 
 
@@ -134,19 +143,21 @@ void ax_servo_6_grap(void* param)
 {
     (void)param;
     //ax_write_position(6, SERAGE_ax_6);
-    ax_write_position_and_speed(6, SERAGE_ax_6, 70);
+    ax_write_position_and_speed(6, SERAGE_ax_6, 80);
 }
 
 void ax_servo_6_close(void* param)
 {
     (void)param;
-    ax_write_position(6, CLOSE_ax_6);
+    //ax_write_position(6, CLOSE_ax_6);
+    ax_write_position_and_speed(6, CLOSE_ax_6, 150);
 }
 
 void ax_servo_6_open(void* param)
 {
     (void)param;
-    ax_write_position(6, OUVERT_ax_6);
+    //ax_write_position(6, OUVERT_ax_6);
+    ax_write_position_and_speed(6, OUVERT_ax_6, 300);
 }
 
 // AX 7 :
@@ -154,19 +165,21 @@ void ax_servo_7_grap(void* param)
 {
     (void)param;
     //ax_write_position(7, SERAGE_ax_7);
-    ax_write_position_and_speed(7, SERAGE_ax_7, 70);
+    ax_write_position_and_speed(7, SERAGE_ax_7, 80);
 }
 
 void ax_servo_7_close(void* param)
 {
     (void)param;
-    ax_write_position(7, CLOSE_ax_7);
+    //ax_write_position(7, CLOSE_ax_7);
+    ax_write_position_and_speed(7, CLOSE_ax_7, 150);
 }
 
 void ax_servo_7_open(void* param)
 {
     (void)param;
-    ax_write_position(7, OUVERT_ax_7);
+    //ax_write_position(7, OUVERT_ax_7);
+    ax_write_position_and_speed(7, OUVERT_ax_7, 300);
 }
 
 ////////////////////

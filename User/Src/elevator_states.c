@@ -86,7 +86,7 @@ void elv_move_v_run(struct MvStateMachine* statemachine, struct MvStateEnv* env,
 	// Calculer la distance relative à parcourir pour la comparaison
 	float distance_relative = env->distance - abs_pos_V_mm;
 
-	if (is_val_near(current_pos, distance_relative, 3.0f) && fabs(pid_position_elevator_V_runtime.d) < 0.05f)
+	if (is_val_near(current_pos, distance_relative, 1.5f) )
 	{
 		env->real_outcome = current_pos;
 		MSM_set_state_finished(statemachine);
@@ -259,7 +259,7 @@ void elv_move_h_run(struct MvStateMachine* statemachine, struct MvStateEnv* env,
 	// Calculer la distance relative à parcourir pour la comparaison
 	float distance_relative = env->distance - abs_pos_H_mm;
 
-	if (is_val_near(current_pos, distance_relative, 5.0f))
+	if (is_val_near(current_pos, distance_relative, 1.5f))
 	{
 		env->real_outcome = current_pos;
 		MSM_set_state_finished(statemachine);

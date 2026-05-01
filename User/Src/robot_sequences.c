@@ -5,21 +5,21 @@
 
 
 // Paramètres par défaut pour les mouvements (à ajuster selon le robot)
-#define SEQ_ACCEL_V   30.0f   // mm/s²
-#define SEQ_SPEED_V    50.0f   // mm/s
-#define SEQ_ACCEL_H   50.0f   // mm/s²
-#define SEQ_SPEED_H   70.0f   // mm/s
+#define SEQ_ACCEL_V   60.0f   // mm/s²
+#define SEQ_SPEED_V    85.0f   // mm/s
+#define SEQ_ACCEL_H   70.0f   // mm/s²
+#define SEQ_SPEED_H   110.0f   // mm/s
 
 // position enregistrer : 
-#define GRAP_H -497.0f 
+#define GRAP_H -326.0f 
 #define READY_TO_GRAP_V -200.0f
-#define GRAP_V -232.0f
+#define GRAP_V -230.0f
 
-#define SAFE_POSITION_H -300.0f // position des ascenseur pour le perimetrer non déployer 
+#define SAFE_POSITION_H -200.0f // position des ascenseur pour le perimetrer non déployer 
 
 #define DEPOSE_V 5.0f
-#define DEPOSE_1_H -105.0f
-#define DEPOSE_2_H 7.0f
+#define DEPOSE_1_H -60.0f
+#define DEPOSE_2_H 3.0f
 
 void seq_build_homing_all(struct Sequencer* seq, float speed_V, float speed_H)
 {
@@ -53,6 +53,12 @@ void seq_safe_position(struct Sequencer* seq)
             &ELV_STATE_MOVE_H, genenv_elv_move_h(SEQ_ACCEL_H, SEQ_SPEED_H, SAFE_POSITION_H));
     sequencer_add(seq, &elevator_V_statemachine,
             &ELV_STATE_MOVE_V, genenv_elv_move_v(SEQ_ACCEL_V, SEQ_SPEED_V, DEPOSE_V));
+}
+
+void seq_ax_safe_pos_for_calage(struct Sequencer* seq)
+{
+    sequencer_reset(seq);
+    sequencer_add_action(seq, ax_caca_calage, NULL, 500);
 }
 
 void seq_ready_to_grap(struct Sequencer* seq)
@@ -283,6 +289,7 @@ void seq_fermer_puis_ejecter_1_element(struct Sequencer* seq)
         ((middle_place[TOB_INT]==1) || (middle_place[TOB_EXT]==1)))
     {
         printf("[DBG] AX=ej+elem->close\n");
+        sequencer_add_action(seq,servo_porte_fermer,NULL,300);
         sequencer_add_action(seq, fermer_porte_et_rentrer_ax, NULL, 1000);
 
         // Action callback qui relancera la phase 2
@@ -303,10 +310,13 @@ void enchement_seq_depose(struct Sequencer* seq)
     sequencer_reset(seq);
 
     sequencer_add_action(seq, ax_servo_6_open, NULL, 100);  
-    sequencer_add_action(seq, ax_servo_7_open, NULL, 500); 
+    sequencer_add_action(seq, ax_servo_7_open, NULL, 300); 
 
     sequencer_add(seq, &elevator_V_statemachine,
                   &ELV_STATE_MOVE_V, genenv_elv_move_v(SEQ_ACCEL_V, SEQ_SPEED_V, DEPOSE_V));
+
+    sequencer_add_action(seq,ax_servo_6_close,NULL,30);
+    sequencer_add_action(seq,ax_servo_7_close,NULL,20);
 
     sequencer_add(seq, &elevator_H_statemachine,
                   &ELV_STATE_MOVE_H, genenv_elv_move_h(SEQ_ACCEL_H, SEQ_SPEED_H, DEPOSE_1_H));
@@ -336,14 +346,14 @@ void enchement_seq_depose(struct Sequencer* seq)
         
             sequencer_add_action(seq, scan_tobogan,  (void*)2, 20);  // Scanner avant de vérifier
             sequencer_add_action(seq, reset_tobogan, NULL, 100);
-            sequencer_add_action(seq, turn_off_pump_4, NULL, 400); 
+            sequencer_add_action(seq, turn_off_pump_4, NULL, 700); 
             sequencer_add_action(seq, trie_tobogan, NULL, 400);
         }
 
         else 
         {
             sequencer_add_action(seq, reset_tobogan, NULL, 100);
-            sequencer_add_action(seq, turn_off_pump_3, NULL, 300);
+            sequencer_add_action(seq, turn_off_pump_3, NULL, 700);
             sequencer_add_action(seq, trie_tobogan, NULL, 500);
         }
 
@@ -358,7 +368,7 @@ void enchement_seq_depose(struct Sequencer* seq)
         /// DEPO 1
     sequencer_add_action(seq, scan_tobogan,  (void*)1, 0);
     sequencer_add_action(seq, reset_tobogan, NULL, 100);
-    sequencer_add_action(seq, turn_off_pump_3, NULL, 300);
+    sequencer_add_action(seq, turn_off_pump_3, NULL, 700);
     sequencer_add_action(seq, trie_tobogan, NULL, 500);
 
     //sequencer_add_action(seq, depose_2eme, NULL, 2000);
@@ -368,7 +378,7 @@ void enchement_seq_depose(struct Sequencer* seq)
     /// DEPO 2
     sequencer_add_action(seq, scan_tobogan,  (void*)2, 20);  // Scanner avant de vérifier
     sequencer_add_action(seq, reset_tobogan, NULL, 100);
-    sequencer_add_action(seq, turn_off_pump_4, NULL, 400); 
+    sequencer_add_action(seq, turn_off_pump_4, NULL, 700); 
     sequencer_add_action(seq, trie_tobogan, NULL, 400);
 
     }

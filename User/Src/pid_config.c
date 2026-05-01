@@ -74,7 +74,7 @@ struct PidSettings pid_position_elevator_V =
 	.fratio = 0.2f,
 	.decay = 0.2f,
 	.i_lim = 15,
-	.max_output = 40,
+	.max_output = 30,
 	.min_output = 0,
 };
 
@@ -86,9 +86,9 @@ struct PidRuntime pid_position_elevator_V_runtime = {};
 // TODO : régler kp, kd, ki selon le comportement réel de l'ascenseur horizontal
 struct PidSettings pid_position_elevator_H =
 {
-	.kp = 2.0f,
+	.kp = 2.5f,
 	.kd = 0.000f,
-	.ki = 0.4f,
+	.ki = 1.0f,
 	.fratio = 0.5f,
 	.decay = 0.2f,
 	.i_lim = 10,

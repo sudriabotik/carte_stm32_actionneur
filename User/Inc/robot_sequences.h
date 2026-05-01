@@ -84,4 +84,6 @@ void seq_fermer_puis_ejecter_1_element(struct Sequencer* seq);
 
 void enchement_seq_depose(struct Sequencer* seq);
 
+void seq_ax_safe_pos_for_calage(struct Sequencer* seq);
+
 #endif // __ROBOT_SEQUENCES_H

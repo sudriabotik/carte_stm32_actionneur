@@ -27,9 +27,10 @@
 #define OUVERT_ax_6  470
 
 // POSITION AX CACA 
-#define POS_EJECTER_AX_CACA 200
+#define POS_EJECTER_AX_CACA 100 //200 pas assez // 90 pour etre sur mais ça empeche le calage
 #define POS_MILIEU_AX_CACA 400
 #define POS_RENTRER_AX_CACA 810
+#define POS_CALAGE_AX_CACA 310
 
 // POSITION AX BANDEROLE
 #define POS_OUVERTURE_CURSOR 820
@@ -37,9 +38,9 @@
 
 ///// POSITION SERVO_MOTEUR  
 // on considère que l'on regarde le sens de rotation de face par rapport au cerveau moteur
-#define POSITION_DROITE 2400
+#define POSITION_DROITE 2200
 #define POSITION_MILIEU 1500
-#define POSITION_GAUCHE 500
+#define POSITION_GAUCHE 650
 
 #define PORTE_FERMER SERVO_POS_0_DEG
 #define PORTE_OUVERTE SERVO_POS_180_DEG
@@ -84,6 +85,7 @@ void ax_servo_7_open(void* param);
 void ax_caca_ejecter (void* param);
 void ax_caca_milieu (void* param);
 void ax_caca_rentrer (void* param);
+void ax_caca_calage(void* param);
 
 void servo_porte_fermer(void* param);
 void servo_porte_ouvert(void* param);

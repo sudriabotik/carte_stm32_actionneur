@@ -5,11 +5,11 @@ FileRevision=1
 LastEDS=
 EDSVersion=4.0
 Description=
-CreationTime=1:00PM
+CreationTime=2:00PM
 CreationDate=11-23-2020
 CreatedBy=
-ModificationTime=2:10PM
-ModificationDate=03-04-2026
+ModificationTime=6:19PM
+ModificationDate=04-29-2026
 ModifiedBy=
 
 [DeviceInfo]
@@ -554,7 +554,7 @@ ObjectType=0x7
 ;StorageLocation=PERSIST_COMM
 DataType=0x0006
 AccessType=rw
-DefaultValue=155
+DefaultValue=500
 PDOMapping=0
 
 [1019]

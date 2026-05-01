@@ -186,7 +186,7 @@ int main(void)
   // Décommenter pour tester les mouvements sans CANopen
 
   // position de l'ax_caca
-  ax_caca_ejecter(NULL);
+  ax_caca_calage(NULL);
   HAL_Delay(100);
   //position de l'ax curseur
   ax_fermeture_cursor(NULL);
@@ -199,8 +199,8 @@ int main(void)
   canopen_update_status(CMD_STATUS_RUNNING, CMD_HOMING, 0, CMD_ERROR_NONE);
   canopen_signal_sequence_started(CMD_HOMING, 0);
 
-  seq_build_homing_all(&main_sequencer, 13.0f, 13.0f);
-  sequencer_start(&main_sequencer);
+  //seq_build_homing_all(&main_sequencer, 13.0f, 13.0f);
+  //sequencer_start(&main_sequencer);
 
   // 2. Déplacement horizontal après le homing
   //seq_deplacement_H(&main_sequencer, -100.0f);
