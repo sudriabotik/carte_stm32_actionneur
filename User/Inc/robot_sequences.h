@@ -82,18 +82,15 @@ void seq_fermer_porte_et_rentrer_ax(struct Sequencer* seq);
  */
 void seq_fermer_puis_ejecter_1_element(struct Sequencer* seq);
 
-void enchement_seq_depose(struct Sequencer* seq);
-
 void seq_ax_safe_pos_for_calage(struct Sequencer* seq);
 
 void seq_ax_open_cursor(struct Sequencer* seq);
 
 void seq_ax_fermer_cursor(struct Sequencer* seq);
 
-/**
- * @brief Version améliorée de trie_tobogan avec délais gérés par le séquenceur
- * @param param Non utilisé
- */
-void trie_tobogan_v2(void* param);
+// ============================================================================
+// Séquences de dépôt déplacées vers rob_seq_depose.h
+// ============================================================================
+#include "rob_seq_depose.h"
 
 #endif // __ROBOT_SEQUENCES_H

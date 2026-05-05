@@ -32,6 +32,8 @@ struct Sequencer sequencer_init(void)
 {
     struct Sequencer seq;
     memset(&seq, 0, sizeof(seq));
+    seq.sub_sequencer = 0;  // NULL
+    seq.waiting_for_sub = 0;  // false
     return seq;
 }
 
@@ -133,6 +135,33 @@ void sequencer_update(struct Sequencer* seq, uint32_t delta_time_ms)
     if (!seq->active)
         return;
 
+    // ========== GESTION DES SOUS-SÉQUENCES ==========
+    // Si une sous-séquence est active, on l'exécute en priorité
+    if (seq->sub_sequencer != 0)
+    {
+        // Exécuter récursivement la sous-séquence
+        sequencer_update(seq->sub_sequencer, delta_time_ms);
+
+        // Vérifier si la sous-séquence est terminée
+        if (!sequencer_is_active(seq->sub_sequencer))
+        {
+            printf("sequencer: SUB-SEQUENCE FINISHED, resuming parent at step %d/%d\n",
+                   seq->current_step + 1, seq->step_count);
+
+            // Nettoyer la référence à la sous-séquence
+            seq->sub_sequencer = 0;
+            seq->waiting_for_sub = 0;
+
+            // L'étape ACTION qui a lancé la sous-séquence a déjà été exécutée
+            // On passe à l'étape suivante maintenant que la sous-séquence est terminée
+            seq->current_step++;
+            seq->step_sent = 0;
+        }
+
+        // Tant que la sous-séquence tourne, on ne fait rien d'autre
+        return;
+    }
+
     if (seq->current_step >= seq->step_count)
     {
         seq->active = 0;
@@ -194,8 +223,13 @@ void sequencer_update(struct Sequencer* seq, uint32_t delta_time_ms)
             // Si pas de délai, passer immédiatement à l'étape suivante
             if (step->action.delay_after_ms == 0)
             {
-                seq->current_step++;
-                seq->step_sent = 0;
+                // IMPORTANT : Ne pas incrémenter si une sous-séquence a été lancée !
+                // La sous-séquence incrémentera quand elle se terminera
+                if (seq->sub_sequencer == 0)
+                {
+                    seq->current_step++;
+                    seq->step_sent = 0;
+                }
                 return;
             }
         }
@@ -208,8 +242,13 @@ void sequencer_update(struct Sequencer* seq, uint32_t delta_time_ms)
             printf("sequencer: ACTION step %d/%d delay completed (%lums)\n",
                    seq->current_step + 1, seq->step_count, step->action.delay_after_ms);
 
-            seq->current_step++;
-            seq->step_sent = 0;
+            // IMPORTANT : Ne pas incrémenter si une sous-séquence a été lancée !
+            // La sous-séquence incrémentera quand elle se terminera
+            if (seq->sub_sequencer == 0)
+            {
+                seq->current_step++;
+                seq->step_sent = 0;
+            }
         }
     }
     else
@@ -226,4 +265,24 @@ uint8_t sequencer_is_active(const struct Sequencer* seq)
 {
     // 1 = séquence en cours, 0 = terminée ou pas encore démarrée
     return seq->active;
+}
+
+
+void sequencer_add_sub_sequence(struct Sequencer* parent, struct Sequencer* sub)
+{
+    if (parent->sub_sequencer != 0)
+    {
+        printf("sequencer: ERROR - sub-sequence already active, cannot nest deeper\n");
+        return;
+    }
+
+    printf("sequencer: STARTING SUB-SEQUENCE (parent paused at step %d/%d)\n",
+           parent->current_step + 1, parent->step_count);
+
+    // Lier la sous-séquence au parent
+    parent->sub_sequencer = sub;
+    parent->waiting_for_sub = 1;
+
+    // Démarrer la sous-séquence
+    sequencer_start(sub);
 }

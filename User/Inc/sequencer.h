@@ -129,6 +129,7 @@ struct SeqIdle
  * Chaque étape peut être :
  * - Un mouvement moteur (SEQ_STEP_MOTOR) : attend la fin du mouvement
  * - Une action custom (SEQ_STEP_ACTION) : exécute un callback immédiatement
+ * - Une sous-séquence : exécute une autre séquence complète, puis reprend
  *
  * Exemple de séquence :
  * 1. Bouger moteur H → HOLD automatique après
@@ -153,6 +154,11 @@ struct Sequencer
 
     struct SeqIdle  idles[SEQUENCER_MAX_MACHINES];  // États idle pour chaque machine (ex: HOLD)
     uint8_t         idle_count;                     // Nombre de machines enregistrées (max 4)
+
+    // ========== SOUS-SÉQUENCES ==========
+
+    struct Sequencer* sub_sequencer;  // Pointeur vers sous-séquence active (NULL si aucune)
+    uint8_t           waiting_for_sub;  // 1 = séquence principale en pause, attend fin de sub-séquence
 };
 
 
@@ -220,6 +226,20 @@ void sequencer_update(struct Sequencer* seq, uint32_t delta_time_ms);
  * @brief Indique si la séquence est en cours d'exécution.
  */
 uint8_t sequencer_is_active(const struct Sequencer* seq);
+
+/**
+ * @brief Démarre une sous-séquence depuis une action callback.
+ *        La séquence parent se met en pause jusqu'à ce que la sous-séquence se termine.
+ * @param parent   Séquenceur parent (celui qui appelle)
+ * @param sub      Sous-séquenceur à exécuter (doit être initialisé et rempli d'étapes)
+ *
+ * IMPORTANT : Utiliser un séquenceur static pour la sous-séquence, exemple :
+ *   static struct Sequencer sub_seq = {0};
+ *   sequencer_reset(&sub_seq);
+ *   sequencer_add(...);
+ *   sequencer_add_sub_sequence(&main_seq, &sub_seq);
+ */
+void sequencer_add_sub_sequence(struct Sequencer* parent, struct Sequencer* sub);
 
 
 #endif // __SEQUENCER_H
