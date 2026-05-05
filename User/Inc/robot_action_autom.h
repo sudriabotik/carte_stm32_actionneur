@@ -15,6 +15,26 @@
 #include "gpio.h"
 #include "i2c_servo_moteur.h"
 
+//////
+///PARAMETRE ASCENSEUR
+//////
+
+// Paramètres par défaut pour les mouvements (à ajuster selon le robot)
+#define SEQ_ACCEL_V   60.0f   // mm/s²
+#define SEQ_SPEED_V    85.0f   // mm/s
+#define SEQ_ACCEL_H   70.0f   // mm/s²
+#define SEQ_SPEED_H   110.0f   // mm/s
+
+// position enregistrer : 
+#define GRAP_H -323.0f 
+#define READY_TO_GRAP_V -200.0f
+#define GRAP_V -230.0f
+
+#define SAFE_POSITION_H -200.0f // position des ascenseur pour le perimetrer non déployer 
+
+#define DEPOSE_V 5.0f
+#define DEPOSE_1_H -61.0f
+#define DEPOSE_2_H 3.0f
 
 //// POSITION AX PINCE
 #define SERAGE_ax_7	 497
@@ -30,7 +50,7 @@
 #define POS_EJECTER_AX_CACA 100 //200 pas assez // 90 pour etre sur mais ça empeche le calage
 #define POS_MILIEU_AX_CACA 400
 #define POS_RENTRER_AX_CACA 810
-#define POS_CALAGE_AX_CACA 310
+#define POS_CALAGE_AX_CACA 265
 
 // POSITION AX BANDEROLE
 #define POS_OUVERTURE_CURSOR 820
@@ -39,7 +59,9 @@
 ///// POSITION SERVO_MOTEUR  
 // on considère que l'on regarde le sens de rotation de face par rapport au cerveau moteur
 #define POSITION_DROITE 2200
+#define POSITION_PETITE_DROITE 1850
 #define POSITION_MILIEU 1500
+#define POSITION_PETITE_GAUCHE 1000
 #define POSITION_GAUCHE 650
 
 #define PORTE_FERMER SERVO_POS_0_DEG
@@ -48,13 +70,19 @@
 #define TOB_INT 0
 #define TOB_EXT 1
 
-// couleu de l'équipe utile pour les automs
+// couleur de l'équipe utile pour les automs
 extern uint8_t couleur_equipe;
 extern uint16_t ax_caca_situation ;
 
 extern uint8_t top_place [2] ;
 extern uint8_t middle_place [2] ;
 extern uint8_t bottom_place [2] ;
+
+extern uint8_t couleur_element_jeux_1 ;
+extern uint8_t couleur_element_jeux_2 ;
+
+extern uint8_t presence_element_jeux_1 ;
+extern uint8_t presence_element_jeux_2 ;
 
 extern bool element_in_ventouse [4]; 
 
@@ -90,8 +118,8 @@ void ax_caca_calage(void* param);
 void servo_porte_fermer(void* param);
 void servo_porte_ouvert(void* param);
 
-void ax_ouverture_pour_cursor (void* param);
-void ax_fermeture_pour_cursor (void* param);
+void ax_ouverture_cursor (void* param);
+void ax_fermeture_cursor (void* param);
 
 /**
  * @brief Actions pour les pompes à vide
@@ -117,4 +145,5 @@ void ax_caca_ejecter(void* param);
 void fermer_porte_et_rentrer_ax(void* param);
 
 void print_state_tobotan();
+
 #endif // ROBOT_ACTION_AUTOM_H

@@ -4,22 +4,17 @@
 #include <stdio.h>
 
 
-// Paramètres par défaut pour les mouvements (à ajuster selon le robot)
-#define SEQ_ACCEL_V   60.0f   // mm/s²
-#define SEQ_SPEED_V    85.0f   // mm/s
-#define SEQ_ACCEL_H   70.0f   // mm/s²
-#define SEQ_SPEED_H   110.0f   // mm/s
-
-// position enregistrer : 
-#define GRAP_H -326.0f 
-#define READY_TO_GRAP_V -200.0f
-#define GRAP_V -230.0f
-
-#define SAFE_POSITION_H -200.0f // position des ascenseur pour le perimetrer non déployer 
-
-#define DEPOSE_V 5.0f
-#define DEPOSE_1_H -60.0f
-#define DEPOSE_2_H 3.0f
+/////////
+/// DEBUT DES DEPLACEMENT DES ASCENSEURS UNIQUEMENT
+//////////
+void seq_safe_position(struct Sequencer* seq)
+{
+    sequencer_reset(seq);
+    sequencer_add(seq, &elevator_H_statemachine,
+            &ELV_STATE_MOVE_H, genenv_elv_move_h(SEQ_ACCEL_H, SEQ_SPEED_H, SAFE_POSITION_H));
+    sequencer_add(seq, &elevator_V_statemachine,
+            &ELV_STATE_MOVE_V, genenv_elv_move_v(SEQ_ACCEL_V, SEQ_SPEED_V, DEPOSE_V));
+}
 
 void seq_build_homing_all(struct Sequencer* seq, float speed_V, float speed_H)
 {
@@ -32,35 +27,6 @@ void seq_build_homing_all(struct Sequencer* seq, float speed_V, float speed_H)
                   &ELV_STATE_HOME_H, genenv_elv_home_h(speed_H));
 }
 
-void seq_open_pince(struct Sequencer* seq)
-{
-    sequencer_reset(seq);
-    sequencer_add_action(seq, ax_servo_6_open, NULL, 0);  
-    sequencer_add_action(seq, ax_servo_7_open, NULL, 0); 
-}
-
-void seq_close_pince(struct Sequencer* seq)
-{
-    sequencer_reset(seq);
-    sequencer_add_action(seq, ax_servo_6_close, NULL, 0);  
-    sequencer_add_action(seq, ax_servo_7_close, NULL, 0); 
-}
-
-void seq_safe_position(struct Sequencer* seq)
-{
-    sequencer_reset(seq);
-    sequencer_add(seq, &elevator_H_statemachine,
-            &ELV_STATE_MOVE_H, genenv_elv_move_h(SEQ_ACCEL_H, SEQ_SPEED_H, SAFE_POSITION_H));
-    sequencer_add(seq, &elevator_V_statemachine,
-            &ELV_STATE_MOVE_V, genenv_elv_move_v(SEQ_ACCEL_V, SEQ_SPEED_V, DEPOSE_V));
-}
-
-void seq_ax_safe_pos_for_calage(struct Sequencer* seq)
-{
-    sequencer_reset(seq);
-    sequencer_add_action(seq, ax_caca_calage, NULL, 500);
-}
-
 void seq_ready_to_grap(struct Sequencer* seq)
 {
     sequencer_reset(seq);
@@ -69,6 +35,73 @@ void seq_ready_to_grap(struct Sequencer* seq)
     sequencer_add(seq, &elevator_V_statemachine,
             &ELV_STATE_MOVE_V, genenv_elv_move_v(SEQ_ACCEL_V, SEQ_SPEED_V, READY_TO_GRAP_V));
 }
+
+void seq_deplacement_H(struct Sequencer* seq, float pos_H_mm)
+{
+    sequencer_reset(seq);
+
+    sequencer_add(seq, &elevator_H_statemachine,
+                  &ELV_STATE_MOVE_H, genenv_elv_move_h(SEQ_ACCEL_H, SEQ_SPEED_H, pos_H_mm));
+}
+
+void seq_deplacement_V(struct Sequencer* seq, float pos_V_mm)
+{
+    sequencer_reset(seq);
+
+    sequencer_add(seq, &elevator_V_statemachine,
+                  &ELV_STATE_MOVE_V, genenv_elv_move_v(SEQ_ACCEL_V, SEQ_SPEED_V, pos_V_mm));
+}
+
+/////////
+/// FIN DES DEPLACEMENT DES ASCENSEURS UNIQUEMENT
+//////////
+
+
+/////////
+/// DEBUT DES MOUVEMENTS D'AX UNIQUEMENT
+//////////
+
+void seq_open_pince(struct Sequencer* seq)
+{
+    sequencer_reset(seq);
+    sequencer_add_action(seq, ax_servo_6_open, NULL, 0);  
+    sequencer_add_action(seq, ax_servo_7_open, NULL, 20); 
+}
+
+void seq_close_pince(struct Sequencer* seq)
+{
+    sequencer_reset(seq);
+    sequencer_add_action(seq, ax_servo_6_close, NULL, 0);  
+    sequencer_add_action(seq, ax_servo_7_close, NULL, 20); 
+}
+
+
+void seq_ax_safe_pos_for_calage(struct Sequencer* seq)
+{
+    sequencer_reset(seq);
+    sequencer_add_action(seq, ax_caca_calage, NULL, 200);
+}
+
+
+void seq_ax_open_cursor(struct Sequencer* seq)
+{
+    sequencer_reset(seq);
+    sequencer_add_action(seq, ax_ouverture_cursor, NULL, 20);
+}
+
+void seq_ax_fermer_cursor(struct Sequencer* seq)
+{
+    sequencer_reset(seq);
+    sequencer_add_action(seq, ax_fermeture_cursor, NULL, 20);
+}
+
+/////////
+/// FIN DES MOUVEMENTS D'AX UNIQUEMENT
+//////////
+
+/////////
+/// DEBUT MOUVEMENT COMPLEXE
+//////////
 
 void seq_build_grab(struct Sequencer* seq)
 {
@@ -97,24 +130,6 @@ void seq_build_grab(struct Sequencer* seq)
                   &ELV_STATE_MOVE_V, genenv_elv_move_v(SEQ_ACCEL_V, SEQ_SPEED_V, GRAP_V));
 
     // HOLD automatique via idle enregistré dans le séquenceur
-}
-
-void seq_deplacement_H(struct Sequencer* seq, float pos_H_mm)
-{
-    sequencer_reset(seq);
-
-    sequencer_add(seq, &elevator_H_statemachine,
-                  &ELV_STATE_MOVE_H, genenv_elv_move_h(SEQ_ACCEL_H, SEQ_SPEED_H, pos_H_mm));
-
-}
-
-void seq_deplacement_V(struct Sequencer* seq, float pos_V_mm)
-{
-    sequencer_reset(seq);
-
-    sequencer_add(seq, &elevator_V_statemachine,
-                  &ELV_STATE_MOVE_V, genenv_elv_move_v(SEQ_ACCEL_V, SEQ_SPEED_V, pos_V_mm));
-
 }
 
 void seq_fermer_porte_et_rentrer_ax(struct Sequencer* seq)
@@ -179,7 +194,95 @@ void seq_ejecter_2_element(struct Sequencer* seq)
  * Cette variable statique permet à l'action callback de relancer
  * la deuxième partie de la séquence après la première.
  */
+
+
 static struct Sequencer* chained_sequencer = NULL;
+ /* 
+
+typedef struct {
+    uint8_t canal;
+    uint16_t position;
+} ServoParams;
+
+// Action générique pour commander un servo
+void servo_command_action(void* param) {
+    ServoParams* p = (ServoParams*)param;
+    i2c_servo(p->canal, p->position);
+    //printf("[DBG] servo canal=%u pos=%u\n", p->canal, p->position);
+}
+
+static ServoParams servo_params_1_petite_droite = {1, POSITION_PETITE_DROITE};
+static ServoParams servo_params_1_droite = {1, POSITION_DROITE};
+static ServoParams servo_params_1_petite_gauche = {1, POSITION_PETITE_GAUCHE};
+static ServoParams servo_params_1_gauche = {1, POSITION_GAUCHE};
+
+static ServoParams servo_params_0_petite_droite = {0, POSITION_PETITE_DROITE};
+static ServoParams servo_params_0_droite = {0, POSITION_DROITE};
+static ServoParams servo_params_0_petite_gauche = {0, POSITION_PETITE_GAUCHE};
+static ServoParams servo_params_0_gauche = {0, POSITION_GAUCHE};
+
+const int servo_delay = 300 ;
+const int servo_delay_2 = 10 ;
+
+void trie_tobogan_cleanup(void* param) {
+    (void)param;
+    
+    couleur_element_jeux_1 = 0;
+    couleur_element_jeux_2 = 0;
+    presence_element_jeux_1 = 0;
+    presence_element_jeux_2 = 0;
+    
+    printf("[DBG] trie_tobogan CLEANUP done\n");
+}
+
+void trie_tobogan_v2(void* param) {
+    (void)param;
+    
+    printf("[DBG] trie_tobogan_v2 START\n");
+    
+    // Servo 1 (toboggan intérieur)
+    if (presence_element_jeux_1) {
+        add_element_jeux_in_tob_int();
+        
+        if (couleur_element_jeux_1 != couleur_equipe) {
+            // Tourner à droite
+            //i2c_servo(1, POSITION_DROITE);
+            sequencer_add_action(chained_sequencer, servo_command_action, &servo_params_1_petite_droite, servo_delay);
+            sequencer_add_action(chained_sequencer, servo_command_action, &servo_params_1_droite, servo_delay_2);
+        }
+        else {
+            // Changer de couleur
+            //i2c_servo(1, POSITION_GAUCHE);
+            sequencer_add_action(chained_sequencer, servo_command_action, &servo_params_1_petite_gauche, servo_delay);
+            sequencer_add_action(chained_sequencer, servo_command_action, &servo_params_1_gauche, servo_delay_2);
+
+        }
+    }
+    
+    // Servo 2 (toboggan extérieur)
+    if (presence_element_jeux_2) {
+        add_element_jeux_in_tob_ext();
+        
+        if (couleur_element_jeux_2 != couleur_equipe) {
+            //i2c_servo(0, POSITION_DROITE);
+            sequencer_add_action(chained_sequencer, servo_command_action, &servo_params_0_petite_droite, servo_delay);
+            sequencer_add_action(chained_sequencer, servo_command_action, &servo_params_0_droite, servo_delay_2);
+            
+        }
+        else {
+            sequencer_add_action(chained_sequencer, servo_command_action, &servo_params_0_petite_gauche, servo_delay);
+            sequencer_add_action(chained_sequencer, servo_command_action, &servo_params_0_gauche, servo_delay_2);
+        }
+    }
+    
+    // Réinitialiser à la fin
+    sequencer_add_action(chained_sequencer, trie_tobogan_cleanup, NULL, 0);
+    
+    // Redémarrer le séquenceur
+    //sequencer_start(chained_sequencer);
+}
+
+*/
 
 /**
  * @brief Action callback : lance seq_ejecter_1_element après fermer_porte
@@ -303,6 +406,7 @@ void seq_fermer_puis_ejecter_1_element(struct Sequencer* seq)
     printf("[DBG] ===FE1 END===\n");
 }
 
+/* 
 void enchement_seq_depose(struct Sequencer* seq)
 {
 
@@ -315,46 +419,54 @@ void enchement_seq_depose(struct Sequencer* seq)
     sequencer_add(seq, &elevator_V_statemachine,
                   &ELV_STATE_MOVE_V, genenv_elv_move_v(SEQ_ACCEL_V, SEQ_SPEED_V, DEPOSE_V));
 
-    sequencer_add_action(seq,ax_servo_6_close,NULL,30);
+    sequencer_add_action(seq,ax_servo_6_close,NULL,20);
     sequencer_add_action(seq,ax_servo_7_close,NULL,20);
 
     sequencer_add(seq, &elevator_H_statemachine,
                   &ELV_STATE_MOVE_H, genenv_elv_move_h(SEQ_ACCEL_H, SEQ_SPEED_H, DEPOSE_1_H));
     
-    sequencer_add_action(seq, print_state_tobotan, NULL, 20);  // Exécuté pendant la séquence, pas maintenant
+    sequencer_add_action(seq, print_state_tobotan, NULL, 10);  // Exécuté pendant la séquence, pas maintenant
 
     // Mémoriser le séquenceur pour les callbacks
     //chained_sequencer = seq;
 
     if ( (top_place[TOB_EXT]==1) || (top_place[TOB_INT] ==1 ) )
     {
-        printf("tobogan deja plein");
+         printf("[DBG] CAS 1: Tobogan plein en haut, abandon\n");
     }
 
     else if ( (middle_place[TOB_EXT]==1 ) || (middle_place[TOB_INT]==1) )
     { 
         //sequencer_add_action(seq, depose_1er, NULL, 2000);
         /// DEPO 1
+        printf("[DBG] CAS 2: Tobogan a éléments au milieu\n");
+
         sequencer_add_action(seq, scan_tobogan,  (void*)1, 0);
 
         if( ((element_in_ventouse[3] || element_in_ventouse[1])==0 )
             &&
             ((element_in_ventouse[2] || element_in_ventouse[0]) == 1) ) 
         {
+            printf("[DBG] CAS 2a: Seulement ventouses basses (v0/v2), H -> DEPOSE_2_H\n");
             sequencer_add(seq, &elevator_H_statemachine,
                 &ELV_STATE_MOVE_H, genenv_elv_move_h(SEQ_ACCEL_H, SEQ_SPEED_H, DEPOSE_2_H));
         
             sequencer_add_action(seq, scan_tobogan,  (void*)2, 20);  // Scanner avant de vérifier
             sequencer_add_action(seq, reset_tobogan, NULL, 100);
             sequencer_add_action(seq, turn_off_pump_4, NULL, 700); 
-            sequencer_add_action(seq, trie_tobogan, NULL, 400);
+            //sequencer_add_action(seq, trie_tobogan, NULL, 400); // old
+            chained_sequencer = seq;
+            sequencer_add_action(seq, trie_tobogan_v2, NULL, 20);
         }
 
         else 
         {
+            printf("[DBG] CAS 2b: Ventouses hautes (v1/v3), rester à DEPOSE_1_H\n");
             sequencer_add_action(seq, reset_tobogan, NULL, 100);
             sequencer_add_action(seq, turn_off_pump_3, NULL, 700);
-            sequencer_add_action(seq, trie_tobogan, NULL, 500);
+            //sequencer_add_action(seq, trie_tobogan, NULL, 500);
+            chained_sequencer = seq;
+            sequencer_add_action(seq, trie_tobogan_v2, NULL, 20);
         }
 
         sequencer_add(seq, &elevator_H_statemachine,
@@ -364,153 +476,29 @@ void enchement_seq_depose(struct Sequencer* seq)
     }
     else if ((middle_place[TOB_EXT]==0 ) && (middle_place[TOB_INT]==0))
     { 
+        printf("[DBG] CAS 3: Tobogan vide, 2 dépôts successifs\n");
+            /// DEPO 1
+        sequencer_add_action(seq, scan_tobogan,  (void*)1, 0);
+        sequencer_add_action(seq, reset_tobogan, NULL, 100);
+        sequencer_add_action(seq, turn_off_pump_3, NULL, 700);
+        //sequencer_add_action(seq, trie_tobogan, NULL, 500);
+        chained_sequencer = seq;
+        sequencer_add_action(seq, trie_tobogan_v2, NULL, 20);
 
-        /// DEPO 1
-    sequencer_add_action(seq, scan_tobogan,  (void*)1, 0);
-    sequencer_add_action(seq, reset_tobogan, NULL, 100);
-    sequencer_add_action(seq, turn_off_pump_3, NULL, 700);
-    sequencer_add_action(seq, trie_tobogan, NULL, 500);
-
-    //sequencer_add_action(seq, depose_2eme, NULL, 2000);
-    sequencer_add(seq, &elevator_H_statemachine,
-        &ELV_STATE_MOVE_H, genenv_elv_move_h(SEQ_ACCEL_H, SEQ_SPEED_H, DEPOSE_2_H));
-    
-    /// DEPO 2
-    sequencer_add_action(seq, scan_tobogan,  (void*)2, 20);  // Scanner avant de vérifier
-    sequencer_add_action(seq, reset_tobogan, NULL, 100);
-    sequencer_add_action(seq, turn_off_pump_4, NULL, 700); 
-    sequencer_add_action(seq, trie_tobogan, NULL, 400);
+        //sequencer_add_action(seq, depose_2eme, NULL, 2000);
+        sequencer_add(seq, &elevator_H_statemachine,
+            &ELV_STATE_MOVE_H, genenv_elv_move_h(SEQ_ACCEL_H, SEQ_SPEED_H, DEPOSE_2_H));
+        
+        /// DEPO 2
+        sequencer_add_action(seq, scan_tobogan,  (void*)2, 20);  // Scanner avant de vérifier
+        sequencer_add_action(seq, reset_tobogan, NULL, 100);
+        sequencer_add_action(seq, turn_off_pump_4, NULL, 700); 
+        //sequencer_add_action(seq, trie_tobogan, NULL, 400);
+        chained_sequencer = seq;
+        sequencer_add_action(seq, trie_tobogan_v2, NULL, 20);
 
     }
 
 }
 
-
-////////////////////////////////////////////
-//// OBSELETTE 
-////////////////////////////////////////////
-
-///on va changer cette fonction pour que les conditions de 
-// verification des tobogans fonctionne
-void seq_build_deposit(struct Sequencer* seq)
-{
-    
-    sequencer_reset(seq);
-
-    sequencer_add(seq, &elevator_V_statemachine,
-                  &ELV_STATE_MOVE_V, genenv_elv_move_v(SEQ_ACCEL_V, SEQ_SPEED_V, DEPOSE_V));
-
-    sequencer_add(seq, &elevator_H_statemachine,
-                  &ELV_STATE_MOVE_H, genenv_elv_move_h(SEQ_ACCEL_H, SEQ_SPEED_H, DEPOSE_1_H));
-    
-    sequencer_add_action(seq, scan_tobogan, NULL,0);
-    print_state_tobotan();
-
-    if ((check_element_jeux_tob_ext() !=0 ) || (check_element_jeux_tob_int() != 0)) 
-    {
-        // on n'effectue pas la suite car un des 2 tobogans est pleins.
-        // on termine la sequence
-        printf("tobogan plein ne peut pas deposer");
-        return;
-    }
-    sequencer_add_action(seq, reset_tobogan, NULL, 100);
-    //sequencer_add_action(seq, scan_tobogan, NULL,0);
-    sequencer_add_action(seq, turn_off_pump_3, NULL, 500);  
-    sequencer_add_action(seq, trie_tobogan, NULL, 1000);
-
-    sequencer_add(seq, &elevator_H_statemachine,
-                &ELV_STATE_MOVE_H, genenv_elv_move_h(SEQ_ACCEL_H, SEQ_SPEED_H, DEPOSE_2_H));
-    sequencer_add_action(seq, reset_tobogan, NULL, 0);
-
-    sequencer_add_action(seq, scan_tobogan, NULL, 500); 
-    if ((check_element_jeux_tob_ext() !=0 ) || (check_element_jeux_tob_int() != 0)) 
-    {
-        // on n'effectue pas la suite car un des 2 tobogans est pleins.
-        // on termine la sequence
-        printf("tobogan plein ne peut pas deposer");
-        return;
-    }
-    sequencer_add_action(seq, reset_tobogan, NULL, 100);
-    //sequencer_add_action(seq, scan_tobogan, NULL, 500); 
-    sequencer_add_action(seq, turn_off_pump_4, NULL, 500); 
-    sequencer_add_action(seq, trie_tobogan, NULL, 1000);
-
-    //sequencer_add_action(seq,servo_porte_fermer,NULL,10);
-
-    //sequencer_add_action(seq, ax_caca_rentrer, NULL, 0);
-    //sequencer_add_action(seq, ax_servo_6_close, NULL, 0);   // Pas de délai
-    //sequencer_add_action(seq, ax_servo_7_close, NULL, 0); 
-}
-
-// cette seq est maintenant obselette 
-void seq_ejecter_elements(struct Sequencer* seq, int num_element_a_ejecter)
-{ 
-    // TO DOfaut faire la logique des elements de jeux du tobogan pour bien gerer l'expulsion des elements de jeux 
-
-    sequencer_reset(seq);
-
-    sequencer_add_action(seq,servo_porte_ouvert,NULL,500);
-    sequencer_add_action(seq,ax_caca_milieu,NULL,1000);
-    sequencer_add_action(seq,ax_caca_ejecter,NULL,500);
-    sequencer_add_action(seq,servo_porte_fermer,NULL,100);
-    sequencer_add_action(seq,ax_caca_rentrer,NULL,500 );
-}
-
-void depose_1er (void* param)
-{
-    (void)param;
-
-    printf("[DBG] START depose_1er");
-
-    if (chained_sequencer == NULL) {
-        printf("[ERR] seq=NULL\n");
-        return;  // Sécurité : pas de séquenceur configuré
-    }
-
-    print_state_tobotan();
-
-    if ((check_element_jeux_tob_ext() !=0 ) || (check_element_jeux_tob_int() != 0)) 
-    {
-        // on n'effectue pas la suite car un des 2 tobogans est pleins.
-        // on termine la sequence
-        printf(" [DBG] depose_1er deja tobogan plein");
-        return;
-    }
-
-    sequencer_add_action(chained_sequencer, reset_tobogan, NULL, 100);
-    sequencer_add_action(chained_sequencer, turn_off_pump_3, NULL, 300);
-    sequencer_add_action(chained_sequencer, trie_tobogan, NULL, 500);
-
-    // Relancer le séquenceur avec les nouvelles actions
-    sequencer_start(chained_sequencer);
-
-    // NE PAS mettre chained_sequencer = NULL ici, car depose_2eme en a encore besoin!
-}
-
-void depose_2eme (void* param)
-{
-    (void)param;
-    printf("[DBG] START depose_2eme");
-
-        if (chained_sequencer == NULL) {
-        printf("[ERR] seq=NULL\n");
-        return;  // Sécurité : pas de séquenceur configuré
-    }
-
-    print_state_tobotan();
-
-    if ((check_element_jeux_tob_ext() !=0 ) || (check_element_jeux_tob_int() != 0)) 
-    {
-        // on n'effectue pas la suite car un des 2 tobogans est pleins.
-        // on termine la sequence
-        printf("[DBG] depose_2eme tobogan deja plein ");
-        return;
-    }
-
-    sequencer_add_action(chained_sequencer, reset_tobogan, NULL, 100);
-    sequencer_add_action(chained_sequencer, turn_off_pump_4, NULL, 400); 
-    sequencer_add_action(chained_sequencer, trie_tobogan, NULL, 400);
-
-    // Réinitialiser le pointeur (optionnel, pour sécurité)
-    chained_sequencer = NULL;
-}
+*/

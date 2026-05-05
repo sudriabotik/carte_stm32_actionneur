@@ -2,7 +2,6 @@
 *
 *
 **/
-
 #include "robot_action_autom.h"
 
 uint8_t couleur_equipe = 0; //BLEU = 0 , JAUNE = 1 , donc par default c'est bleu
@@ -150,14 +149,14 @@ void ax_servo_6_close(void* param)
 {
     (void)param;
     //ax_write_position(6, CLOSE_ax_6);
-    ax_write_position_and_speed(6, CLOSE_ax_6, 150);
+    ax_write_position_and_speed(6, CLOSE_ax_6, 250);
 }
 
 void ax_servo_6_open(void* param)
 {
     (void)param;
     //ax_write_position(6, OUVERT_ax_6);
-    ax_write_position_and_speed(6, OUVERT_ax_6, 300);
+    ax_write_position_and_speed(6, OUVERT_ax_6, 500);
 }
 
 // AX 7 :
@@ -172,14 +171,14 @@ void ax_servo_7_close(void* param)
 {
     (void)param;
     //ax_write_position(7, CLOSE_ax_7);
-    ax_write_position_and_speed(7, CLOSE_ax_7, 150);
+    ax_write_position_and_speed(7, CLOSE_ax_7, 250);
 }
 
 void ax_servo_7_open(void* param)
 {
     (void)param;
     //ax_write_position(7, OUVERT_ax_7);
-    ax_write_position_and_speed(7, OUVERT_ax_7, 300);
+    ax_write_position_and_speed(7, OUVERT_ax_7, 500);
 }
 
 ////////////////////
@@ -237,6 +236,8 @@ void scan_tobogan(void* param)
 
 }
 
+///// OLD ////
+/* 
 void trie_tobogan(void* param)
 {
     (void)param;
@@ -251,31 +252,31 @@ void trie_tobogan(void* param)
         add_element_jeux_in_tob_int();
         if (couleur_element_jeux_1 != couleur_equipe) 
         {
-            /* tourner le servo moteur vers la droite ne 
-            change pas la couleur de l'element de jeux */
+            // tourner le servo moteur vers la droite ne 
+            //change pas la couleur de l'element de jeux 
             i2c_servo (1, POSITION_DROITE); // canal 1 c'est le servo moteur 1
         }
         else
         {
-            /* on change de couleur l'element de jeux*/
-            i2c_servo (1, POSITION_GAUCHE); // canal 0 c'est le servo moteur 1
+            // on change de couleur l'element de jeux
+            i2c_servo (1, POSITION_GAUCHE); // canal 1 c'est le servo moteur 1
         }
 
     }
 
-    /* lorsqu'il n'y a pas d'élement de jeux = 1 et lorsqu'il y a un element de jeux = 0*/
+    // lorsqu'il n'y a pas d'élement de jeux = 1 et lorsqu'il y a un element de jeux = 0
     if (presence_element_jeux_2)
     {
         add_element_jeux_in_tob_ext();
         if (couleur_element_jeux_2 != couleur_equipe) 
         {
-            /* tourner le servo moteur vers la droite ne 
-            change pas la couleur de l'element de jeux */
+            // tourner le servo moteur vers la droite ne 
+            //change pas la couleur de l'element de jeux 
             i2c_servo (0, POSITION_DROITE); // canal 0 c'est le servo moteur 2 
         }
         else
         {
-            /* on change de couleur l'element de jeux*/
+            // on change de couleur l'element de jeux
             i2c_servo (0, POSITION_GAUCHE); // canal 0 c'est le servo moteur 2 
         }
     }
@@ -284,8 +285,8 @@ void trie_tobogan(void* param)
     couleur_element_jeux_2 = 0 ;
     presence_element_jeux_1 = 0;
     presence_element_jeux_2 = 0;
-
 }
+*/
 
 void reset_tobogan(void* param)
 {

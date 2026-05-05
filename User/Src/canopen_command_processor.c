@@ -344,6 +344,25 @@ void canopen_cmd_process(void) {
                 break;
             }
 
+            case CMD_AX_CURSOR_OUVERT : 
+            {
+                printf("[CANopen CMD] Executing: CMD_AX_CURSOR_OUVERT\n\r");
+                canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
+                seq_ax_open_cursor(main_sequencer);
+                sequencer_start(main_sequencer);
+                sequencer_was_running = 1;
+                break;
+            }
+
+            case CMD_AX_CURSOR_FERMER:
+            {
+                printf("[CANopen CMD] Executing: CMD_AX_CURSOR_FERMER\n\r");
+                canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
+                seq_ax_fermer_cursor(main_sequencer);
+                sequencer_start(main_sequencer);
+                sequencer_was_running = 1;
+                break;
+            }
 
             case CMD_EMERGENCY_STOP:
                 printf("[CANopen CMD] EMERGENCY STOP!\n");

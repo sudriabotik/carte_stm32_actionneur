@@ -68,7 +68,7 @@
 #include "main.h"
 #include "mv_statemachine.h"
 
-#define SEQUENCER_MAX_STEPS    16
+#define SEQUENCER_MAX_STEPS    32
 #define SEQUENCER_MAX_MACHINES  4
 
 
