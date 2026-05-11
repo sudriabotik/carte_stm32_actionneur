@@ -364,6 +364,16 @@ void canopen_cmd_process(void) {
                 break;
             }
 
+            case CMD_AX_GRAB_PINCE:
+            {
+                printf("[CANopen CMD] Executing: CMD_AX_GRAB_PINCE\n\r");
+                canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
+                seq_grap_pince(main_sequencer);
+                sequencer_start(main_sequencer);
+                sequencer_was_running = 1;
+                break;
+            }
+
             case CMD_EMERGENCY_STOP:
                 printf("[CANopen CMD] EMERGENCY STOP!\n");
 

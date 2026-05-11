@@ -75,6 +75,13 @@ void seq_close_pince(struct Sequencer* seq)
     sequencer_add_action(seq, ax_servo_7_close, NULL, 20); 
 }
 
+void seq_grap_pince(struct Sequencer* seq)
+{
+    sequencer_reset(seq);
+    sequencer_add_action(seq, ax_servo_6_grap, NULL, 0);  
+    sequencer_add_action(seq, ax_servo_7_grap, NULL, 20); 
+}
+
 
 void seq_ax_safe_pos_for_calage(struct Sequencer* seq)
 {
@@ -129,7 +136,7 @@ void seq_build_grab(struct Sequencer* seq)
     sequencer_add(seq, &elevator_V_statemachine,
                   &ELV_STATE_MOVE_V, genenv_elv_move_v(SEQ_ACCEL_V, SEQ_SPEED_V, GRAP_V));
 
-    // HOLD automatique via idle enregistré dans le séquenceur
+    sequencer_add_action(seq, ax_servo_7_grap, NULL, 300); // juste pour mettre un delay
 }
 
 void seq_fermer_porte_et_rentrer_ax(struct Sequencer* seq)
@@ -231,14 +238,14 @@ void action_launch_ejecter_sequence(void* param)
         if ((bottom_place[TOB_INT]==1) && (bottom_place[TOB_EXT]==1))
         {
             printf("[DBG] B1:2tob->mid\n");
-            sequencer_add_action(chained_sequencer, servo_porte_ouvert, NULL, 200);
-            sequencer_add_action(chained_sequencer, ax_caca_milieu, NULL, 400);
+            sequencer_add_action(chained_sequencer, servo_porte_ouvert, NULL, 150);
+            sequencer_add_action(chained_sequencer, ax_caca_milieu, NULL, 200);
         }
         else if ((bottom_place[TOB_INT]==1) || (bottom_place[TOB_EXT]==1))
         {
             printf("[DBG] B2:1tob->eject\n");
             sequencer_add_action(chained_sequencer, servo_porte_ouvert, NULL, 0);
-            sequencer_add_action(chained_sequencer, ax_caca_ejecter, NULL, 400);
+            sequencer_add_action(chained_sequencer, ax_caca_ejecter, NULL, 200);
         }
         else
         {
@@ -252,7 +259,7 @@ void action_launch_ejecter_sequence(void* param)
         {
             printf("[DBG] B3:ext->eject\n");
             sequencer_add_action(chained_sequencer, servo_porte_ouvert, NULL, 0);
-            sequencer_add_action(chained_sequencer, ax_caca_ejecter, NULL, 400);
+            sequencer_add_action(chained_sequencer, ax_caca_ejecter, NULL, 200);
         }
         else
         {
@@ -305,10 +312,10 @@ void seq_fermer_puis_ejecter_1_element(struct Sequencer* seq)
     {
         printf("[DBG] AX=ej+elem->close\n");
         sequencer_add_action(seq,servo_porte_fermer,NULL,300);
-        sequencer_add_action(seq, fermer_porte_et_rentrer_ax, NULL, 1000);
+        sequencer_add_action(seq, fermer_porte_et_rentrer_ax, NULL, 500);
 
         // Action callback qui relancera la phase 2
-        sequencer_add_action(seq, action_launch_ejecter_sequence, NULL, 1000);
+        sequencer_add_action(seq, action_launch_ejecter_sequence, NULL, 500);
     }
     else
     {

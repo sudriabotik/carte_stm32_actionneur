@@ -57,6 +57,8 @@ struct MvStateEnv
 
 	float elapsed_time;
 	float real_outcome;
+
+	float pos_start;  // Position absolue de départ (initialisée dans wake)
 };
 
 

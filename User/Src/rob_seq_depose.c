@@ -39,8 +39,8 @@ static ServoParams servo_params_0_droite = {0, POSITION_DROITE};
 static ServoParams servo_params_0_petite_gauche = {0, POSITION_PETITE_GAUCHE};
 static ServoParams servo_params_0_gauche = {0, POSITION_GAUCHE};
 
-const int servo_delay = 500 ;
-const int servo_delay_2 = 500 ;
+const int servo_delay = 0 ;
+const int servo_delay_2 = 100 ;
 
 void trie_tobogan_cleanup(void* param) {
     (void)param;
@@ -54,57 +54,60 @@ void trie_tobogan_cleanup(void* param) {
 }
 
 void trie_tobogan_v2(void* param) {
-    // Récupérer le séquenceur parent depuis le paramètre
     struct Sequencer* parent_seq = (struct Sequencer*)param;
-
-    printf("[DBG] trie_tobogan_v2 START - building sub-sequence\n");
-
-    // Réinitialiser la sous-séquence
+    
     sequencer_reset(&sub_seq_tobogan);
-
-    // Construire la sous-séquence avec les commandes servo
-
+    
+    // Déterminer les mouvements à faire
+    ServoParams* servo1_petit = NULL;
+    ServoParams* servo1_grand = NULL;
+    ServoParams* servo0_petit = NULL;
+    ServoParams* servo0_grand = NULL;
+    
     // Servo 1 (toboggan intérieur)
     if (presence_element_jeux_1) {
         add_element_jeux_in_tob_int();
-
         if (couleur_element_jeux_1 != couleur_equipe) {
-            // Tourner à droite
-            printf("[DBG] Servo 1: droite (mauvaise couleur)\n");
-            sequencer_add_action(&sub_seq_tobogan, servo_command_action, &servo_params_1_petite_droite, servo_delay);
-            sequencer_add_action(&sub_seq_tobogan, servo_command_action, &servo_params_1_droite, servo_delay_2);
-        }
-        else {
-            // Changer de couleur
-            printf("[DBG] Servo 1: gauche (bonne couleur)\n");
-            sequencer_add_action(&sub_seq_tobogan, servo_command_action, &servo_params_1_petite_gauche, servo_delay);
-            sequencer_add_action(&sub_seq_tobogan, servo_command_action, &servo_params_1_gauche, servo_delay_2);
+            servo1_petit = &servo_params_1_petite_droite;
+            servo1_grand = &servo_params_1_droite;
+        } else {
+            servo1_petit = &servo_params_1_petite_gauche;
+            servo1_grand = &servo_params_1_gauche;
         }
     }
-
-    // Servo 2 (toboggan extérieur)
+    
+    // Servo 0 (toboggan extérieur)
     if (presence_element_jeux_2) {
         add_element_jeux_in_tob_ext();
-
         if (couleur_element_jeux_2 != couleur_equipe) {
-            printf("[DBG] Servo 0: droite (mauvaise couleur)\n");
-            sequencer_add_action(&sub_seq_tobogan, servo_command_action, &servo_params_0_petite_droite, servo_delay);
-            sequencer_add_action(&sub_seq_tobogan, servo_command_action, &servo_params_0_droite, servo_delay_2);
-        }
-        else {
-            printf("[DBG] Servo 0: gauche (bonne couleur)\n");
-            sequencer_add_action(&sub_seq_tobogan, servo_command_action, &servo_params_0_petite_gauche, servo_delay);
-            sequencer_add_action(&sub_seq_tobogan, servo_command_action, &servo_params_0_gauche, servo_delay_2);
+            servo0_petit = &servo_params_0_petite_droite;
+            servo0_grand = &servo_params_0_droite;
+        } else {
+            servo0_petit = &servo_params_0_petite_gauche;
+            servo0_grand = &servo_params_0_gauche;
         }
     }
-
-    // Réinitialiser à la fin
+    /* 
+    // Phase 1 : Petits mouvements (en parallèle)
+    if (servo1_petit) {
+        sequencer_add_action(&sub_seq_tobogan, servo_command_action, servo1_petit, 0);
+    }
+    if (servo0_petit) {
+        sequencer_add_action(&sub_seq_tobogan, servo_command_action, servo0_petit, servo_delay);
+    }
+    */
+    // Phase 2 : Grands mouvements (en parallèle)
+    if (servo1_grand) {
+        sequencer_add_action(&sub_seq_tobogan, servo_command_action, servo1_grand, 0);
+    }
+    if (servo0_grand) {
+        sequencer_add_action(&sub_seq_tobogan, servo_command_action, servo0_grand, servo_delay_2);
+    }
+    
+    // Cleanup
     sequencer_add_action(&sub_seq_tobogan, trie_tobogan_cleanup, NULL, 0);
-
-    // Lancer la sous-séquence (pause le parent jusqu'à la fin)
+    
     sequencer_add_sub_sequence(parent_seq, &sub_seq_tobogan);
-
-    printf("[DBG] trie_tobogan_v2 sub-sequence launched (%d steps)\n", sub_seq_tobogan.step_count);
 }
 
 
@@ -115,19 +118,19 @@ void enchement_seq_depose(struct Sequencer* seq)
     printf("[DBG] START ench_seq_depose");
     sequencer_reset(seq);
 
-    sequencer_add_action(seq, ax_servo_6_open, NULL, 100);  
-    sequencer_add_action(seq, ax_servo_7_open, NULL, 300); 
+    sequencer_add_action(seq, ax_servo_6_open, NULL, 0);  
+    sequencer_add_action(seq, ax_servo_7_open, NULL, 200); 
 
     sequencer_add(seq, &elevator_V_statemachine,
                   &ELV_STATE_MOVE_V, genenv_elv_move_v(SEQ_ACCEL_V, SEQ_SPEED_V, DEPOSE_V));
 
-    sequencer_add_action(seq,ax_servo_6_close,NULL,20);
-    sequencer_add_action(seq,ax_servo_7_close,NULL,20);
+    sequencer_add_action(seq,ax_servo_6_close,NULL, 0);
+    sequencer_add_action(seq,ax_servo_7_close,NULL, 0);
 
     sequencer_add(seq, &elevator_H_statemachine,
                   &ELV_STATE_MOVE_H, genenv_elv_move_h(SEQ_ACCEL_H, SEQ_SPEED_H, DEPOSE_1_H));
     
-    sequencer_add_action(seq, print_state_tobotan, NULL, 10);  // Exécuté pendant la séquence, pas maintenant
+    sequencer_add_action(seq, print_state_tobotan, NULL, 0);  // Exécuté pendant la séquence, pas maintenant
 
     if ( (top_place[TOB_EXT]==1) || (top_place[TOB_INT] ==1 ) )
     {
@@ -152,7 +155,7 @@ void enchement_seq_depose(struct Sequencer* seq)
         
             sequencer_add_action(seq, scan_tobogan,  (void*)2, 20);  // Scanner avant de vérifier
             sequencer_add_action(seq, reset_tobogan, NULL, 100);
-            sequencer_add_action(seq, turn_off_pump_4, NULL, 700);
+            sequencer_add_action(seq, turn_off_pump_4, NULL, 500);
             //sequencer_add_action(seq, trie_tobogan, NULL, 400); // old
             sequencer_add_action(seq, trie_tobogan_v2, seq, 0);
         }

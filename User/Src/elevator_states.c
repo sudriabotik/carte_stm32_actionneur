@@ -60,6 +60,9 @@ void elv_move_v_wake(struct MvStateMachine* statemachine, struct MvStateEnv* env
 	printf("elevator V : moving from %.1f mm to %.1f mm (distance: %.1f mm)\n",
 	       abs_pos_V_mm, env->distance, distance_relative);
 
+	// Sauvegarder la position de départ pour mise à jour en temps réel
+	env->pos_start = abs_pos_V_mm;
+
 	Encoder16Reset(&encoder_R);
 	// Utiliser la distance RELATIVE pour la trajectoire
 	env->pos_slope   = pregen_position_slope(env->acceleration, env->speed, distance_relative);
@@ -76,15 +79,21 @@ void elv_move_v_run(struct MvStateMachine* statemachine, struct MvStateEnv* env,
 	float current_pos    = ticks_to_mm_V(encoder_R.total_count);
 	float desired_pos    = eval_position_slope(env->elapsed_time, env->pos_slope);
 
-	env->real_outcome = current_pos; 
+	env->real_outcome = current_pos;
+
+	// Mise à jour de la position absolue en temps réel
+	abs_pos_V_mm = env->pos_start + current_pos;
 
 	float motor_command  = PID_Run(&pid_position_elevator_V_runtime, &pid_position_elevator_V,
 	                               current_pos, desired_pos, delta_time);
 
 	motor_drive(motor_R, motor_command);
 
+	printf("[V] abs=%.1f cur=%.1f des=%.1f\n", 
+       abs_pos_V_mm, current_pos, desired_pos);
+
 	// Calculer la distance relative à parcourir pour la comparaison
-	float distance_relative = env->distance - abs_pos_V_mm;
+	float distance_relative = env->distance - env->pos_start;
 
 	if (is_val_near(current_pos, distance_relative, 1.5f) )
 	{
@@ -95,8 +104,8 @@ void elv_move_v_run(struct MvStateMachine* statemachine, struct MvStateEnv* env,
 
 void elv_move_v_stop(struct MvStateMachine* statemachine, struct MvStateEnv* env, float delta_time)
 {
-	// Mettre à jour la position absolue : ancienne position + distance parcourue
-	abs_pos_V_mm += env->real_outcome;
+	//on n'uilisee cette actualisation car c'est deja actualise ren temps réel la position absolue.
+	//abs_pos_V_mm += env->real_outcome;
 
 	printf("elevator V : reached %.1f mm (target was %.1f mm)\n", abs_pos_V_mm, env->distance);
 	motor_drive(motor_R, 0.0f);
@@ -233,6 +242,9 @@ void elv_move_h_wake(struct MvStateMachine* statemachine, struct MvStateEnv* env
 	printf("elevator H : moving from %.1f mm to %.1f mm (distance: %.1f mm)\n",
 	       abs_pos_H_mm, env->distance, distance_relative);
 
+	// Sauvegarder la position de départ pour mise à jour en temps réel
+	env->pos_start = abs_pos_H_mm;
+
 	Encoder16Reset(&encoder_L);
 	// Utiliser la distance RELATIVE pour la trajectoire
 	env->pos_slope    = pregen_position_slope(env->acceleration, env->speed, distance_relative);
@@ -251,13 +263,16 @@ void elv_move_h_run(struct MvStateMachine* statemachine, struct MvStateEnv* env,
 
 	env->real_outcome = current_pos;
 
+	// Mise à jour de la position absolue en temps réel
+	abs_pos_H_mm = env->pos_start + current_pos;
+
 	float motor_command = PID_Run(&pid_position_elevator_H_runtime, &pid_position_elevator_H,
 	                              current_pos, desired_pos, delta_time);
 
 	motor_drive(motor_L, motor_command);
 
 	// Calculer la distance relative à parcourir pour la comparaison
-	float distance_relative = env->distance - abs_pos_H_mm;
+	float distance_relative = env->distance - env->pos_start;
 
 	if (is_val_near(current_pos, distance_relative, 1.5f))
 	{
@@ -268,8 +283,8 @@ void elv_move_h_run(struct MvStateMachine* statemachine, struct MvStateEnv* env,
 
 void elv_move_h_stop(struct MvStateMachine* statemachine, struct MvStateEnv* env, float delta_time)
 {
-	// Mettre à jour la position absolue : ancienne position + distance parcourue
-	abs_pos_H_mm += env->real_outcome;
+	// on n'utilisie plus cette actualisation car c'est deja actualiser en temps réel. 
+	//abs_pos_H_mm += env->real_outcome;
 
 	printf("elevator H : reached %.1f mm (target was %.1f mm)\n", abs_pos_H_mm, env->distance);
 	motor_drive(motor_L, 0.0f);

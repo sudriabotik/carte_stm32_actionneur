@@ -22,23 +22,23 @@
 // Paramètres par défaut pour les mouvements (à ajuster selon le robot)
 #define SEQ_ACCEL_V   60.0f   // mm/s²
 #define SEQ_SPEED_V    85.0f   // mm/s
-#define SEQ_ACCEL_H   70.0f   // mm/s²
-#define SEQ_SPEED_H   110.0f   // mm/s
+#define SEQ_ACCEL_H   80.0f   // mm/s²
+#define SEQ_SPEED_H   130.0f   // mm/s
 
 // position enregistrer : 
-#define GRAP_H -323.0f 
+#define GRAP_H -321.5f 
 #define READY_TO_GRAP_V -200.0f
 #define GRAP_V -230.0f
 
 #define SAFE_POSITION_H -200.0f // position des ascenseur pour le perimetrer non déployer 
 
-#define DEPOSE_V 5.0f
+#define DEPOSE_V 4.0f
 #define DEPOSE_1_H -61.0f
 #define DEPOSE_2_H 3.0f
 
 //// POSITION AX PINCE
-#define SERAGE_ax_7	 497
-#define SERAGE_ax_6	 521
+#define SERAGE_ax_7	 482
+#define SERAGE_ax_6	 536
 
 #define CLOSE_ax_7  190
 #define CLOSE_ax_6  820

@@ -156,7 +156,7 @@ void ax_servo_6_open(void* param)
 {
     (void)param;
     //ax_write_position(6, OUVERT_ax_6);
-    ax_write_position_and_speed(6, OUVERT_ax_6, 500);
+    ax_write_position_and_speed(6, OUVERT_ax_6, 700);
 }
 
 // AX 7 :
@@ -178,7 +178,7 @@ void ax_servo_7_open(void* param)
 {
     (void)param;
     //ax_write_position(7, OUVERT_ax_7);
-    ax_write_position_and_speed(7, OUVERT_ax_7, 500);
+    ax_write_position_and_speed(7, OUVERT_ax_7, 700);
 }
 
 ////////////////////
