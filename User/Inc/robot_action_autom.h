@@ -56,6 +56,9 @@
 #define POS_OUVERTURE_CURSOR 820
 #define POS_FERMETURE_CURSOR 495
 
+#define POS_OUVERTURE_CURSOR_2 2250
+#define POS_FERMETURE_CURSOR_2 1500
+
 ///// POSITION SERVO_MOTEUR  
 // on considère que l'on regarde le sens de rotation de face par rapport au cerveau moteur
 #define POSITION_DROITE 2200
@@ -145,5 +148,10 @@ void ax_caca_ejecter(void* param);
 void fermer_porte_et_rentrer_ax(void* param);
 
 void print_state_tobotan();
+
+void ouverture_cursor_2(void* param);
+void fermeture_cursor_2(void* param);
+
+
 
 #endif // ROBOT_ACTION_AUTOM_H

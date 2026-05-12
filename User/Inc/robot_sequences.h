@@ -90,6 +90,10 @@ void seq_ax_fermer_cursor(struct Sequencer* seq);
 
 void seq_grap_pince(struct Sequencer* seq);
 
+void seq_open_cursor_2(struct Sequencer* seq);
+
+void seq_fermeture_cursor_2(struct Sequencer* seq);
+
 // ============================================================================
 // Séquences de dépôt déplacées vers rob_seq_depose.h
 // ============================================================================

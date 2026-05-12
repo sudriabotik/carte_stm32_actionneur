@@ -9,6 +9,8 @@
 #include "ax_controller.h"
 #include "robot_action_autom.h"
 #include "i2c_servo_moteur.h"
+#include "robot_data.h"    // Pour motor_drive, motor_R, motor_L
+#include "stm32g4xx_hal.h" // Pour HAL_GetTick, __disable_irq, __NOP
 
 /* Pointeur vers le séquenceur principal (initialisé par canopen_cmd_init) */
 static struct Sequencer* main_sequencer = NULL;
@@ -22,6 +24,10 @@ static uint8_t sequencer_was_running = 0;
 /* Mémorisation de l'action et commande en cours */
 static uint16_t current_action_id = 0;
 static uint16_t current_cmd_id = 0;
+
+/* Timer de match - Arrêt d'urgence après timeout */
+static uint32_t match_start_tick = 0;  // 0 = match pas démarré
+static const uint32_t MATCH_DURATION_MS = 99700;  // Durée du match en millisecondes
 
 /* Référence externe au stack CANopen */
 extern CANopenNodeSTM32* canopenNodeSTM32;
@@ -133,6 +139,18 @@ void canopen_update_status(uint8_t status,
 void canopen_cmd_process(void) {
     if (main_sequencer == NULL) {
         return; // Pas encore initialisé
+    }
+
+    // ========== VÉRIFICATION TIMEOUT MATCH ==========
+    if (match_start_tick != 0) {
+        uint32_t current_tick = HAL_GetTick();
+        uint32_t elapsed_ms = current_tick - match_start_tick;
+
+        if (elapsed_ms >= MATCH_DURATION_MS) {
+            printf("[MATCH TIMEOUT] Match duration exceeded (%lu ms)!\n", elapsed_ms);
+            canopen_cmd_emergency_stop(CMD_ERROR_TIMEOUT);
+            // Ne revient jamais ici (boucle infinie dans emergency_stop)
+        }
     }
 
     // ========== LECTURE COMMANDE (CANopen → STM32) ==========
@@ -374,16 +392,44 @@ void canopen_cmd_process(void) {
                 break;
             }
 
-            case CMD_EMERGENCY_STOP:
-                printf("[CANopen CMD] EMERGENCY STOP!\n");
+            case CMD_OPEN_CURSOR_2:
+            {
+                printf("[CANopen CMD] Executing: CMD_OPEN_CURSOR_2\n\r");
+                canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
+                seq_open_cursor_2(main_sequencer);
+                sequencer_start(main_sequencer);
+                sequencer_was_running = 1;
+                break;
+            }
 
-                // Arrêt immédiat : ABORTED
-                canopen_update_status(CMD_STATUS_ABORTED, action_id, command_id, CMD_ERROR_EMERGENCY_STOP);
+            case CMD_CLOSE_CURSOR_2:
+            {
+                printf("[CANopen CMD] Executing: CMD_CLOSE_CURSOR_2\n\r");
+                canopen_update_status(CMD_STATUS_RUNNING, action_id, command_id, CMD_ERROR_NONE);
+                seq_fermeture_cursor_2(main_sequencer);
+                sequencer_start(main_sequencer);
+                sequencer_was_running = 1;
+                break;
+            }
 
-                sequencer_reset(main_sequencer);
-                sequencer_was_running = 0;
+            case CMD_START_MATCH:
+            {
+                printf("[CANopen CMD] Executing: START_MATCH\n");
 
+                // Enregistrer le tick actuel (horloge système)
+                match_start_tick = HAL_GetTick();
+
+                printf("Match started at tick: %lu\n", match_start_tick);
+
+                // Signaler la commande comme complétée immédiatement
                 canopen_update_status(CMD_STATUS_COMPLETED, action_id, command_id, CMD_ERROR_NONE);
+                break;
+            }
+
+            case CMD_EMERGENCY_STOP:
+                printf("[CANopen CMD] EMERGENCY STOP received via CAN!\n");
+                canopen_cmd_emergency_stop(CMD_ERROR_EMERGENCY_STOP);
+                // Ne revient jamais ici (boucle infinie dans emergency_stop)
                 break;
 
             case CMD_IDLE:
@@ -428,4 +474,45 @@ void canopen_signal_sequence_started(uint16_t action_id, uint16_t command_id)
     current_cmd_id = command_id;
     printf("[CANopen CMD] Manual sequence started: action_id=%u, cmd_id=%u\n",
            action_id, command_id);
+}
+
+// ============================================================================
+// Arrêt d'urgence (Emergency Stop)
+// ============================================================================
+
+/**
+ * @brief Arrêt d'urgence complet avec blocage du STM32
+ *
+ * Cette fonction arrête immédiatement tous les moteurs, signale l'erreur
+ * via CANopen, puis bloque complètement le STM32 (désactivation des interruptions
+ * + boucle infinie). Seul un reset physique peut redémarrer le système.
+ *
+ * @param error_code Code d'erreur à signaler (CMD_ERROR_TIMEOUT ou CMD_ERROR_EMERGENCY_STOP)
+ */
+void canopen_cmd_emergency_stop(uint8_t error_code)
+{
+    printf("[EMERGENCY STOP] Stopping all systems!\n");
+
+    // 1. Arrêter les moteurs immédiatement
+    motor_drive(motor_R, 0.0f);
+    motor_drive(motor_L, 0.0f);
+
+    // 2. Arrêter le séquenceur
+    if (main_sequencer != NULL) {
+        sequencer_reset(main_sequencer);
+        sequencer_was_running = 0;
+    }
+
+    // 3. Signaler l'erreur via CANopen
+    canopen_update_status(CMD_STATUS_ABORTED, current_action_id, current_cmd_id, error_code);
+
+    printf("[EMERGENCY STOP] System halted - Reset required!\n");
+
+    // 4. BLOCAGE TOTAL : désactiver toutes les interruptions
+    __disable_irq();
+
+    // 5. Boucle infinie - le STM32 est gelé
+    while(1) {
+        __NOP();  // No Operation
+    }
 }

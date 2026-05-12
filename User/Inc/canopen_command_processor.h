@@ -43,6 +43,9 @@ typedef enum {
     CMD_AX_CURSOR_OUVERT = 18,
     CMD_AX_CURSOR_FERMER = 19,
     CMD_AX_GRAB_PINCE = 20,
+    CMD_OPEN_CURSOR_2 = 21,
+    CMD_CLOSE_CURSOR_2 = 22,
+    CMD_START_MATCH = 23,   /**< Démarrer le timer de match */
     CMD_EMERGENCY_STOP = 99 /**< Arrêt d'urgence */
 } CommandID_t;
 
@@ -131,6 +134,19 @@ void canopen_cmd_process(void);
  * @param command_id ID de commande fictif (peut être 0 pour homing au démarrage)
  */
 void canopen_signal_sequence_started(uint16_t action_id, uint16_t command_id);
+
+/**
+ * @brief Arrêt d'urgence complet avec blocage du STM32
+ *
+ * Cette fonction arrête immédiatement tous les moteurs, signale l'erreur
+ * via CANopen, puis bloque complètement le STM32 (désactivation des interruptions
+ * + boucle infinie). Seul un reset physique peut redémarrer le système.
+ *
+ * ⚠️ ATTENTION : Cette fonction ne retourne JAMAIS ! Le STM32 sera gelé.
+ *
+ * @param error_code Code d'erreur à signaler (CMD_ERROR_TIMEOUT ou CMD_ERROR_EMERGENCY_STOP)
+ */
+void canopen_cmd_emergency_stop(uint8_t error_code);
 
 #ifdef __cplusplus
 }

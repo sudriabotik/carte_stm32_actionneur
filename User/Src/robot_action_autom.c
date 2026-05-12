@@ -97,6 +97,17 @@ void ax_fermeture_cursor (void* param)
     ax_write_position(1, POS_FERMETURE_CURSOR);
 }
 
+void ouverture_cursor_2(void* param)
+{
+    (void)param;
+    i2c_servo(3,POS_OUVERTURE_CURSOR_2);
+}
+
+void fermeture_cursor_2(void* param)
+{
+    (void)param;
+    i2c_servo(3,POS_FERMETURE_CURSOR_2);
+}
 
 ////////////////////
 //// TURN ON AND OFF PUMP

@@ -58,7 +58,7 @@ void seq_deplacement_V(struct Sequencer* seq, float pos_V_mm)
 
 
 /////////
-/// DEBUT DES MOUVEMENTS D'AX UNIQUEMENT
+/// DEBUT DES MOUVEMENTS D'AX et SERVO
 //////////
 
 void seq_open_pince(struct Sequencer* seq)
@@ -100,6 +100,18 @@ void seq_ax_fermer_cursor(struct Sequencer* seq)
 {
     sequencer_reset(seq);
     sequencer_add_action(seq, ax_fermeture_cursor, NULL, 20);
+}
+
+void seq_open_cursor_2(struct Sequencer* seq)
+{
+    sequencer_reset(seq);
+    sequencer_add_action(seq, ouverture_cursor_2, NULL, 20);
+}
+
+void seq_fermeture_cursor_2(struct Sequencer* seq)
+{
+    sequencer_reset(seq);
+    sequencer_add_action(seq, fermeture_cursor_2, NULL, 20);
 }
 
 /////////
